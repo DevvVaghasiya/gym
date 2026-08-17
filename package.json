@@ -1,0 +1,36 @@
+{
+  "name": "gym",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "backend": "npm start --prefix backend",
+    "ml:train": "python ml-service/generate_dataset.py && python ml-service/train.py",
+    "ml:serve": "python -m uvicorn app:app --reload --port 8000 --app-dir ml-service"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.3",
+    "typescript": "~6.0.2",
+    "vite": "^8.1.1"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.3.2",
+    "chart.js": "^4.5.1",
+    "framer-motion": "^12.42.2",
+    "lucide-react": "^1.23.0",
+    "react": "^19.2.7",
+    "react-chartjs-2": "^5.3.1",
+    "react-dom": "^19.2.7",
+    "react-hook-form": "^7.81.0",
+    "react-markdown": "^10.1.0",
+    "react-router-dom": "^7.18.1",
+    "remark-gfm": "^4.0.1",
+    "tailwindcss": "^4.3.2",
+    "zustand": "^5.0.14"
+  }
+}

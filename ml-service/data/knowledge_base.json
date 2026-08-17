@@ -1,0 +1,76 @@
+{
+  "docs": [
+    {
+      "id": "calories-tdee",
+      "title": "Calories, BMR and TDEE",
+      "tags": ["calories", "tdee", "bmr", "deficit", "surplus", "eat"],
+      "content": "Daily calorie targets should start from BMR (Mifflin-St Jeor) then TDEE = BMR x activity factor. Muscle gain usually uses TDEE + 200-300 kcal. Fat loss usually uses TDEE - 300-500 kcal. Maintenance stays near TDEE. Extreme deficits harm training. Floor calories: about 1600 kcal for most men and 1400 kcal for most women unless a clinician directs otherwise."
+    },
+    {
+      "id": "protein",
+      "title": "Protein targets",
+      "tags": ["protein", "macros", "muscle", "grams"],
+      "content": "A practical evidence-based range is 1.6-2.2 g of protein per kg for muscle gain, and 2.0-2.4 g/kg during fat loss. Spread protein across 3-5 meals. Vegetarian sources include paneer, dal, curd, tofu, soya, whey, and eggs if eggetarian."
+    },
+    {
+      "id": "missed-workout",
+      "title": "Missed workouts",
+      "tags": ["missed", "skip", "miss", "reschedule"],
+      "content": "Do not double tomorrow's session after a missed workout. Shift the remaining week forward by one day or skip the least important accessory day. Protect rest."
+    },
+    {
+      "id": "exercise-subs-chest",
+      "title": "Chest exercise substitutions",
+      "tags": ["replace", "substitute", "bench", "chest", "press"],
+      "content": "Barbell bench press can be replaced with dumbbell bench press, machine chest press, or weighted push-ups. Dumbbells are usually the closest hypertrophy substitute."
+    },
+    {
+      "id": "food-subs-veg",
+      "title": "Vegetarian protein swaps",
+      "tags": ["paneer", "replace", "vegetarian", "protein", "tofu", "dal"],
+      "content": "Paneer can be swapped for tofu, Greek yogurt/curd, soya chunks, or extra dal plus a protein shake while watching daily protein."
+    },
+    {
+      "id": "splits",
+      "title": "Choosing a training split",
+      "tags": ["split", "ppl", "upper", "lower", "full body", "days"],
+      "content": "Beginners on 2-3 days should use full body. Four days is usually upper/lower. Intermediate 3-day is Push/Pull/Legs. Do not pick PPL only because the goal is muscle gain."
+    },
+    {
+      "id": "progressive-overload",
+      "title": "Progressive overload",
+      "tags": ["overload", "progress", "weight", "reps"],
+      "content": "Add load or reps when you hit the top of the rep range with good form. Example: 40 kg x 8 -> 40 kg x 10 -> 42.5 kg x 8."
+    },
+    {
+      "id": "recovery",
+      "title": "Recovery, sleep and stress",
+      "tags": ["recovery", "sleep", "rest", "stress"],
+      "content": "Aim for 7-9 hours of sleep. High stress and poor sleep are reasons to keep calories closer to maintenance and reduce extra isolation volume."
+    },
+    {
+      "id": "indian-diet",
+      "title": "Indian gym diet patterns",
+      "tags": ["indian", "gujarati", "punjabi", "south", "roti", "dal", "rice"],
+      "content": "A high-protein Indian template: breakfast oats or idli/dosa + sambar or eggs/curd; lunch rice or roti + dal + sabzi + paneer/tofu/chicken; snack curd or whey; dinner roti + protein + vegetables."
+    },
+    {
+      "id": "safety",
+      "title": "Safety and medical limits",
+      "tags": ["injury", "pain", "medical", "disorder", "starvation"],
+      "content": "Sharp joint pain is a stop signal. Extreme calorie targets, purging, or crash dieting are not valid fitness strategies. Eating-disorder symptoms and medical conditions need a qualified clinician."
+    },
+    {
+      "id": "supplements",
+      "title": "Supplements",
+      "tags": ["supplement", "whey", "creatine", "vitamin"],
+      "content": "Food first. Best-supported gym supplements are creatine monohydrate 3-5 g daily and protein powder if food protein is low. This is not medical advice."
+    },
+    {
+      "id": "water",
+      "title": "Hydration",
+      "tags": ["water", "hydration"],
+      "content": "About 30-35 ml of water per kg of body weight, plus extra on training days. Pale straw urine is a practical check."
+    }
+  ]
+}

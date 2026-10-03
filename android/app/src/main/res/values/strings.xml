@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name"> gym AI</string>
+    <string name="title_activity_main"> gym AI</string>
+    <string name="package_name">com.devvaghasiya.gymai</string>
+    <string name="custom_url_scheme">com.devvaghasiya.gymai</string>
+</resources>

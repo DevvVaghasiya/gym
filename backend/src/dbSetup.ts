@@ -20,6 +20,7 @@ async function setupDatabase() {
         id VARCHAR(50) PRIMARY KEY,
         name VARCHAR(100) NOT NULL,
         email VARCHAR(255) UNIQUE,
+        phone VARCHAR(30),
         password VARCHAR(255),
         age INT,
         gender VARCHAR(10),
@@ -60,6 +61,10 @@ async function setupDatabase() {
         muscle_ratings JSON,
         recommended_strategy VARCHAR(40),
         recommended_split VARCHAR(40),
+        daily_calories INT,
+        protein_target INT,
+        carbs_target INT,
+        fat_target INT,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       )
     `);
@@ -98,6 +103,19 @@ async function setupDatabase() {
         muscle_mass DECIMAL(5,2),
         notes TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS user_daily_stats (
+        id VARCHAR(50) PRIMARY KEY,
+        user_id VARCHAR(50) NOT NULL,
+        stat_date DATE NOT NULL,
+        water_intake_liters DECIMAL(5,2) DEFAULT 0,
+        meals_json JSON,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        UNIQUE KEY unique_user_stats_day (user_id, stat_date)
       )
     `);
 

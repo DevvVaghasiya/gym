@@ -8,9 +8,10 @@ import { generateWorkoutPlan } from '../engine/workoutGenerator';
 import { generateAIDietPlan } from '../engine/dietGenerator';
 import { calculateBMI, calculateBMR, calculateTDEE, performAdvancedDiagnostics, calculateAllMetrics } from '../engine/bodyComposition';
 import { buildRecommendation } from '../engine/recommendationEngine';
-import { fetchMlRecommendation } from '../lib/api';
+import { fetchMlRecommendation, saveOnboardingResult, saveProgressEntry, saveUserProfile } from '../lib/api';
 import { useNutritionStore } from '../store/useNutritionStore';
 import { useProgressStore } from '../store/useProgressStore';
+import { useAuthStore } from '../store/useAuthStore';
 import type { UserProfile, Goal, Gender, GymType, ActivityLevel, FoodPreference, Equipment, MuscleRatings } from '../types/user';
 import { 
   Dumbbell, ArrowRight, ChevronLeft, Activity, User, Heart, ShieldAlert, Sparkles, 
@@ -27,12 +28,16 @@ export default function OnboardingPage() {
   const setProfile = useUserStore(state => state.setProfile);
   const setPlan = useWorkoutStore(state => state.setPlan);
   const setDietPlan = useNutritionStore(state => state.setPlan);
+  const token = useAuthStore(state => state.token);
   const navigate = useNavigate();
+
+  const weekDayOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
   const { register, handleSubmit, watch, setValue } = useForm<UserProfile>({
     defaultValues: {
       name: '',
       phone: '',
+      selectedWorkoutDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday'],
       age: 26,
       gender: 'male',
       heightCm: 178,
@@ -86,6 +91,31 @@ export default function OnboardingPage() {
   const activityLevel = watch('activityLevel');
   const goal = watch('goal');
   const selectedEquipment = watch('availableEquipment') || [];
+  const selectedWorkoutDays = watch('selectedWorkoutDays') || [];
+
+  const syncWorkoutDaySelection = (nextDays: number) => {
+    const current = [...(watch('selectedWorkoutDays') || [])].filter((day) => weekDayOrder.includes(day));
+    const fallbackSelection = [...new Set([...current, ...weekDayOrder])].filter((day) => weekDayOrder.includes(day));
+    const nextSelection = fallbackSelection.slice(0, nextDays);
+    setValue('daysPerWeek', nextDays);
+    setValue('selectedWorkoutDays', nextSelection.length > 0 ? nextSelection : weekDayOrder.slice(0, nextDays));
+  };
+
+  const toggleWorkoutDay = (day: string) => {
+    const current = [...(watch('selectedWorkoutDays') || [])].filter((item) => weekDayOrder.includes(item));
+    const exists = current.includes(day);
+
+    if (exists) {
+      const nextSelection = current.filter((item) => item !== day);
+      setValue('selectedWorkoutDays', nextSelection);
+      setValue('daysPerWeek', Math.max(1, nextSelection.length));
+      return;
+    }
+
+    const nextSelection = [...current, day].sort((a, b) => weekDayOrder.indexOf(a) - weekDayOrder.indexOf(b));
+    setValue('selectedWorkoutDays', nextSelection);
+    setValue('daysPerWeek', nextSelection.length);
+  };
 
   const [liveMetrics, setLiveMetrics] = useState({ bmi: 23, bmr: 1700, tdee: 2300 });
 
@@ -164,21 +194,69 @@ export default function OnboardingPage() {
     setShowReport(true);
   };
 
-  const confirmAndProceedToDashboard = () => {
+  const confirmAndProceedToDashboard = async () => {
     if (!diagnosticReport) return;
     
     const finalProfile = diagnosticReport.profile;
-    setProfile(finalProfile);
-    const plan = generateWorkoutPlan(finalProfile);
-    setPlan(plan);
-    setDietPlan(generateAIDietPlan(finalProfile));
-    useProgressStore.getState().addEntry({
+    const recommendation = diagnosticReport.recommendation ?? buildRecommendation(finalProfile);
+    const profileToSave = {
+      ...finalProfile,
+      recommendedStrategy: recommendation.strategy,
+      recommendedSplit: recommendation.split,
+      dailyCalories: recommendation.calories,
+      proteinTarget: recommendation.protein,
+      carbsTarget: recommendation.carbs,
+      fatTarget: recommendation.fat,
+      bmr: recommendation.bmr,
+      tdee: recommendation.tdee,
+    };
+
+    const baselineEntry = {
       date: new Date().toISOString().slice(0, 10),
       weightKg: finalProfile.weightKg,
       bodyFatPercent: finalProfile.bodyFatPercent,
       muscleMassPercent: finalProfile.muscleMassPercent,
       notes: 'Onboarding baseline',
-    });
+    };
+
+    const plan = generateWorkoutPlan(profileToSave);
+    const dietPlan = generateAIDietPlan(profileToSave);
+
+    const onboardingPayload = {
+      ...profileToSave,
+      recommendedStrategy: recommendation.strategy,
+      recommendedSplit: recommendation.split,
+      dailyCalories: recommendation.calories,
+      proteinTarget: recommendation.protein,
+      carbsTarget: recommendation.carbs,
+      fatTarget: recommendation.fat,
+      workoutPlan: plan,
+      dietPlan,
+    };
+
+    setProfile(profileToSave);
+    setPlan(plan);
+    setDietPlan(dietPlan);
+    useProgressStore.getState().addEntry(baselineEntry);
+
+    try {
+      await saveUserProfile(profileToSave, token);
+    } catch {
+      // Keep the profile local if the backend is unavailable.
+    }
+
+    try {
+      await saveOnboardingResult(onboardingPayload, token);
+    } catch {
+      // Keep the onboarding result local if the API is unavailable.
+    }
+
+    try {
+      await saveProgressEntry(baselineEntry, token);
+    } catch {
+      // Keep the baseline local if the API is unavailable.
+    }
+
     navigate('/');
   };
 
@@ -211,10 +289,11 @@ export default function OnboardingPage() {
       <div className="absolute top-[-10%] left-[-10%] w-[60vw] h-[60vw] bg-gradient-to-br from-blue-600/10 via-indigo-600/5 to-transparent rounded-full blur-[120px] mix-blend-screen animate-pulse-glow pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] bg-gradient-to-tr from-purple-600/10 via-pink-600/5 to-transparent rounded-full blur-[120px] mix-blend-screen animate-pulse-glow pointer-events-none" style={{ animationDelay: '2s' }} />
       <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none mix-blend-overlay"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(96,165,250,0.08),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(168,85,247,0.08),_transparent_30%)]" />
 
       {isAnalyzing ? (
         // AI Loading Processing Screen
-        <div className="w-full max-w-md backdrop-blur-3xl bg-slate-900/40 border border-white/5 rounded-[2.5rem] p-10 text-center relative shadow-2xl">
+        <div className="w-full max-w-md backdrop-blur-3xl bg-slate-900/40 border border-white/10 rounded-[2.5rem] p-10 text-center relative shadow-[0_30px_80px_-40px_rgba(59,130,246,0.8)] ring-1 ring-white/5">
           <motion.div 
             animate={{ rotate: 360 }}
             transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
@@ -245,7 +324,7 @@ export default function OnboardingPage() {
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="w-full max-w-3xl backdrop-blur-3xl bg-slate-900/40 border border-white/5 rounded-[3rem] p-12 shadow-2xl relative"
+          className="w-full max-w-3xl backdrop-blur-3xl bg-slate-900/40 border border-white/10 rounded-[3rem] p-12 shadow-[0_30px_80px_-40px_rgba(59,130,246,0.8)] ring-1 ring-white/5 relative"
         >
           <div className="flex items-center justify-between mb-12">
             <div>
@@ -294,7 +373,7 @@ export default function OnboardingPage() {
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-2xl relative z-10"
         >
-          <div className="backdrop-blur-3xl bg-slate-900/40 border border-white/5 rounded-[3rem] p-12 shadow-2xl">
+          <div className="backdrop-blur-3xl bg-slate-900/40 border border-white/10 rounded-[3rem] p-12 shadow-[0_30px_80px_-40px_rgba(59,130,246,0.8)] ring-1 ring-white/5">
             <header className="mb-12">
               <div className="flex justify-between items-center mb-6">
                 <span className="text-gray-500 text-[10px] font-extrabold uppercase tracking-widest">Step {step} of 7</span>
@@ -396,7 +475,9 @@ export default function OnboardingPage() {
                       <div className="flex gap-3">
                         {[2, 3, 4, 5, 6].map(d => (
                           <button
-                            key={d} type="button" onClick={() => setValue('daysPerWeek', d)}
+                            key={d}
+                            type="button"
+                            onClick={() => syncWorkoutDaySelection(d)}
                             className={`flex-1 py-3 rounded-2xl font-bold transition-all ${
                               watch('daysPerWeek') === d ? 'bg-white text-black' : 'bg-white/[0.03] text-gray-500'
                             }`}
@@ -404,6 +485,30 @@ export default function OnboardingPage() {
                             {d}
                           </button>
                         ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className={labelClasses}>Choose Your Training Days</label>
+                      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                        {weekDayOrder.map((day) => {
+                          const isSelected = (selectedWorkoutDays || []).includes(day);
+
+                          return (
+                            <button
+                              key={day}
+                              type="button"
+                              onClick={() => toggleWorkoutDay(day)}
+                              className={`rounded-2xl border px-4 py-3 text-sm font-bold transition-all ${
+                                isSelected
+                                  ? 'border-blue-500/40 bg-blue-500/15 text-white shadow-lg shadow-blue-500/10'
+                                  : 'border-white/10 bg-white/[0.03] text-slate-400 hover:bg-white/[0.05] hover:text-white'
+                              }`}
+                            >
+                              {day.slice(0, 3)}
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
                   </motion.div>

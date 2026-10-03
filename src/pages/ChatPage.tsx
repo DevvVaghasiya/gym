@@ -1,198 +1,245 @@
-import { useRef, useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, Send, Cpu, ChevronRight, User, Trash2, ShieldAlert } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import { useState, useRef, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { MessageCircle, Send, Bot, User, Activity, Trash2 } from 'lucide-react';
 import { useUserStore } from '../store/useUserStore';
 import { useWorkoutStore } from '../store/useWorkoutStore';
+import { useProgressStore } from '../store/useProgressStore';
 import { useNutritionStore } from '../store/useNutritionStore';
 import { useChatStore } from '../store/useChatStore';
-import { answerGymQuestion } from '../engine/chatEngine';
+import { useAuthStore } from '../store/useAuthStore';
+import { generateCoachResponse, CoachContext } from '../engine/hybridCoach';
 import { fetchChatAnswer } from '../lib/api';
-
-const SUGGESTIONS = [
-  'How many calories should I eat?',
-  'How much protein do I need?',
-  'Can I replace barbell bench press?',
-  'I missed my leg workout today. What should I do?',
-];
 
 export default function ChatPage() {
   const profile = useUserStore(s => s.profile);
   const workoutPlan = useWorkoutStore(s => s.currentPlan);
   const dietPlan = useNutritionStore(s => s.currentPlan);
+  const token = useAuthStore(s => s.token);
+  const { entries, prs } = useProgressStore();
+  const water = profile?.dailyWaterIntakeLiters ?? 3.0;
+
   const { messages, addMessage, clear } = useChatStore();
+
   const [input, setInput] = useState('');
-  const [busy, setBusy] = useState(false);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const [isTyping, setIsTyping] = useState(false);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+
+  // Initialize with greeting once, even in React StrictMode / hydration replays
+  useEffect(() => {
+    if (messages.some(msg => msg.id === 'init-1')) return;
+
+    addMessage({
+      id: 'init-1',
+      role: 'assistant',
+      content: "Hey there! I'm your hybrid AI coach. I analyze your logged workouts, sleep, and nutrition to give you personalized coaching based on sports science rules and your data. What do you need help with today?",
+      createdAt: new Date().toISOString()
+    });
+  }, [messages, addMessage]);
+
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTo({
+        top: chatContainerRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   useEffect(() => {
-    if (messages.length > 0) {
-      bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [messages, busy]);
+    scrollToBottom();
+  }, [messages, isTyping]);
 
-  const ask = async (text: string) => {
-    const q = text.trim();
-    if (!q || busy) return;
+  const handleSend = async () => {
+    const question = input.trim();
+    if (!question || isTyping) return;
+
+    addMessage({
+      id: Date.now().toString(),
+      role: 'user',
+      content: question,
+      createdAt: new Date().toISOString()
+    });
+    
     setInput('');
-    addMessage({ id: 'u_' + Date.now(), role: 'user', content: q, createdAt: new Date().toISOString() });
-    setBusy(true);
-    try {
-      let result;
+    setIsTyping(true);
+
+    const context: CoachContext = {
+      profile,
+      workoutPlan,
+      progressEntries: entries,
+      prs: prs,
+      todayWater: water
+    };
+
+    setTimeout(async () => {
+      let responseContent: string;
       try {
-        result = await fetchChatAnswer({ message: q, profile, workoutPlan, dietPlan });
+        const result = await fetchChatAnswer({
+          message: question,
+          profile,
+          workoutPlan,
+          dietPlan,
+        }, token);
+        responseContent = result.answer;
       } catch {
-        result = answerGymQuestion(q, { profile, workoutPlan, dietPlan });
+        responseContent = generateCoachResponse(question, context);
       }
       addMessage({
-        id: 'a_' + Date.now(),
+        id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: result.answer,
-        sources: result.sources,
-        createdAt: new Date().toISOString(),
+        content: responseContent,
+        createdAt: new Date().toISOString()
       });
-    } finally {
-      setBusy(false);
-    }
+      setIsTyping(false);
+    }, 1200);
   };
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="max-w-4xl mx-auto h-full flex flex-col min-h-0 overflow-hidden"
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35 }}
+      className="flex h-[calc(100vh-40px)] w-full max-w-[1600px] flex-col overflow-hidden rounded-[30px] border border-white/10 bg-[#07111d]/90 shadow-[0_30px_80px_-20px_rgba(15,23,42,0.9)] backdrop-blur-xl"
     >
-      <header className="flex items-center justify-between pb-6 border-b border-white/5 mb-6 flex-shrink-0">
-        <div>
-          <h1 className="text-3xl font-black text-white flex items-center gap-3">
-            <MessageCircle className="w-8 h-8 text-blue-500" />
-            Neural Coach
-          </h1>
-          <p className="text-gray-500 text-sm mt-1">AI-powered fitness intelligence.</p>
+      <header className="flex items-center justify-between gap-4 border-b border-white/10 bg-slate-950/40 px-4 py-4 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 ring-1 ring-cyan-500/20">
+            <MessageCircle className="h-5 w-5 text-cyan-400" />
+          </div>
+          <div className="min-w-0">
+            <div className="text-[10px] font-extrabold uppercase tracking-[0.22em] text-cyan-300/90">Hybrid Architecture</div>
+            <h1 className="mt-1 text-xl font-black tracking-tight text-white sm:text-2xl">AI Coach</h1>
+          </div>
         </div>
-        {messages.length > 0 && (
+
+        <div className="flex items-center gap-2 sm:gap-3">
           <button
             onClick={clear}
-            className="px-4 py-2 rounded-xl bg-red-500/10 text-red-500 border border-red-500/20 text-xs font-bold flex items-center gap-2 hover:bg-red-500/20 transition-colors"
+            className="hidden items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[10px] font-extrabold uppercase tracking-[0.18em] text-slate-300 transition hover:bg-white/10 hover:text-white sm:flex"
           >
-            <Trash2 className="w-4 h-4" /> Reset
+            <Trash2 className="h-3.5 w-3.5" />
+            Clear
           </button>
-        )}
+          <div className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-[10px] font-extrabold uppercase tracking-[0.18em] text-emerald-200">
+            <Activity className="h-3.5 w-3.5 text-emerald-400" />
+            Systems Online
+          </div>
+        </div>
       </header>
 
-      <div className="flex-1 overflow-y-auto pr-4 space-y-8 custom-scrollbar min-h-0">
-        <AnimatePresence mode="popLayout">
-          {messages.length === 0 ? (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex flex-col items-center justify-center min-h-[300px] text-center mt-10"
-            >
-              <div className="w-24 h-24 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-500 mb-6 border border-blue-500/20 shadow-[0_0_30px_rgba(59,130,246,0.15)]">
-                <Cpu className="w-12 h-12" />
-              </div>
-              <h2 className="text-2xl font-black text-white mb-2">System Online</h2>
-              <p className="text-gray-500 text-sm max-w-md mb-8">
-                Ask about your macros, request exercise substitutions, or get advice on managing fatigue and recovery.
-              </p>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-                {SUGGESTIONS.map(s => (
-                  <button
-                    key={s}
-                    onClick={() => ask(s)}
-                    className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 text-left text-sm font-medium text-gray-300 hover:text-white hover:bg-blue-500/10 hover:border-blue-500/30 transition-all flex items-center justify-between group"
-                  >
-                    <span>{s}</span>
-                    <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all text-blue-400" />
-                  </button>
-                ))}
-              </div>
-            </motion.div>
-          ) : (
-            messages.map(m => (
-              <motion.div
-                key={m.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
+      <div className="flex-1 overflow-hidden">
+        <div
+          ref={chatContainerRef}
+          className="h-full overflow-y-auto px-3 py-5 sm:px-6 lg:px-8 custom-scrollbar"
+        >
+          <div className="mx-auto w-full max-w-[1280px] space-y-5">
+            <div className="mb-2 flex flex-wrap gap-2">
+              {[
+                'Give me a back workout',
+                'Meal ideas for fat loss',
+                'How do I recover faster?',
+                'What should I eat today?'
+              ].map(prompt => (
+                <button
+                  key={prompt}
+                  type="button"
+                  onClick={() => setInput(prompt)}
+                  className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[11px] font-medium text-slate-200 transition hover:border-cyan-400/30 hover:bg-cyan-500/10 hover:text-cyan-200"
+                >
+                  {prompt}
+                </button>
+              ))}
+            </div>
+            {messages.map(msg => (
+              <div
+                key={msg.id}
+                className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
-                <div className={`flex gap-4 max-w-[85%] ${m.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
-                  <div className={`w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0 ${
-                    m.role === 'user' ? 'bg-gradient-to-br from-indigo-500 to-purple-600' : 'bg-slate-800 border border-white/10'
-                  }`}>
-                    {m.role === 'user' ? <User className="w-5 h-5 text-white" /> : <Cpu className="w-5 h-5 text-blue-400" />}
+                {msg.role !== 'user' && (
+                  <div className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 shadow-[0_8px_20px_-8px_rgba(59,130,246,0.9)]">
+                    <Bot className="h-4 w-4 text-white" />
                   </div>
-                  
-                  <div className={`rounded-[2rem] px-6 py-5 ${
-                    m.role === 'user' 
-                      ? 'bg-gradient-to-br from-indigo-600 to-purple-700 text-white shadow-xl shadow-indigo-500/20' 
-                      : 'bg-white/[0.02] border border-white/5 text-gray-200'
-                  }`}>
-                    {m.role === 'assistant' ? (
-                      <div className="prose prose-invert prose-p:leading-relaxed prose-pre:bg-black/50 prose-pre:border prose-pre:border-white/10 max-w-none text-sm">
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                          {m.content}
-                        </ReactMarkdown>
-                      </div>
-                    ) : (
-                      <p className="text-sm font-medium">{m.content}</p>
-                    )}
-                    
-                    {m.sources && m.sources.length > 0 && (
-                      <div className="mt-4 pt-4 border-t border-white/10 flex flex-wrap gap-2">
-                        {m.sources.map((s, i) => (
-                          <span key={i} className="text-[10px] font-black text-blue-400 bg-blue-500/10 border border-blue-500/20 px-2 py-1 rounded-lg uppercase tracking-widest">
-                            {s}
-                          </span>
-                        ))}
-                      </div>
-                    )}
+                )}
+
+                <div className={`max-w-[84%] ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
+                  <div className={`mb-1 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] ${msg.role === 'user' ? 'justify-end text-violet-300' : 'text-slate-500'}`}>
+                    <span>{msg.role === 'user' ? 'You' : 'FitCoach AI'}</span>
+                    <span className="text-slate-600">
+                      {new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }).format(new Date(msg.createdAt))}
+                    </span>
+                  </div>
+
+                  <div
+                    className={`rounded-[24px] px-5 py-4 text-[15px] leading-8 shadow-[0_15px_30px_-20px_rgba(15,23,42,0.9)] md:text-[17px] ${
+                      msg.role === 'user'
+                        ? 'bg-gradient-to-br from-indigo-500 via-violet-500 to-purple-600 text-white rounded-tr-md'
+                        : 'border border-white/5 bg-slate-900/80 text-slate-200 rounded-tl-md'
+                    }`}
+                  >
+                    {msg.content.split('\n').map((line, i) => (
+                      <p key={i} className={i > 0 ? 'mt-2' : ''}>
+                        {line.includes('**') ? (
+                          <span dangerouslySetInnerHTML={{ __html: line.replace(/\*\*(.*?)\*\*/g, '<strong class="font-black text-white">$1</strong>') }} />
+                        ) : (
+                          line
+                        )}
+                      </p>
+                    ))}
                   </div>
                 </div>
-              </motion.div>
-            ))
-          )}
-        </AnimatePresence>
-        
-        {busy && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-3 px-14 text-blue-400 text-xs font-bold uppercase tracking-widest">
-            <span className="flex gap-1">
-              <span className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce" />
-              <span className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce delay-100" />
-              <span className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce delay-200" />
-            </span>
-            Processing Query...
-          </motion.div>
-        )}
-        <div ref={bottomRef} className="h-4" />
+
+                {msg.role === 'user' && (
+                  <div className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 shadow-[0_8px_20px_-8px_rgba(99,102,241,0.9)]">
+                    <User className="h-4 w-4 text-white" />
+                  </div>
+                )}
+              </div>
+            ))}
+
+            {isTyping && (
+              <div className="flex justify-start gap-3">
+                <div className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 shadow-[0_8px_20px_-8px_rgba(59,130,246,0.9)]">
+                  <Bot className="h-4 w-4 text-white" />
+                </div>
+                <div className="max-w-[84%] items-start">
+                  <div className="mb-1 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
+                    <span>FitCoach AI</span>
+                  </div>
+                  <div className="flex h-12 items-center gap-2 rounded-[22px] rounded-tl-md border border-white/5 bg-slate-900/80 px-4 py-3 shadow-[0_15px_30px_-20px_rgba(15,23,42,0.9)]">
+                    <div className="h-2.5 w-2.5 animate-bounce rounded-full bg-cyan-400" style={{ animationDelay: '0ms' }} />
+                    <div className="h-2.5 w-2.5 animate-bounce rounded-full bg-cyan-400" style={{ animationDelay: '150ms' }} />
+                    <div className="h-2.5 w-2.5 animate-bounce rounded-full bg-cyan-400" style={{ animationDelay: '300ms' }} />
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
-      {/* Stable Input Area */}
-      <div className="pt-6 pb-2 flex-shrink-0">
-        <form
-          onSubmit={e => { e.preventDefault(); ask(input); }}
-          className="relative flex gap-3 w-full"
-        >
-          <input
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            placeholder="Type your message..."
-            className="flex-1 bg-white/[0.03] border border-white/10 rounded-[2rem] px-8 py-5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500/40 transition-all text-sm font-medium backdrop-blur-xl shadow-2xl"
-          />
-          <button
-            type="submit"
-            disabled={busy || !input.trim()}
-            className="w-[60px] h-[60px] rounded-[2rem] bg-gradient-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center flex-shrink-0 disabled:opacity-50 disabled:grayscale transition-all shadow-xl shadow-blue-500/20 hover:scale-105 active:scale-95"
-          >
-            <Send className="w-5 h-5" />
-          </button>
-        </form>
-        <p className="text-center text-[10px] text-gray-600 font-medium mt-3 flex items-center justify-center gap-1.5">
-          <ShieldAlert className="w-3 h-3" /> FitAI is an AI assistant, not a doctor.
-        </p>
+      <div className="border-t border-white/10 bg-slate-950/60 px-3 py-4 sm:px-6 lg:px-8">
+        <div className="mx-auto w-full max-w-[1280px]">
+          <div className="relative flex items-center rounded-[24px] border border-slate-700/80 bg-slate-900/80 p-2 shadow-[0_25px_40px_-20px_rgba(59,130,246,0.28)]">
+            <input
+              type="text"
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleSend()}
+              placeholder="Ask about your workout, diet, or recovery..."
+              className="w-full bg-transparent px-4 py-4 text-base font-medium text-white placeholder:text-slate-500 outline-none md:text-lg"
+            />
+            <button
+              onClick={handleSend}
+              disabled={!input.trim() || isTyping}
+              className="ml-2 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 text-white shadow-[0_12px_30px_-12px_rgba(59,130,246,0.9)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <Send className="h-4 w-4" />
+            </button>
+          </div>
+          <p className="mt-3 text-center text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
+            Powered by Context-Aware Hybrid Rules Engine
+          </p>
+        </div>
       </div>
     </motion.div>
   );

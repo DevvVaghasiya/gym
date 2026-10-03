@@ -19,7 +19,12 @@ export const useChatStore = create<ChatState>()(
   persist(
     (set) => ({
       messages: [],
-      addMessage: (msg) => set((s) => ({ messages: [...s.messages, msg] })),
+      addMessage: (msg) =>
+        set((s) => ({
+          messages: s.messages.some(existing => existing.id === msg.id)
+            ? s.messages
+            : [...s.messages, msg],
+        })),
       clear: () => set({ messages: [] }),
     }),
     { name: 'gym-chat-storage' }

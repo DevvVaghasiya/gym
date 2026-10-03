@@ -1,0 +1,22 @@
+question,intent,response
+How much caffeine can I take before a workout?,caffeine,"Use 3-6 mg/kg 30-90 minutes before training, and keep total intake under about 400 mg/day for most adults."
+"I am sore after leg day, what should I do?",soreness,"Keep moving lightly, reduce the same muscle group's volume, and prioritize sleep, hydration, and protein."
+What should I eat before and after training?,meal_timing,Use protein in every meal and keep most carbs around training. A pre or post workout meal with protein and carbs works best.
+Should I take creatine or whey?,supplements,"Creatine monohydrate is one of the best-supported supplements, and whey is useful if you struggle to hit protein goals."
+How much water should I drink daily?,water,"A simple rule is 30-35 mL per kg of bodyweight daily, plus more on hard training days or in heat."
+How do I choose a workout split?,split,"Beginners do well with full body or upper lower, while intermediate lifters often prefer push pull legs or upper lower."
+What is a good protein target for fat loss?,protein,"Aim roughly 1.8-2.2 g/kg bodyweight, and spread it across meals to preserve muscle while dieting."
+What should I eat for muscle gain?,meal_timing,"Use a calorie surplus, hit protein at every meal, and keep carbs around training for performance and recovery."
+"I missed my leg workout, what do I do?",missed_workout,Do not double the whole week. Shift the workout forward and keep recovery prioritized.
+Can I replace chicken with paneer?,substitute_food,"Yes, as long as you keep similar protein and total calories. Paneer, tofu, yogurt, dal, and soy are good protein swaps."
+What are good squat alternatives?,substitute_exercise,"Goblet squats, leg press, split squats, and hack squats are solid alternatives when technique or pain is an issue."
+How much cardio should I do?,cardio,"20-40 minutes of easy to moderate cardio 2-4 times per week is enough for most people, unless your goal is specifically aerobic performance."
+How do I recover faster from hard training?,recovery,"Get 7-9 hours of sleep, keep protein and water high, and use lighter sessions or deloads when stress is high."
+What calories should I eat?,calories,Calories should start from maintenance and then adjust by 200-300 kcal for muscle gain or 300-500 for fat loss.
+Should I cut out caffeine while dieting?,caffeine,"No, not necessarily. Moderate caffeine can still support training and appetite control, but too much can disrupt sleep and recovery."
+"I want to gain muscle but I am tired all the time, what should I do?",recovery,"Reduce extra volume, sleep more, and keep calories and protein consistent. Recovery is where growth happens."
+Can I train chest and shoulders on the same day?,split,"Yes, if you recover well. Many people do push days with chest, shoulders, and triceps while keeping total weekly volume in check."
+Should I do HIIT every day?,cardio,"No. HIIT is useful, but too much can reduce recovery and hurt strength training quality. Keep it limited and controlled."
+What is the best breakfast for fat loss?,meal_timing,"Eggs or Greek yogurt with fruit, oats, and protein is a strong option. The goal is a high-protein, filling breakfast you can repeat consistently."
+Should I replace whey with eggs?,supplements,"Yes, eggs and Greek yogurt can replace whey if they fit your protein target. Supplements are convenience, not necessity."
+Does more water help muscle growth?,water,"Hydration helps performance, concentration, and training quality. It is not magic, but being consistently hydrated supports recovery and effort."

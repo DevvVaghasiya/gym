@@ -1,4 +1,6 @@
 export interface ProgressEntry {
+  id?: string;
+  userEmail?: string;
   date: string;
   weightKg: number;
   bodyFatPercent?: number;
@@ -7,6 +9,8 @@ export interface ProgressEntry {
 }
 
 export interface PRRecord {
+  id?: string;
+  userEmail?: string;
   exerciseId: string;
   exerciseName: string;
   weight: number;
@@ -41,4 +45,3 @@ export interface AIProjections {
   timelineGoalWeeks: number;
   estimatedGoalCompletionDate: string;
 }
-

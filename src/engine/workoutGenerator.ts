@@ -1,6 +1,7 @@
 import type { UserProfile, Equipment, Experience, Goal, WorkoutSplit } from '../types/user';
 import type { WorkoutPlan, WorkoutDay, Exercise, MuscleGroup } from '../types/workout';
 import { EXERCISE_DATABASE } from '../data/exercises';
+import { getExerciseMachineImage } from '../data/exerciseImages';
 import { recommendWeight, computeGoalWeight } from './weightRecommender';
 import { recommendSplit, weeklySetTargets, recommendStrategy } from './recommendationEngine';
 
@@ -66,7 +67,8 @@ export function calculateSetsReps(exercise: Exercise, goal: Goal, experience: Ex
 export function generateWorkoutPlan(profile: UserProfile): WorkoutPlan {
   const days: WorkoutDay[] = [];
   const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-  const workoutDays = Math.min(Math.max(profile.daysPerWeek, 1), 6);
+  const requestedDays = (profile.selectedWorkoutDays || []).filter((day): day is string => !!day && weekDays.includes(day));
+  const workoutDays = requestedDays.length > 0 ? requestedDays.length : Math.min(Math.max(profile.daysPerWeek, 1), 6);
 
   const buildDay = (name: string, focus: string, muscleGroups: string[], exerciseCount: number, dayName: string) => {
     const exercises = selectExercises(muscleGroups as any, profile.availableEquipment, profile.experience, profile.injuries, exerciseCount);
@@ -106,7 +108,7 @@ export function generateWorkoutPlan(profile: UserProfile): WorkoutPlan {
             cable: 'Cable pulley equivalent variation',
             bodyweight: 'Push-up / Bodyweight squat scaling'
           },
-          image: `https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=400&q=80`,
+          image: getExerciseMachineImage(ex),
           videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4'
         };
 
@@ -133,6 +135,8 @@ export function generateWorkoutPlan(profile: UserProfile): WorkoutPlan {
     return bump ? 1 : 0;
   };
 
+  const normalizedSelectedDays = requestedDays.length > 0 ? requestedDays : weekDays.slice(0, workoutDays);
+  const selectedDayIndexes = normalizedSelectedDays.map(day => weekDays.indexOf(day)).filter(idx => idx >= 0);
   const templates: Array<{ name: string; focus: string; groups: string[]; count: number }> = [];
 
   const push = { name: 'Push', focus: 'Chest, Shoulders, Triceps', groups: ['chest', 'shoulders', 'triceps'], count: 5 };
@@ -172,6 +176,8 @@ export function generateWorkoutPlan(profile: UserProfile): WorkoutPlan {
     workoutDays === 3 ? [0, 2, 4] :
     workoutDays === 2 ? [0, 3] : [0];
 
+  const scheduleIndexes = selectedDayIndexes.length > 0 ? selectedDayIndexes : trainingIdx.slice(0, workoutDays);
+
   const week: WorkoutDay[] = weekDays.map((dayName) => ({
     day: dayName,
     name: 'Rest Day',
@@ -180,8 +186,8 @@ export function generateWorkoutPlan(profile: UserProfile): WorkoutPlan {
     exercises: [],
   }));
 
-  templates.slice(0, workoutDays).forEach((template, i) => {
-    const dayIndex = trainingIdx[i] ?? i;
+  templates.slice(0, scheduleIndexes.length).forEach((template, i) => {
+    const dayIndex = scheduleIndexes[i] ?? i;
     week[dayIndex] = buildDay(template.name, template.focus, template.groups, template.count, weekDays[dayIndex]);
   });
   days.push(...week);

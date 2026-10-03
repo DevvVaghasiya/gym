@@ -1,0 +1,201 @@
+age,gender,height_cm,weight_kg,body_fat_percentage,activity_level,experience,goal,workout_days,diet_preference,calories,protein_g,carbs_g,fat_g,workout_split
+39,Male,166,85.8,28.6,Low,Advanced,Muscle Gain,5,Vegetarian,2300,150,237,84,Push Pull Legs
+39,Female,169,69.1,23.0,Moderate,Beginner,Muscle Gain,5,Non-Vegetarian,2490,120,349,68,Upper Lower + Full Body
+43,Male,171,71.4,25.7,Low,Beginner,Muscle Gain,6,Vegan,2100,125,265,60,Push Pull Legs
+40,Female,161,52.1,23.2,Moderate,Beginner,Muscle Gain,3,Non-Vegetarian,2010,101,291,49,Full Body
+28,Female,163,74.3,30.6,Light,Beginner,Muscle Gain,6,Non-Vegetarian,2280,133,293,65,Push Pull Legs
+19,Female,172,51.7,35.8,Moderate,Intermediate,Muscle Gain,3,Non-Vegetarian,2350,89,409,40,Full Body
+30,Male,180,73.5,13.1,Light,Beginner,Fat Loss,6,Non-Vegetarian,1930,154,181,66,Push Pull Legs
+29,Male,177,67.4,19.5,Low,Intermediate,Maintenance,4,Vegetarian,1970,105,249,61,Upper Lower
+30,Male,173,70.5,21.4,Moderate,Beginner,Fat Loss,4,Vegan,2160,129,254,70,Upper Lower
+25,Female,167,50.9,27.6,Low,Advanced,Maintenance,6,Vegetarian,1500,88,196,40,Push Pull Legs + Accessories
+41,Male,174,69.1,23.6,Moderate,Intermediate,Muscle Gain,5,Non-Vegetarian,2650,124,415,55,Push Pull Legs
+36,Male,184,60.5,17.5,Very High,Intermediate,Fat Loss,3,Non-Vegetarian,2350,132,340,51,Full Body
+39,Male,179,102.0,42.4,Very High,Intermediate,Maintenance,6,Vegetarian,3710,171,594,72,Push Pull Legs
+28,Male,175,73.9,14.8,Low,Intermediate,Fat Loss,6,Non-Vegetarian,1740,154,159,54,Push Pull Legs
+43,Female,153,50.5,23.9,Moderate,Intermediate,Muscle Gain,6,Vegan,1870,91,285,40,Push Pull Legs
+45,Male,177,70.1,13.4,Very High,Advanced,Muscle Gain,6,Non-Vegetarian,3530,127,630,56,Push Pull Legs + Accessories
+39,Male,171,90.4,25.0,High,Beginner,Muscle Gain,6,Vegetarian,3570,150,588,68,Push Pull Legs
+28,Male,166,64.4,26.5,Very High,Intermediate,Fat Loss,5,Vegetarian,2360,114,345,58,Push Pull Legs
+21,Female,161,52.0,20.5,Light,Intermediate,Muscle Gain,3,Vegetarian,1860,102,266,43,Full Body
+45,Female,169,70.0,38.4,Light,Advanced,Fat Loss,4,Non-Vegetarian,1560,123,150,52,Upper Lower
+29,Female,179,87.4,23.0,High,Intermediate,Muscle Gain,6,Vegetarian,3370,168,524,67,Push Pull Legs
+27,Male,166,69.1,15.9,Moderate,Advanced,Maintenance,5,Vegetarian,2430,124,335,65,Push Pull Legs
+20,Female,153,58.2,31.4,High,Beginner,Fat Loss,6,Vegetarian,1780,103,244,43,Push Pull Legs
+33,Female,160,66.0,25.1,Moderate,Intermediate,Fat Loss,3,Vegetarian,1720,141,146,63,Full Body
+19,Female,161,90.2,40.0,Moderate,Beginner,Fat Loss,6,Vegetarian,2210,156,199,88,Push Pull Legs
+37,Female,168,68.9,21.2,High,Intermediate,Muscle Gain,3,Non-Vegetarian,2620,125,398,59,Full Body
+42,Female,150,59.9,30.2,Light,Beginner,Maintenance,3,Vegetarian,1560,99,183,48,Full Body
+30,Male,166,71.7,31.1,High,Intermediate,Fat Loss,4,Non-Vegetarian,2390,145,301,67,Upper Lower
+32,Female,162,53.9,35.9,Light,Intermediate,Muscle Gain,6,Non-Vegetarian,1810,102,261,40,Push Pull Legs
+32,Male,173,60.8,18.4,Moderate,Intermediate,Muscle Gain,6,Vegan,2630,112,446,44,Push Pull Legs
+35,Female,157,78.0,33.3,Moderate,Intermediate,Muscle Gain,6,Non-Vegetarian,2520,154,347,57,Push Pull Legs
+40,Female,172,67.8,34.9,High,Intermediate,Fat Loss,3,Non-Vegetarian,2050,124,265,55,Full Body
+26,Female,160,68.0,36.0,Moderate,Beginner,Muscle Gain,3,Vegan,2490,122,377,55,Full Body
+36,Female,167,73.9,32.9,High,Intermediate,Fat Loss,6,Non-Vegetarian,2100,126,261,62,Push Pull Legs
+41,Female,153,45.0,23.4,Light,Advanced,Muscle Gain,5,Vegan,1640,77,237,43,Push Pull Legs
+19,Male,174,85.9,23.6,Low,Beginner,Fat Loss,3,Non-Vegetarian,1780,185,87,77,Full Body
+19,Female,161,73.8,15.0,High,Beginner,Muscle Gain,3,Non-Vegetarian,3000,141,459,67,Full Body
+40,Male,173,93.6,22.6,High,Beginner,Muscle Gain,6,Vegetarian,3470,176,482,93,Push Pull Legs
+35,Female,164,49.5,32.3,High,Intermediate,Fat Loss,4,Vegetarian,1790,95,247,46,Upper Lower
+25,Male,176,80.7,31.2,Light,Intermediate,Muscle Gain,5,Non-Vegetarian,2830,134,419,69,Push Pull Legs
+29,Female,175,90.0,29.5,Light,Beginner,Maintenance,6,Non-Vegetarian,2260,150,261,69,Push Pull Legs
+44,Female,154,57.0,26.9,Moderate,Beginner,Maintenance,5,Non-Vegetarian,1810,100,238,51,Upper Lower + Full Body
+26,Female,159,76.8,21.0,Moderate,Beginner,Maintenance,6,Non-Vegetarian,2360,131,311,66,Push Pull Legs
+25,Female,165,51.9,33.7,High,Beginner,Fat Loss,6,Vegetarian,1730,96,229,48,Push Pull Legs
+18,Female,150,45.0,38.5,Light,Intermediate,Fat Loss,5,Vegan,1350,94,153,40,Push Pull Legs
+39,Male,163,72.1,22.7,Low,Beginner,Maintenance,5,Vegetarian,1810,132,159,72,Upper Lower + Full Body
+33,Female,155,80.4,27.7,Moderate,Beginner,Fat Loss,6,Non-Vegetarian,1850,143,184,61,Push Pull Legs
+24,Female,165,45.0,33.5,Moderate,Intermediate,Maintenance,6,Vegetarian,1820,83,283,40,Push Pull Legs
+36,Female,160,60.9,30.4,Moderate,Intermediate,Fat Loss,6,Non-Vegetarian,1680,129,175,52,Push Pull Legs
+30,Female,156,49.6,20.3,Moderate,Intermediate,Fat Loss,6,Non-Vegetarian,1570,100,202,40,Push Pull Legs
+27,Male,179,73.9,17.4,Moderate,Beginner,Maintenance,5,Vegetarian,2720,130,385,73,Upper Lower + Full Body
+40,Male,182,72.7,24.5,High,Advanced,Muscle Gain,5,Non-Vegetarian,3130,138,510,60,Push Pull Legs
+33,Female,163,83.9,20.4,Light,Intermediate,Muscle Gain,5,Vegetarian,2240,160,240,71,Push Pull Legs
+42,Male,175,52.9,25.6,High,Beginner,Maintenance,6,Non-Vegetarian,2520,97,444,40,Push Pull Legs
+28,Male,177,62.6,23.6,High,Intermediate,Muscle Gain,5,Non-Vegetarian,2980,106,514,55,Push Pull Legs
+24,Female,162,66.5,24.7,Low,Beginner,Muscle Gain,6,Non-Vegetarian,1850,129,213,53,Push Pull Legs
+41,Female,159,45.0,26.8,Light,Advanced,Fat Loss,5,Vegetarian,1240,95,114,45,Push Pull Legs
+35,Male,171,74.2,26.3,Very High,Intermediate,Maintenance,4,Non-Vegetarian,3220,126,556,55,Upper Lower
+28,Male,166,83.6,24.2,Moderate,Intermediate,Fat Loss,4,Vegan,2300,165,264,66,Upper Lower
+27,Male,162,55.0,25.4,Moderate,Intermediate,Maintenance,6,Non-Vegetarian,2180,88,360,44,Push Pull Legs
+22,Male,190,81.5,24.7,High,Beginner,Maintenance,6,Non-Vegetarian,3350,152,513,76,Push Pull Legs
+31,Female,167,82.5,25.8,Very High,Intermediate,Maintenance,3,Vegetarian,3060,127,505,59,Full Body
+24,Male,167,64.1,20.6,Light,Beginner,Fat Loss,5,Vegetarian,1800,116,221,51,Upper Lower + Full Body
+31,Male,178,75.8,26.9,High,Beginner,Maintenance,4,Non-Vegetarian,2920,127,444,71,Upper Lower
+41,Male,173,90.7,8.0,Moderate,Intermediate,Fat Loss,5,Vegan,2180,175,182,83,Push Pull Legs
+23,Male,177,73.6,23.9,Low,Beginner,Fat Loss,3,Vegetarian,1750,134,159,64,Full Body
+34,Male,160,77.3,28.5,Moderate,Beginner,Muscle Gain,6,Vegetarian,2920,138,439,68,Push Pull Legs
+43,Female,169,51.0,35.0,High,Intermediate,Fat Loss,6,Non-Vegetarian,1660,89,237,40,Push Pull Legs
+27,Female,162,55.8,20.0,High,Intermediate,Fat Loss,3,Non-Vegetarian,1740,99,222,51,Full Body
+19,Female,162,46.1,28.6,Low,Advanced,Maintenance,3,Vegetarian,1510,85,201,40,Full Body
+35,Male,172,66.3,13.2,Light,Intermediate,Muscle Gain,3,Non-Vegetarian,2340,129,339,51,Full Body
+35,Male,166,80.5,24.7,High,Intermediate,Muscle Gain,5,Vegan,3230,145,534,57,Push Pull Legs
+40,Male,175,69.4,17.6,High,Beginner,Muscle Gain,4,Vegan,3010,117,486,66,Upper Lower
+45,Male,165,48.5,9.0,High,Beginner,Maintenance,6,Non-Vegetarian,2270,88,385,42,Push Pull Legs
+20,Male,171,66.2,15.7,Low,Beginner,Muscle Gain,4,Vegan,2190,125,280,64,Upper Lower
+35,Male,176,117.3,28.0,Moderate,Intermediate,Muscle Gain,4,Non-Vegetarian,3580,205,475,96,Upper Lower
+21,Female,164,68.5,15.4,Very High,Beginner,Fat Loss,4,Non-Vegetarian,2220,123,314,52,Upper Lower
+31,Female,157,62.4,31.0,Moderate,Advanced,Muscle Gain,5,Non-Vegetarian,2180,106,328,49,Push Pull Legs
+39,Male,173,78.9,28.6,Very High,Advanced,Fat Loss,4,Vegetarian,2670,138,359,75,Upper Lower
+38,Male,170,70.7,22.3,Light,Advanced,Maintenance,5,Non-Vegetarian,2100,117,279,58,Push Pull Legs
+39,Male,172,96.6,17.6,Low,Advanced,Fat Loss,4,Non-Vegetarian,1770,184,80,81,Upper Lower
+23,Male,180,91.0,32.1,Moderate,Beginner,Fat Loss,3,Vegetarian,2610,195,266,85,Full Body
+32,Male,187,73.8,24.9,Moderate,Beginner,Fat Loss,3,Non-Vegetarian,2380,131,319,64,Full Body
+44,Female,161,75.2,35.1,High,Beginner,Muscle Gain,3,Non-Vegetarian,2650,136,399,57,Full Body
+45,Female,164,45.0,16.9,Light,Advanced,Fat Loss,5,Vegetarian,1260,91,132,42,Push Pull Legs
+35,Male,185,77.7,15.0,Moderate,Beginner,Muscle Gain,6,Vegetarian,2970,139,474,57,Push Pull Legs
+22,Male,173,78.9,26.3,Light,Intermediate,Maintenance,4,Non-Vegetarian,2380,148,304,63,Upper Lower
+33,Female,167,67.9,33.4,Moderate,Advanced,Muscle Gain,3,Vegan,2450,127,366,54,Full Body
+44,Male,186,93.1,21.2,Moderate,Intermediate,Maintenance,5,Non-Vegetarian,2950,152,412,77,Push Pull Legs
+31,Female,162,67.4,33.7,Moderate,Intermediate,Fat Loss,4,Vegetarian,1700,141,139,65,Upper Lower
+24,Female,154,63.7,27.1,Low,Beginner,Muscle Gain,6,Vegetarian,1790,120,188,63,Push Pull Legs
+34,Female,162,62.9,36.3,Very High,Beginner,Muscle Gain,5,Vegetarian,2790,123,450,56,Upper Lower + Full Body
+30,Male,179,84.8,15.3,Moderate,Intermediate,Muscle Gain,6,Vegetarian,3310,167,478,81,Push Pull Legs
+44,Male,165,73.3,22.8,Moderate,Intermediate,Fat Loss,6,Non-Vegetarian,1940,134,207,64,Push Pull Legs
+29,Male,184,70.1,29.9,Light,Beginner,Fat Loss,4,Non-Vegetarian,1830,146,196,52,Upper Lower
+21,Female,150,51.1,30.6,Moderate,Intermediate,Muscle Gain,4,Vegan,1990,85,306,48,Upper Lower
+25,Male,174,70.7,12.2,High,Beginner,Maintenance,5,Non-Vegetarian,2920,125,448,71,Upper Lower + Full Body
+18,Female,161,83.5,32.5,Very High,Beginner,Maintenance,6,Non-Vegetarian,2910,148,429,67,Push Pull Legs
+40,Male,164,65.7,31.1,Light,Intermediate,Muscle Gain,3,Non-Vegetarian,2200,128,313,48,Full Body
+27,Male,176,63.1,25.2,Low,Beginner,Muscle Gain,3,Vegetarian,2200,122,322,47,Full Body
+22,Male,159,64.4,20.2,High,Beginner,Fat Loss,5,Vegetarian,2250,126,304,60,Upper Lower + Full Body
+38,Female,150,45.0,25.2,High,Beginner,Fat Loss,4,Vegetarian,1420,95,170,40,Upper Lower
+45,Female,163,55.7,33.9,Moderate,Advanced,Muscle Gain,6,Vegetarian,2030,104,306,44,Push Pull Legs + Accessories
+25,Female,155,51.8,45.0,High,Beginner,Fat Loss,5,Non-Vegetarian,1710,95,237,43,Upper Lower + Full Body
+39,Male,162,66.1,23.0,Light,Intermediate,Fat Loss,4,Non-Vegetarian,1580,112,168,50,Upper Lower
+34,Female,164,71.0,28.0,Moderate,Intermediate,Muscle Gain,6,Vegetarian,2400,130,348,54,Push Pull Legs
+37,Male,184,62.2,12.7,Moderate,Beginner,Fat Loss,5,Vegetarian,2010,107,283,50,Upper Lower + Full Body
+27,Female,168,56.6,27.7,Very High,Beginner,Fat Loss,4,Vegetarian,2110,100,307,54,Upper Lower
+39,Female,171,68.3,34.5,Low,Beginner,Fat Loss,4,Non-Vegetarian,1440,122,86,68,Upper Lower
+27,Female,162,67.3,23.5,Low,Beginner,Fat Loss,4,Vegetarian,1440,134,105,54,Upper Lower
+29,Female,169,63.9,26.1,Very High,Beginner,Fat Loss,4,Non-Vegetarian,2180,130,291,55,Upper Lower
+28,Male,179,75.5,34.2,Light,Intermediate,Fat Loss,4,Vegetarian,1960,157,202,59,Upper Lower
+41,Female,166,71.5,33.2,Low,Advanced,Fat Loss,3,Non-Vegetarian,1300,123,80,65,Full Body
+43,Female,160,78.5,13.8,Moderate,Intermediate,Fat Loss,5,Non-Vegetarian,1780,168,133,64,Push Pull Legs
+33,Female,163,57.3,26.2,Moderate,Intermediate,Muscle Gain,3,Non-Vegetarian,2160,105,309,55,Full Body
+34,Female,150,71.0,34.3,Moderate,Advanced,Muscle Gain,4,Non-Vegetarian,2280,125,327,52,Upper Lower
+40,Female,157,68.3,33.0,High,Beginner,Maintenance,5,Non-Vegetarian,2180,121,300,56,Upper Lower + Full Body
+40,Male,175,88.6,24.1,Light,Beginner,Fat Loss,5,Vegetarian,1900,193,119,73,Upper Lower + Full Body
+40,Male,187,82.1,26.6,High,Intermediate,Maintenance,3,Vegetarian,3100,156,436,81,Full Body
+36,Male,168,87.9,21.2,Low,Advanced,Muscle Gain,3,Vegetarian,2290,170,254,66,Full Body
+32,Female,158,57.7,27.2,Moderate,Beginner,Muscle Gain,4,Vegetarian,2140,115,325,42,Upper Lower
+36,Male,180,56.3,27.8,High,Advanced,Fat Loss,6,Non-Vegetarian,2170,111,309,55,Push Pull Legs + Accessories
+45,Male,182,45.0,19.8,Moderate,Beginner,Fat Loss,3,Vegetarian,1820,87,269,44,Full Body
+41,Male,170,82.0,8.9,Very High,Beginner,Maintenance,5,Vegan,3320,131,567,59,Upper Lower + Full Body
+22,Male,170,68.5,26.9,High,Intermediate,Muscle Gain,6,Non-Vegetarian,3230,133,521,67,Push Pull Legs
+21,Male,168,105.0,29.0,Very High,Beginner,Muscle Gain,4,Non-Vegetarian,4170,181,650,94,Upper Lower
+36,Male,179,88.0,26.6,Light,Advanced,Fat Loss,6,Non-Vegetarian,2050,172,176,73,Push Pull Legs + Accessories
+25,Male,165,90.6,17.3,Low,Intermediate,Fat Loss,6,Non-Vegetarian,1710,198,80,76,Push Pull Legs
+43,Male,169,71.8,25.6,Moderate,Intermediate,Maintenance,4,Non-Vegetarian,2450,118,350,65,Upper Lower
+39,Female,156,51.9,32.2,High,Intermediate,Muscle Gain,5,Non-Vegetarian,2160,99,351,40,Push Pull Legs
+23,Male,173,46.6,20.7,Light,Beginner,Muscle Gain,6,Vegetarian,2150,84,352,45,Push Pull Legs
+38,Male,179,65.5,28.1,Moderate,Beginner,Fat Loss,6,Vegetarian,1950,129,224,60,Push Pull Legs
+19,Male,166,80.2,13.9,High,Beginner,Muscle Gain,4,Non-Vegetarian,3300,143,535,66,Upper Lower
+38,Male,173,102.0,22.9,Low,Beginner,Fat Loss,3,Non-Vegetarian,1850,212,80,100,Full Body
+31,Male,171,50.9,13.1,Moderate,Advanced,Muscle Gain,5,Non-Vegetarian,2410,82,424,43,Push Pull Legs
+31,Female,165,67.0,35.9,High,Beginner,Fat Loss,4,Non-Vegetarian,2060,147,223,64,Upper Lower
+42,Male,179,79.1,21.3,Moderate,Advanced,Fat Loss,6,Vegetarian,2110,142,257,57,Push Pull Legs + Accessories
+35,Female,159,45.1,24.6,Light,Beginner,Muscle Gain,6,Vegetarian,1750,75,272,41,Push Pull Legs
+40,Female,155,54.7,20.9,Light,Beginner,Maintenance,5,Non-Vegetarian,1590,90,191,52,Upper Lower + Full Body
+41,Male,174,89.4,8.0,Low,Beginner,Maintenance,3,Non-Vegetarian,2070,148,183,83,Full Body
+28,Male,180,63.2,18.8,Moderate,Advanced,Muscle Gain,5,Vegan,2820,111,454,62,Push Pull Legs
+20,Female,154,62.3,36.9,Moderate,Beginner,Fat Loss,3,Non-Vegetarian,1660,131,148,61,Full Body
+40,Female,164,59.7,28.7,Low,Advanced,Maintenance,6,Non-Vegetarian,1500,90,184,45,Push Pull Legs + Accessories
+40,Male,179,91.3,23.3,High,Advanced,Fat Loss,5,Vegetarian,2740,169,333,81,Push Pull Legs
+39,Female,161,66.7,36.6,High,Beginner,Muscle Gain,3,Non-Vegetarian,2630,127,413,52,Full Body
+29,Female,151,63.7,28.2,Moderate,Beginner,Muscle Gain,3,Vegan,2180,121,296,58,Full Body
+32,Male,163,81.1,9.7,High,Advanced,Muscle Gain,4,Non-Vegetarian,3250,162,517,59,Upper Lower
+34,Male,174,79.7,17.1,Moderate,Advanced,Muscle Gain,4,Vegetarian,3080,138,475,70,Upper Lower
+36,Male,168,72.4,11.5,High,Intermediate,Maintenance,4,Vegetarian,2830,109,465,59,Upper Lower
+29,Male,170,55.6,12.3,High,Advanced,Fat Loss,6,Non-Vegetarian,2180,101,348,43,Push Pull Legs + Accessories
+18,Male,166,69.6,23.0,High,Intermediate,Maintenance,3,Non-Vegetarian,2770,129,415,66,Full Body
+19,Male,178,74.5,14.9,High,Advanced,Fat Loss,4,Vegetarian,2440,130,356,55,Upper Lower
+19,Male,187,90.7,22.7,High,Intermediate,Muscle Gain,3,Non-Vegetarian,3910,164,626,83,Full Body
+29,Female,168,45.2,27.7,High,Beginner,Fat Loss,4,Vegetarian,1780,84,268,41,Upper Lower
+41,Female,157,67.1,25.6,Light,Intermediate,Muscle Gain,3,Non-Vegetarian,1930,122,225,59,Full Body
+30,Male,166,76.9,13.8,Moderate,Intermediate,Fat Loss,5,Non-Vegetarian,2110,134,262,59,Push Pull Legs
+30,Male,193,70.1,22.5,Moderate,Intermediate,Muscle Gain,5,Non-Vegetarian,3090,129,499,65,Push Pull Legs
+21,Female,162,45.0,22.1,Moderate,Intermediate,Muscle Gain,3,Non-Vegetarian,2040,76,343,40,Full Body
+18,Female,163,59.1,16.0,Low,Intermediate,Fat Loss,3,Vegetarian,1370,110,115,53,Full Body
+26,Female,162,45.0,32.3,Moderate,Intermediate,Muscle Gain,4,Vegan,2000,77,333,40,Upper Lower
+25,Female,158,71.6,35.5,Moderate,Intermediate,Muscle Gain,4,Vegetarian,2490,138,356,57,Upper Lower
+44,Female,172,51.6,27.4,High,Beginner,Fat Loss,4,Non-Vegetarian,1740,101,231,46,Upper Lower
+29,Male,184,64.3,17.9,Low,Beginner,Muscle Gain,6,Vegetarian,2290,117,354,45,Push Pull Legs
+45,Male,169,79.0,19.9,Low,Beginner,Maintenance,4,Vegetarian,2010,123,221,70,Upper Lower
+30,Male,166,94.4,29.2,High,Beginner,Fat Loss,5,Non-Vegetarian,2510,170,267,85,Upper Lower + Full Body
+21,Female,153,49.2,16.2,Light,Intermediate,Fat Loss,5,Vegetarian,1250,92,120,45,Push Pull Legs
+18,Male,159,79.5,14.6,High,Intermediate,Muscle Gain,3,Non-Vegetarian,3340,135,573,57,Full Body
+42,Male,163,81.9,18.9,High,Advanced,Fat Loss,3,Vegan,2200,177,190,81,Full Body
+18,Female,163,56.9,32.0,Very High,Intermediate,Fat Loss,3,Non-Vegetarian,2140,109,314,50,Full Body
+32,Female,151,48.8,36.2,High,Intermediate,Maintenance,3,Vegetarian,1980,88,318,40,Full Body
+22,Female,150,57.8,23.0,High,Beginner,Muscle Gain,5,Non-Vegetarian,2360,107,357,57,Upper Lower + Full Body
+21,Male,165,47.7,19.3,Low,Intermediate,Fat Loss,4,Vegetarian,1400,99,161,40,Upper Lower
+27,Female,157,65.8,21.8,Moderate,Advanced,Muscle Gain,3,Non-Vegetarian,2350,109,368,49,Full Body
+23,Male,177,79.1,21.4,Moderate,Beginner,Maintenance,5,Vegetarian,2670,138,384,64,Upper Lower + Full Body
+36,Male,160,78.8,33.0,Moderate,Beginner,Muscle Gain,3,Non-Vegetarian,2850,127,434,67,Full Body
+39,Male,168,58.3,24.7,Very High,Beginner,Muscle Gain,4,Non-Vegetarian,3040,112,531,52,Upper Lower
+44,Male,189,70.1,17.3,Moderate,Beginner,Fat Loss,3,Vegetarian,2130,149,259,56,Full Body
+18,Female,174,71.6,28.9,Very High,Beginner,Maintenance,4,Vegetarian,2930,134,462,61,Upper Lower
+45,Female,162,62.1,19.7,Moderate,Beginner,Muscle Gain,6,Non-Vegetarian,2280,104,355,49,Push Pull Legs
+23,Male,174,85.6,18.8,Light,Intermediate,Fat Loss,3,Non-Vegetarian,2020,176,166,72,Full Body
+28,Female,155,71.6,32.5,High,Beginner,Fat Loss,5,Vegetarian,1910,148,211,53,Upper Lower + Full Body
+26,Male,170,52.5,17.8,High,Advanced,Fat Loss,6,Vegetarian,2090,103,330,40,Push Pull Legs + Accessories
+35,Male,173,82.9,20.6,Low,Beginner,Fat Loss,4,Vegetarian,1690,149,121,67,Upper Lower
+29,Male,158,64.1,24.9,Low,Beginner,Muscle Gain,4,Vegan,2090,115,284,55,Upper Lower
+26,Female,165,65.5,33.4,High,Beginner,Muscle Gain,5,Vegetarian,2810,107,449,65,Upper Lower + Full Body
+30,Female,150,53.7,34.4,High,Intermediate,Muscle Gain,6,Non-Vegetarian,2180,92,354,44,Push Pull Legs
+19,Female,168,65.6,32.4,Moderate,Advanced,Fat Loss,6,Non-Vegetarian,1830,128,207,54,Push Pull Legs + Accessories
+31,Female,161,65.5,44.4,Moderate,Beginner,Muscle Gain,4,Vegetarian,2450,125,342,65,Upper Lower
+41,Female,159,66.2,34.9,High,Intermediate,Fat Loss,3,Vegetarian,1860,136,221,48,Full Body
+27,Female,168,58.3,29.9,Light,Intermediate,Fat Loss,5,Vegan,1570,105,183,46,Push Pull Legs
+34,Male,178,66.3,18.3,Low,Advanced,Maintenance,4,Non-Vegetarian,2000,102,288,49,Upper Lower
+34,Female,156,55.0,23.0,Moderate,Beginner,Fat Loss,6,Non-Vegetarian,1490,113,170,40,Push Pull Legs
+19,Female,159,90.6,30.6,Low,Advanced,Muscle Gain,4,Vegetarian,2190,158,215,78,Upper Lower
+31,Female,155,50.0,29.3,Moderate,Beginner,Fat Loss,4,Non-Vegetarian,1460,94,175,43,Upper Lower
+39,Female,162,70.9,36.6,Moderate,Advanced,Muscle Gain,4,Non-Vegetarian,2430,141,333,59,Upper Lower
+18,Male,167,76.2,22.1,Moderate,Intermediate,Muscle Gain,3,Non-Vegetarian,3040,145,453,73,Full Body
+42,Female,163,65.0,33.1,High,Intermediate,Maintenance,3,Vegetarian,2270,103,358,47,Full Body
+31,Male,173,64.3,19.9,Very High,Intermediate,Muscle Gain,6,Vegetarian,3320,104,593,59,Push Pull Legs
+19,Female,161,78.2,21.7,High,Intermediate,Maintenance,6,Vegetarian,2640,131,374,69,Push Pull Legs
+35,Male,157,65.8,23.0,Light,Beginner,Fat Loss,6,Vegetarian,1700,128,152,64,Push Pull Legs

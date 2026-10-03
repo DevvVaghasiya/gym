@@ -23,6 +23,7 @@ export interface UserProfile {
   name: string;
   email?: string;
   phone?: string;
+  selectedWorkoutDays?: string[];
   age: number;
   gender: Gender;
   heightCm: number;
@@ -57,6 +58,10 @@ export interface UserProfile {
   deadlift1RM?: number;
   recommendedStrategy?: FitnessStrategy;
   recommendedSplit?: WorkoutSplit;
+  dailyCalories?: number;
+  proteinTarget?: number;
+  carbsTarget?: number;
+  fatTarget?: number;
   smokingHabit: boolean;
   alcoholConsumption: 'none' | 'light' | 'moderate' | 'heavy';
   country: string;

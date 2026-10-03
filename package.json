@@ -9,7 +9,11 @@
     "preview": "vite preview",
     "backend": "npm start --prefix backend",
     "ml:train": "python ml-service/generate_dataset.py && python ml-service/train.py",
-    "ml:serve": "python -m uvicorn app:app --reload --port 8000 --app-dir ml-service"
+    "ml:serve": "python -m uvicorn app:app --reload --port 8000 --app-dir ml-service",
+    "cap:sync": "cap sync",
+    "cap:build": "npm run build && cap copy && cap sync",
+    "android:build": "npm run cap:build && cd android && gradlew.bat assembleDebug",
+    "cap:open:android": "cap open android"
   },
   "devDependencies": {
     "@types/react": "^19.2.17",
@@ -19,6 +23,9 @@
     "vite": "^8.1.1"
   },
   "dependencies": {
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/cli": "^8.5.2",
+    "@capacitor/core": "^8.5.2",
     "@tailwindcss/vite": "^4.3.2",
     "chart.js": "^4.5.1",
     "framer-motion": "^12.42.2",

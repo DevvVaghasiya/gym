@@ -8,6 +8,7 @@ import ProgressPage from './pages/ProgressPage';
 import ChatPage from './pages/ChatPage';
 import AuthPage from './pages/AuthPage';
 import SettingsPage from './pages/SettingsPage';
+import ManualPredictionPage from './pages/ManualPredictionPage';
 import { useAuthStore } from './store/useAuthStore';
 
 // Protected Route wrapper
@@ -22,6 +23,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/auth" element={<AuthPage />} />
+        <Route path="/predict" element={<ManualPredictionPage />} />
         
         {/* Protected Onboarding */}
         <Route 

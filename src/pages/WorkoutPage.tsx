@@ -5,6 +5,9 @@ import { useWorkoutStore } from '../store/useWorkoutStore';
 import { useProgressStore } from '../store/useProgressStore';
 import { evaluateProgressiveOverload } from '../engine/progressiveOverload';
 import { calculatePlates } from '../engine/plateCalculator';
+import { generateWorkoutPlan } from '../engine/workoutGenerator';
+import { EXERCISE_DATABASE } from '../data/exercises';
+import { getExerciseMachineImage } from '../data/exerciseImages';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Play, Check, Clock, Shield, AlertCircle, Dumbbell, ChevronRight, RotateCcw, 
@@ -19,14 +22,20 @@ export default function WorkoutPage() {
   const { addPR } = useProgressStore();
 
   const [activeDayIdx, setActiveDayIdx] = useState<number | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string>(() => new Date().toISOString().slice(0, 10));
   const [activeSession, setActiveSession] = useState<any>(null);
+  const weekDayOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const [isAddExercisesOpen, setIsAddExercisesOpen] = useState(false);
+  const [isEditingExercises, setIsEditingExercises] = useState(false);
+  const [exerciseSearch, setExerciseSearch] = useState('');
+  const [selectedExerciseIds, setSelectedExerciseIds] = useState<Record<string, boolean>>({});
   
   // Alternatives Sheet
   const [alternativeEx, setAlternativeEx] = useState<any>(null);
 
   // Plate Calculator
-  const [targetPlateWeight, setTargetPlateWeight] = useState<number>(60);
-  const [calculatedPlates, setCalculatedPlates] = useState<any>({ plates: [], perSide: [] });
+  const [targetPlateWeight, setTargetPlateWeight] = useState<number>(0);
+  const [calculatedPlates, setCalculatedPlates] = useState<any>({ plates: null, perSide: [] });
 
   // Active Timer
   const [timerSeconds, setTimerSeconds] = useState(0);
@@ -46,12 +55,48 @@ export default function WorkoutPage() {
   const inputClasses = "w-full bg-slate-900/60 border border-white/10 rounded-xl px-3 py-2 text-white text-sm";
   const labelClasses = "block text-xs font-semibold text-gray-300 mb-1.5";
 
+  const todayString = new Date().toISOString().slice(0, 10);
+  const selectedWeekday = selectedDate ? new Date(`${selectedDate}T12:00:00`).toLocaleDateString('en-US', { weekday: 'long' }) : '';
+  const selectedWorkoutDays = profile?.selectedWorkoutDays && profile.selectedWorkoutDays.length > 0
+    ? profile.selectedWorkoutDays
+    : (currentPlan ? currentPlan.days.filter(day => !day.isRestDay).map(day => day.day) : []);
+
+  const updateSelectedWorkoutDays = (nextDays: string[]) => {
+    if (!profile) return;
+
+    const normalized = [...new Set(nextDays)]
+      .filter(day => weekDayOrder.includes(day))
+      .sort((a, b) => weekDayOrder.indexOf(a) - weekDayOrder.indexOf(b));
+
+    const finalDays = normalized.length > 0 ? normalized : [selectedWeekday || 'Monday'];
+    updateProfile({ selectedWorkoutDays: finalDays, daysPerWeek: finalDays.length });
+
+    const generatedPlan = generateWorkoutPlan({ ...profile, selectedWorkoutDays: finalDays, daysPerWeek: finalDays.length });
+    setPlan(generatedPlan);
+  };
+
+  const toggleWorkoutDay = (day: string) => {
+    const current = [...(selectedWorkoutDays || [])];
+    const nextDays = current.includes(day)
+      ? current.filter(item => item !== day)
+      : [...current, day];
+
+    const ordered = nextDays
+      .filter(item => weekDayOrder.includes(item))
+      .sort((a, b) => weekDayOrder.indexOf(a) - weekDayOrder.indexOf(b));
+
+    updateSelectedWorkoutDays(ordered.length > 0 ? ordered : [day]);
+  };
+
   useEffect(() => {
-    if (currentPlan && activeDayIdx === null) {
-      // Find today's day (or default to first day)
-      setActiveDayIdx(0);
-    }
-  }, [currentPlan, activeDayIdx]);
+    if (!currentPlan) return;
+
+    const preferredIdx = currentPlan.days.findIndex(day => day.day === selectedWeekday);
+    const fallbackIdx = currentPlan.days.findIndex(day => !day.isRestDay);
+    const nextIdx = preferredIdx >= 0 ? preferredIdx : (fallbackIdx >= 0 ? fallbackIdx : 0);
+
+    setActiveDayIdx((current) => current === null || current !== nextIdx ? nextIdx : current);
+  }, [currentPlan, selectedDate, selectedWeekday]);
 
   useEffect(() => {
     if (timerActive && timerSeconds > 0) {
@@ -339,15 +384,127 @@ export default function WorkoutPage() {
   }
 
   const activeDay = activeDayIdx !== null ? currentPlan.days[activeDayIdx] : null;
+  const existingExerciseIds = new Set((activeDay?.exercises || []).map((item) => item.exercise.id));
+  const filteredExercisePool = EXERCISE_DATABASE.filter((exercise) => {
+    const isAlreadyAdded = existingExerciseIds.has(exercise.id);
+    if (isAlreadyAdded) return false;
+
+    const term = exerciseSearch.trim().toLowerCase();
+    if (!term) return true;
+    return exercise.name.toLowerCase().includes(term) || exercise.muscleGroup.toLowerCase().includes(term);
+  });
+
+  const addSelectedExercises = () => {
+    if (!currentPlan || activeDayIdx === null || Object.keys(selectedExerciseIds).length === 0) {
+      setIsAddExercisesOpen(false);
+      return;
+    }
+
+    const additions = EXERCISE_DATABASE.filter((exercise) => selectedExerciseIds[exercise.id])
+      .map((exercise) => ({
+        exercise,
+        sets: 4,
+        reps: 10,
+        recommendedWeight: { min: 12, max: 22 },
+        restSeconds: 75,
+        targetRPE: 8,
+      }));
+
+    if (additions.length === 0) {
+      setIsAddExercisesOpen(false);
+      return;
+    }
+
+    const nextPlan = {
+      ...currentPlan,
+      days: currentPlan.days.map((day, idx) => idx === activeDayIdx
+        ? { ...day, exercises: [...day.exercises, ...additions] }
+        : day),
+    };
+
+    setPlan(nextPlan);
+    setSelectedExerciseIds({});
+    setExerciseSearch('');
+    setIsAddExercisesOpen(false);
+  };
+
+  const removeExerciseFromDay = (exerciseIndex: number) => {
+    if (!currentPlan || activeDayIdx === null) return;
+
+    const nextPlan = {
+      ...currentPlan,
+      days: currentPlan.days.map((day, idx) => idx === activeDayIdx
+        ? { ...day, exercises: day.exercises.filter((_, index) => index !== exerciseIndex) }
+        : day),
+    };
+
+    setPlan(nextPlan);
+  };
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="max-w-7xl mx-auto pb-20"
+      className="page-shell mx-auto w-full max-w-[1500px] pb-20"
     >
-      
+      {!activeSession && currentPlan && (
+        <div className="glass-section mb-8 p-4 sm:p-5">
+          <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
+            <div>
+              <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-2.5 py-1.5 text-[9px] font-black uppercase tracking-[0.22em] text-blue-300">
+                <span className="h-1.5 w-1.5 rounded-full bg-blue-400" />
+                Workout Schedule
+              </div>
+              <h1 className="text-2xl font-black tracking-tight text-white sm:text-3xl">Training Plan</h1>
+            </div>
+
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
+              <label className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.02] px-4 py-3 text-sm font-medium text-slate-300 shadow-inner shadow-slate-950/40">
+                <span className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-slate-400">Date</span>
+                <input
+                  type="date"
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value || todayString)}
+                  className="rounded-xl border border-white/10 bg-slate-950/80 px-3 py-2 text-sm font-medium text-white outline-none ring-0 transition focus:border-blue-500/50"
+                />
+              </label>
+
+              <button
+                type="button"
+                onClick={() => setSelectedDate(todayString)}
+                className="rounded-2xl border border-blue-500/30 bg-blue-500/10 px-4 py-3 text-xs font-extrabold uppercase tracking-[0.18em] text-blue-300 transition hover:bg-blue-500/20"
+              >
+                Today
+              </button>
+            </div>
+          </div>
+
+          <div className="mt-5">
+            <div className="mb-3 text-[10px] font-extrabold uppercase tracking-[0.2em] text-slate-400">Select workout days</div>
+            <div className="flex flex-wrap gap-2.5">
+              {weekDayOrder.map((day) => {
+                const isSelected = (selectedWorkoutDays || []).includes(day);
+                return (
+                  <button
+                    key={day}
+                    type="button"
+                    onClick={() => toggleWorkoutDay(day)}
+                    className={`rounded-2xl border px-3 py-2 text-xs font-extrabold uppercase tracking-[0.14em] transition-all ${
+                      isSelected
+                        ? 'border-blue-500/50 bg-blue-500/15 text-white shadow-lg shadow-blue-500/10'
+                        : 'border-white/10 bg-white/[0.02] text-slate-400 hover:bg-white/[0.05] hover:text-white'
+                    }`}
+                  >
+                    {day.slice(0, 3)}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
       {activeSession ? (
         // ACTIVE WORKOUT MODE
         <div className="relative">
@@ -592,72 +749,131 @@ export default function WorkoutPage() {
         </div>
       ) : (
         // PLAN OVERVIEW
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-8 xl:gap-10">
           {/* Days Selection */}
-          <div className="lg:col-span-4 space-y-3">
-            <h2 className="text-gray-500 text-[10px] font-extrabold uppercase tracking-[0.2em] mb-6 px-4">Training Split</h2>
-            {currentPlan.days.map((day, idx) => (
-              <button
-                key={idx}
-                onClick={() => setActiveDayIdx(idx)}
-                className={`w-full text-left p-6 rounded-[2rem] border transition-all duration-300 ${
-                  activeDayIdx === idx
-                    ? 'bg-white/10 text-white border-white/20 shadow-xl'
-                    : 'bg-white/[0.02] border-white/5 text-gray-500 hover:bg-white/[0.04]'
-                }`}
-              >
-                <div className={`text-[10px] font-extrabold uppercase tracking-widest mb-1 ${activeDayIdx === idx ? 'text-blue-500' : 'text-gray-600'}`}>{day.day}</div>
-                <div className="text-xl font-black tracking-tight">{day.name}</div>
-              </button>
-            ))}
+          <div className="lg:col-span-5 xl:col-span-4">
+            <div className="glass-section h-full p-4 sm:p-5 md:p-6">
+              <h2 className="mb-7 px-2 text-[10px] font-extrabold uppercase tracking-[0.22em] text-slate-400">Training Split</h2>
+              <div className="flex flex-col gap-4 sm:gap-5">
+                {currentPlan.days.map((day, idx) => {
+                  const isSelectedDateDay = selectedWeekday === day.day;
+                  const isToday = selectedDate === todayString && isSelectedDateDay;
+
+                  return (
+                    <button
+                      key={idx}
+                      onClick={() => setActiveDayIdx(idx)}
+                      className={`w-full text-left rounded-[1.5rem] border p-4 transition-all duration-300 sm:p-5 ${
+                        activeDayIdx === idx
+                          ? 'border-white/20 bg-white/10 text-white shadow-[0_20px_35px_-26px_rgba(59,130,246,0.9)]'
+                          : 'border-white/5 bg-white/[0.02] text-slate-400 hover:bg-white/[0.04] hover:text-white'
+                      } ${isSelectedDateDay ? 'ring-1 ring-blue-500/40' : ''}`}
+                    >
+                      <div className="mb-2 flex items-center justify-between gap-2">
+                        <span className={`text-[10px] font-extrabold uppercase tracking-[0.18em] ${activeDayIdx === idx ? 'text-blue-400' : 'text-slate-500'}`}>{day.day}</span>
+                        {isSelectedDateDay && (
+                          <span className="rounded-full bg-blue-500/10 px-2 py-1 text-[8px] font-extrabold uppercase tracking-[0.18em] text-blue-300">
+                            {isToday ? 'Today' : 'Selected'}
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-xl font-black tracking-tight sm:text-[1.3rem] leading-tight">{day.name}</div>
+                      {!day.isRestDay && (
+                        <div className="mt-2 text-xs font-medium text-slate-400">
+                          {day.exercises.length} exercises
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           </div>
 
           {/* Details */}
-          <div className="lg:col-span-8">
+          <div className="lg:col-span-7 xl:col-span-8">
             {activeDay && (
               <motion.div
                 key={activeDayIdx}
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="stat-card !p-0"
+                className="glass-section !p-0"
               >
-                <div className="p-10 border-b border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div className="flex flex-col justify-between gap-5 border-b border-white/5 p-6 sm:p-8 md:flex-row md:items-center">
                   <div>
-                    <h3 className="text-3xl font-extrabold text-white tracking-tight mb-2">{activeDay.name}</h3>
-                    <p className="text-gray-500 font-medium">{activeDay.focus}</p>
+                    <h3 className="mb-2 text-3xl font-extrabold tracking-tight text-white">{activeDay.name}</h3>
+                    <p className="text-sm text-slate-400">{activeDay.focus}</p>
                   </div>
                   {!activeDay.isRestDay && (
-                    <button
-                      onClick={() => startSession(activeDay)}
-                      className="px-8 py-4 rounded-2xl bg-blue-500 text-white font-extrabold text-sm shadow-xl shadow-blue-500/20 hover:scale-105 active:scale-95 transition-all"
-                    >
-                      Start Workout
-                    </button>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <button
+                        onClick={() => setIsAddExercisesOpen(true)}
+                        className="btn-secondary"
+                      >
+                        + Add Exercises
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIsEditingExercises((prev) => !prev)}
+                        className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-xs font-extrabold uppercase tracking-[0.18em] text-slate-200 transition hover:border-amber-500/30 hover:text-white"
+                      >
+                        {isEditingExercises ? 'Done Editing' : 'Edit'}
+                      </button>
+                      <button
+                        onClick={() => startSession(activeDay)}
+                        className="btn-premium"
+                      >
+                        Start Workout
+                      </button>
+                    </div>
                   )}
                 </div>
 
-                <div className="p-10 space-y-6">
+                <div className="space-y-5 p-6 sm:p-8">
                   {!activeDay.isRestDay ? activeDay.exercises.map((we, idx) => (
-                    <div key={idx} className="p-6 rounded-[2rem] bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all group">
-                      <div className="flex items-center justify-between mb-4">
-                        <h4 className="text-lg font-bold text-white group-hover:text-blue-500 transition-colors">{we.exercise.name}</h4>
-                        <div className="text-right">
-                          <p className="text-blue-500 text-sm font-black">{we.recommendedWeight.min}-{we.recommendedWeight.max} kg</p>
-                          <p className="text-gray-600 text-[10px] font-extrabold uppercase tracking-widest">Target Weight</p>
+                    <div key={idx} className="rounded-[1.6rem] border border-white/5 bg-white/[0.02] p-4 transition-all duration-300 hover:border-white/10 hover:bg-white/[0.04] group sm:p-5">
+                      <div className="mb-4 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                        <div className="flex items-start gap-3 sm:gap-4">
+                          <img
+                            src={getExerciseMachineImage(we.exercise)}
+                            alt={we.exercise.name}
+                            className="h-20 w-20 rounded-2xl object-cover ring-1 ring-white/10 bg-slate-900/70 sm:h-24 sm:w-24"
+                          />
+                          <div>
+                            <h4 className="text-lg font-bold text-white transition-colors group-hover:text-blue-400">{we.exercise.name}</h4>
+                            <p className="mt-1 text-[10px] font-extrabold uppercase tracking-[0.18em] text-slate-500">
+                              {we.exercise.equipment.join(' • ') || 'Gym machine'}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <div className="text-left lg:text-right">
+                            <p className="text-sm font-black text-blue-400">{we.recommendedWeight.min}-{we.recommendedWeight.max} kg</p>
+                            <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-slate-500">Target Weight</p>
+                          </div>
+                          {isEditingExercises && (
+                            <button
+                              type="button"
+                              onClick={() => removeExerciseFromDay(idx)}
+                              className="rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2 text-[10px] font-extrabold uppercase tracking-[0.18em] text-red-300 transition hover:bg-red-500/20"
+                            >
+                              Remove
+                            </button>
+                          )}
                         </div>
                       </div>
-                      <div className="flex gap-6">
+                      <div className="flex flex-wrap gap-5 sm:gap-8">
                         <div>
-                          <p className="text-white text-sm font-bold">{we.sets}</p>
-                          <p className="text-gray-600 text-[10px] font-extrabold uppercase tracking-widest">Sets</p>
+                          <p className="text-sm font-bold text-white">{we.sets}</p>
+                          <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-slate-500">Sets</p>
                         </div>
                         <div>
-                          <p className="text-white text-sm font-bold">{we.reps}</p>
-                          <p className="text-gray-600 text-[10px] font-extrabold uppercase tracking-widest">Reps</p>
+                          <p className="text-sm font-bold text-white">{we.reps}</p>
+                          <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-slate-500">Reps</p>
                         </div>
                         <div>
-                          <p className="text-white text-sm font-bold">{we.restSeconds}s</p>
-                          <p className="text-gray-600 text-[10px] font-extrabold uppercase tracking-widest">Rest</p>
+                          <p className="text-sm font-bold text-white">{we.restSeconds}s</p>
+                          <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-slate-500">Rest</p>
                         </div>
                       </div>
                     </div>
@@ -675,9 +891,112 @@ export default function WorkoutPage() {
         </div>
       )}
 
-      {/* Plate Calculator (simplified as info for now) */}
       <AnimatePresence>
-        {targetPlateWeight > 0 && calculatedPlates.plates && (
+        {isAddExercisesOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96, y: 12 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 12 }}
+              className="w-full max-w-3xl rounded-[2rem] border border-white/10 bg-slate-950/95 p-5 shadow-[0_25px_80px_-25px_rgba(59,130,246,0.8)] sm:p-7"
+            >
+              <div className="mb-5 flex items-center justify-between gap-4">
+                <div>
+                  <h3 className="text-2xl font-black tracking-tight text-white">Add Exercises</h3>
+                  <p className="mt-1 text-sm text-slate-400">Chest, shoulders, triceps · 34 available</p>
+                </div>
+                <button
+                  onClick={() => setIsAddExercisesOpen(false)}
+                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-lg text-slate-300 transition-colors hover:text-white"
+                  aria-label="Close add exercises modal"
+                >
+                  ×
+                </button>
+              </div>
+
+              <label className="mb-5 block">
+                <span className="mb-2 block text-[10px] font-extrabold uppercase tracking-[0.2em] text-slate-500">Search exercises</span>
+                <input
+                  value={exerciseSearch}
+                  onChange={(e) => setExerciseSearch(e.target.value)}
+                  placeholder="Search exercises..."
+                  className="input-modern"
+                />
+              </label>
+
+              <div className="mb-5 flex flex-wrap gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-300">
+                {['All', 'Chest', 'Shoulders', 'Triceps', 'Back', 'Legs'].map((chip) => (
+                  <button
+                    key={chip}
+                    type="button"
+                    className="rounded-full border border-white/10 bg-white/[0.02] px-3 py-2 text-slate-300 transition-colors hover:border-blue-500/40 hover:text-white"
+                  >
+                    {chip}
+                  </button>
+                ))}
+              </div>
+
+              <div className="max-h-[420px] space-y-2 overflow-y-auto pr-1 custom-scrollbar">
+                {filteredExercisePool.map((exercise) => {
+                  const isSelected = !!selectedExerciseIds[exercise.id];
+                  return (
+                    <div
+                      key={exercise.id}
+                      className={`flex items-center justify-between rounded-[1.15rem] border p-3 transition-all ${
+                        isSelected
+                          ? 'border-emerald-500/40 bg-emerald-500/10'
+                          : 'border-white/5 bg-white/[0.02] hover:border-white/10 hover:bg-white/[0.04]'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-rose-500 to-red-500 text-xs font-black text-white">
+                          {exercise.name.slice(0, 2).toUpperCase()}
+                        </div>
+                        <div>
+                          <p className="text-sm font-bold text-white">{exercise.name}</p>
+                          <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-slate-500">
+                            {exercise.muscleGroup} • {exercise.type}
+                          </p>
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => setSelectedExerciseIds((prev) => ({ ...prev, [exercise.id]: !prev[exercise.id] }))}
+                        className={`flex h-9 w-9 items-center justify-center rounded-xl border transition-all ${
+                          isSelected
+                            ? 'border-emerald-500/40 bg-emerald-500/20 text-emerald-300'
+                            : 'border-white/10 bg-slate-900/70 text-slate-400 hover:text-white'
+                        }`}
+                      >
+                        {isSelected ? '✓' : '+'}
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="mt-6 flex justify-end gap-3">
+                <button type="button" onClick={() => setIsAddExercisesOpen(false)} className="btn-secondary">
+                  Cancel
+                </button>
+                <button type="button" onClick={addSelectedExercises} className="btn-premium">
+                  Add Selected
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Plate Calculator (shown only when user clicks info icon) */}
+      <AnimatePresence>
+        {targetPlateWeight > 0 && calculatedPlates && calculatedPlates.plates && calculatedPlates.plates.length > 0 && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-6 backdrop-blur-xl bg-black/60">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}

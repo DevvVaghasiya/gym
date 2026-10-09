@@ -9,7 +9,7 @@ import { useNutritionStore } from '../store/useNutritionStore';
 import { useProgressStore } from '../store/useProgressStore';
 import { useNavigate } from 'react-router-dom';
 import {
-  User, Dumbbell, Utensils, Bell, Moon, Sun, 
+  User, Dumbbell, Utensils, Bell,
   Check, LogOut, Camera, RotateCcw, ShieldAlert, Sliders,
   Sparkles, Save, Heart, ShieldCheck
 } from 'lucide-react';
@@ -26,9 +26,6 @@ export default function SettingsPage() {
 
   const [activeTab, setActiveTab] = useState<'profile' | 'workout' | 'nutrition' | 'preferences'>('profile');
   const [form, setForm] = useState<any>({});
-  const [theme, setTheme] = useState<'dark' | 'light'>(() =>
-    typeof localStorage !== 'undefined' ? (localStorage.getItem('theme') === 'light' ? 'light' : 'dark') : 'dark'
-  );
   const [savedMsg, setSavedMsg] = useState('');
 
   // Notification & Preference toggles
@@ -39,13 +36,6 @@ export default function SettingsPage() {
   useEffect(() => {
     if (profile) setForm({ ...profile });
   }, [profile]);
-
-  useEffect(() => {
-    if (typeof document !== 'undefined') {
-      document.body.classList.toggle('light', theme === 'light');
-      localStorage.setItem('theme', theme);
-    }
-  }, [theme]);
 
   const handleSaveSettings = () => {
     if (!profile) return;
@@ -133,18 +123,21 @@ export default function SettingsPage() {
           <p className="text-slate-400 text-xs sm:text-sm font-medium mt-1">Manage your body stats, workout preferences, diet targets & app options.</p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex w-full items-stretch gap-3 sm:w-auto sm:items-center">
           <button
             onClick={handleSaveSettings}
-            className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-lg flex items-center gap-2"
+            aria-label="Save changes"
+            className="flex min-h-12 flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-3 py-3 text-[11px] font-bold uppercase tracking-wider text-white shadow-lg transition-all hover:from-blue-500 hover:to-indigo-500 sm:flex-none sm:px-6 sm:text-xs"
           >
-            <Save className="w-4 h-4" /> Save Changes
+            <Save className="h-4 w-4 shrink-0" />
+            <span className="sm:hidden">Save</span>
+            <span className="hidden sm:inline">Save Changes</span>
           </button>
           <button
             onClick={() => logout()}
-            className="px-4 py-3 bg-slate-800 border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-700 font-bold text-xs rounded-xl transition-all flex items-center gap-2"
+            className="flex min-h-12 flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-slate-700 bg-slate-800 px-3 py-3 text-[11px] font-bold text-slate-300 transition-all hover:bg-slate-700 hover:text-white sm:flex-none sm:px-4 sm:text-xs"
           >
-            <LogOut className="w-4 h-4 text-rose-400" /> Sign Out
+            <LogOut className="h-4 w-4 shrink-0 text-rose-400" /> Sign Out
           </button>
         </div>
       </header>
@@ -168,8 +161,8 @@ export default function SettingsPage() {
         
         {/* Left Profile Summary & Navigation */}
         <div className="lg:col-span-4 space-y-6">
-          <div className="bg-slate-900/60 border border-white/10 rounded-[2rem] p-6 text-center backdrop-blur-xl">
-            <div className="relative w-24 h-24 mx-auto mb-4 group">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-3 rounded-[2rem] border border-white/10 bg-slate-900/60 p-4 text-left backdrop-blur-xl sm:block sm:p-6 sm:text-center">
+            <div className="group relative h-14 w-14 shrink-0 sm:mx-auto sm:mb-4 sm:h-24 sm:w-24">
               <div className="w-full h-full rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 p-1 shadow-xl">
                 <div className="w-full h-full rounded-full bg-slate-950 flex items-center justify-center overflow-hidden">
                   {form.avatar ? (
@@ -185,10 +178,12 @@ export default function SettingsPage() {
               </label>
             </div>
 
-            <h3 className="text-xl font-black text-white">{form.name || 'User'}</h3>
-            <p className="text-xs text-slate-400 font-medium mb-4">{form.email || 'user@example.com'}</p>
+            <div className="min-w-0 flex-1 sm:flex-none">
+              <h3 className="truncate text-lg font-black text-white sm:text-xl">{form.name || 'User'}</h3>
+              <p className="truncate text-xs font-medium text-slate-400 sm:mb-4">{form.email || 'user@example.com'}</p>
+            </div>
 
-            <div className="grid grid-cols-2 gap-2 text-center text-xs pt-4 border-t border-white/5">
+            <div className="grid w-full grid-cols-2 gap-2 border-t border-white/5 pt-3 text-center text-xs sm:pt-4">
               <div className="p-3 bg-slate-950 rounded-xl border border-white/5">
                 <span className="text-slate-500 text-[10px] font-extrabold uppercase block mb-0.5">Current Weight</span>
                 <span className="text-white font-bold">{form.weightKg || 70} kg</span>
@@ -201,24 +196,26 @@ export default function SettingsPage() {
           </div>
 
           {/* Navigation Tabs */}
-          <div className="bg-slate-900/60 border border-white/10 rounded-[2rem] p-3 space-y-1.5 backdrop-blur-xl">
+          <div className="grid grid-cols-4 gap-1.5 rounded-[2rem] border border-white/10 bg-slate-900/60 p-2 backdrop-blur-xl sm:p-3 lg:flex lg:flex-col lg:gap-1.5">
             {[
-              { id: 'profile', label: 'Body Biometrics & Profile', icon: User },
-              { id: 'workout', label: 'Workout & Training Rules', icon: Dumbbell },
-              { id: 'nutrition', label: 'Diet & Nutrition Preferences', icon: Utensils },
-              { id: 'preferences', label: 'App Theme & Notifications', icon: Sliders },
+              { id: 'profile', label: 'Body Biometrics & Profile', mobileLabel: 'Profile', icon: User },
+              { id: 'workout', label: 'Workout & Training Rules', mobileLabel: 'Workout', icon: Dumbbell },
+              { id: 'nutrition', label: 'Diet & Nutrition Preferences', mobileLabel: 'Diet', icon: Utensils },
+              { id: 'preferences', label: 'App Theme & Notifications', mobileLabel: 'App', icon: Sliders },
             ].map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-extrabold transition-all ${
+                aria-pressed={activeTab === tab.id}
+                className={`flex min-h-12 min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-1 py-2 text-[10px] font-extrabold transition-all sm:flex-row sm:gap-2 sm:px-3 sm:text-xs lg:min-h-11 lg:justify-start lg:px-4 lg:py-3 ${
                   activeTab === tab.id
                     ? 'bg-blue-600 text-white shadow-lg'
                     : 'text-slate-400 hover:text-white hover:bg-white/5'
                 }`}
               >
                 <tab.icon className="w-4 h-4" />
-                <span>{tab.label}</span>
+                <span className="sm:hidden">{tab.mobileLabel}</span>
+                <span className="hidden sm:inline">{tab.label}</span>
               </button>
             ))}
           </div>

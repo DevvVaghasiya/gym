@@ -1,19 +1,18 @@
 import * as mysql from 'mysql2/promise';
+import { databaseOptions } from './dbConfig';
 
 async function setupDatabase() {
   try {
-    const connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: 'user1',
-    });
+    const { database, ...serverOptions } = databaseOptions;
+    const connection = await mysql.createConnection(serverOptions);
 
     console.log('Connected to MySQL server.');
 
-    await connection.query(`CREATE DATABASE IF NOT EXISTS gym_ai`);
-    console.log('Database gym_ai created or already exists.');
+    const databaseName = database ?? 'gym_ai';
+    await connection.query(`CREATE DATABASE IF NOT EXISTS ${mysql.escapeId(databaseName)}`);
+    console.log(`Database ${databaseName} created or already exists.`);
 
-    await connection.query(`USE gym_ai`);
+    await connection.query(`USE ${mysql.escapeId(databaseName)}`);
 
     const createUsersTableQuery = `
       CREATE TABLE IF NOT EXISTS users (

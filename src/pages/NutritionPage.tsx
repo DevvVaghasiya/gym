@@ -6,470 +6,472 @@ import { generateAIDietPlan, regenerateMealInPlan, recalculateSkippedMealMacros 
 import { fetchDailyStats, saveDailyStats } from '../lib/api';
 import type { SupplementRecommendation } from '../types/nutrition';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Utensils, RotateCw, AlertTriangle, CheckCircle, Droplet, Plus, Info, 
-  Sparkles, Zap, ChevronRight, ShieldCheck, Activity, Coffee, Flame, Check, RefreshCw
+import {
+  Utensils, RotateCw, AlertTriangle, CheckCircle, Droplet, Plus,
+  Sparkles, Zap, ChevronRight, ShieldCheck, Activity, Coffee,
+  Flame, Check, RefreshCw, X,
 } from 'lucide-react';
 
-export default function NutritionPage() {
-  const profile = useUserStore(state => state.profile);
-  const updateProfile = useUserStore(state => state.updateProfile);
-  const token = useAuthStore(state => state.token);
-  const dietPlan = useNutritionStore(state => state.currentPlan);
-  const setDietPlan = useNutritionStore(state => state.setPlan);
-  const todayDateStr = new Date().toISOString().slice(0, 10);
+/* ── tiny helpers ─────────────────────────────────────────────── */
 
-  const [toastMsg, setToastMsg] = useState('');
+function ProgressBar({ pct, colorClass }: { pct: number; colorClass: string }) {
+  return (
+    <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/[0.06]">
+      <motion.div
+        initial={{ width: 0 }}
+        animate={{ width: `${pct}%` }}
+        transition={{ duration: 0.55, ease: 'easeOut' }}
+        className={`h-full rounded-full ${colorClass}`}
+      />
+    </div>
+  );
+}
+
+/* ── main component ───────────────────────────────────────────── */
+
+export default function NutritionPage() {
+  const profile       = useUserStore(s => s.profile);
+  const updateProfile = useUserStore(s => s.updateProfile);
+  const token         = useAuthStore(s => s.token);
+  const dietPlan      = useNutritionStore(s => s.currentPlan);
+  const setDietPlan   = useNutritionStore(s => s.setPlan);
+
+  const todayStr = new Date().toISOString().slice(0, 10);
+
+  const [toastMsg, setToastMsg]   = useState('');
   const [selectedSupp, setSelectedSupp] = useState<SupplementRecommendation | null>(null);
-  const [todayWaterIntake, setTodayWaterIntake] = useState<number>(() => {
-    const saved = localStorage.getItem(`fitai_water_${todayDateStr}`);
-    return saved !== null ? parseFloat(saved) || 0 : 0;
+  const [mealFilter, setMealFilter]     = useState<'all' | 'pending' | 'completed'>('all');
+  const [water, setWater] = useState<number>(() => {
+    const s = localStorage.getItem(`fitai_water_${new Date().toISOString().slice(0, 10)}`);
+    return s ? parseFloat(s) || 0 : 0;
   });
-  const [mealFilter, setMealFilter] = useState<'all' | 'pending' | 'completed'>('all');
 
   useEffect(() => {
-    if (profile && !dietPlan) {
-      setDietPlan(generateAIDietPlan(profile));
-    }
+    if (profile && !dietPlan) setDietPlan(generateAIDietPlan(profile));
   }, [profile, dietPlan]);
 
   useEffect(() => {
     if (!profile) return;
-    const todayStr = new Date().toISOString().slice(0, 10);
-    const savedLocal = localStorage.getItem(`fitai_water_${todayStr}`);
-    if (savedLocal !== null) {
-      setTodayWaterIntake(parseFloat(savedLocal) || 0);
-    }
-
-    const loadTodayStats = async () => {
-      try {
-        const stats = await fetchDailyStats(token, todayStr);
-        if (typeof stats.waterIntakeLiters === 'number' && stats.waterIntakeLiters > 0) {
-          setTodayWaterIntake(stats.waterIntakeLiters);
-          localStorage.setItem(`fitai_water_${todayStr}`, stats.waterIntakeLiters.toString());
+    const local = localStorage.getItem(`fitai_water_${todayStr}`);
+    if (local) setWater(parseFloat(local) || 0);
+    fetchDailyStats(token, todayStr)
+      .then(s => {
+        if (typeof s.waterIntakeLiters === 'number' && s.waterIntakeLiters > 0) {
+          setWater(s.waterIntakeLiters);
+          localStorage.setItem(`fitai_water_${todayStr}`, s.waterIntakeLiters.toString());
         }
-      } catch (error) {
-        console.warn('Failed to load hydration state:', error);
-      }
-    };
-
-    loadTodayStats();
+      })
+      .catch(() => {});
   }, [profile, token]);
 
-  const handleRegenerate = (mealId: string) => {
+  const toast = (msg: string) => { setToastMsg(msg); setTimeout(() => setToastMsg(''), 3200); };
+
+  const mealSnapshot = (plan: typeof dietPlan) =>
+    (plan?.meals ?? []).map(m => ({ id: m.id, time: m.time, name: m.name, logged: !!m.logged, skipped: !!m.skipped }));
+
+  const handleRegenerate = (id: string) => {
     if (!dietPlan || !profile) return;
-    const preference = profile.foodPreference || 'vegetarian';
-    const updated = regenerateMealInPlan(dietPlan, mealId, preference);
-    setDietPlan(updated);
-    showToast("Meal regenerated with fresh healthy options!");
+    setDietPlan(regenerateMealInPlan(dietPlan, id, profile.foodPreference || 'vegetarian'));
+    toast('Meal regenerated!');
   };
 
-  const handleSkipMeal = (mealId: string) => {
+  const handleSkip = (id: string) => {
     if (!dietPlan) return;
-    const updated = recalculateSkippedMealMacros(dietPlan, mealId);
-    setDietPlan(updated);
-    showToast("Meal skipped. Remaining macros redistributed to upcoming meals.");
+    setDietPlan(recalculateSkippedMealMacros(dietPlan, id));
+    toast('Meal skipped – macros redistributed.');
   };
 
-  const toggleMealLogged = async (mealId: string) => {
+  const handleLog = async (id: string) => {
     if (!dietPlan) return;
     const updated = {
       ...dietPlan,
       meals: dietPlan.meals.map(m => {
-        if (m.id === mealId) {
-          const nextLogged = !m.logged;
-          if (nextLogged) {
-            updateProfile({ xp: (profile?.xp || 0) + 30 });
-          }
-          return { ...m, logged: nextLogged, skipped: false };
-        }
-        return m;
-      })
+        if (m.id !== id) return m;
+        if (!m.logged) updateProfile({ xp: (profile?.xp ?? 0) + 30 });
+        return { ...m, logged: !m.logged, skipped: false };
+      }),
     };
     setDietPlan(updated);
-
-    try {
-      await saveDailyStats({
-        date: new Date().toISOString().slice(0, 10),
-        waterIntakeLiters: todayWaterIntake,
-        meals: updated.meals.map((meal) => ({
-          id: meal.id,
-          time: meal.time,
-          name: meal.name,
-          logged: !!meal.logged,
-          skipped: !!meal.skipped,
-        })),
-      }, token);
-    } catch (error) {
-      console.warn('Failed to persist meal intake:', error);
-    }
-
-    showToast("Meal status updated successfully!");
+    try { await saveDailyStats({ date: todayStr, waterIntakeLiters: water, meals: mealSnapshot(updated) }, token); } catch {}
+    toast('Meal status updated!');
   };
 
-  const handleAddWater = async (amountLiters: number) => {
-    const todayStr = new Date().toISOString().slice(0, 10);
-    const updated = Math.min(6, +(todayWaterIntake + amountLiters).toFixed(2));
-    setTodayWaterIntake(updated);
-    localStorage.setItem(`fitai_water_${todayStr}`, updated.toString());
-    showToast(`Hydration updated: +${(amountLiters * 1000).toFixed(0)}ml logged!`);
-
-    try {
-      await saveDailyStats({
-        date: todayStr,
-        waterIntakeLiters: updated,
-        meals: (dietPlan?.meals || []).map((meal) => ({
-          id: meal.id,
-          time: meal.time,
-          name: meal.name,
-          logged: !!meal.logged,
-          skipped: !!meal.skipped,
-        })),
-      }, token);
-    } catch (error) {
-      console.warn('Failed to persist water intake:', error);
-    }
+  const addWater = async (amt: number) => {
+    const next = Math.min(6, +(water + amt).toFixed(2));
+    setWater(next);
+    localStorage.setItem(`fitai_water_${todayStr}`, next.toString());
+    toast(`+${(amt * 1000).toFixed(0)} ml logged!`);
+    try { await saveDailyStats({ date: todayStr, waterIntakeLiters: next, meals: mealSnapshot(dietPlan) }, token); } catch {}
   };
 
-  const showToast = (msg: string) => {
-    setToastMsg(msg);
-    setTimeout(() => setToastMsg(''), 3500);
-  };
+  /* guards */
+  if (!profile) return (
+    <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3 p-8 text-center">
+      <AlertTriangle className="h-12 w-12 animate-bounce text-amber-400" />
+      <h3 className="text-xl font-black text-white">Profile Setup Required</h3>
+      <p className="max-w-xs text-sm text-slate-400">Complete your profile to generate your personalized AI nutrition plan.</p>
+    </div>
+  );
+  if (!dietPlan) return (
+    <div className="flex min-h-[50vh] items-center justify-center text-sm text-slate-500">Building your diet plan…</div>
+  );
 
-  if (!profile) {
-    return (
-      <div className="min-h-[70vh] flex flex-col items-center justify-center text-center p-6">
-        <AlertTriangle className="w-12 h-12 text-amber-400 mb-4 animate-bounce" />
-        <h3 className="text-xl font-bold text-white mb-2">Profile Setup Required</h3>
-        <p className="text-sm text-gray-400 max-w-sm mb-6">Complete your profile to generate your customized AI nutrition & meal architecture.</p>
-      </div>
-    );
-  }
+  /* derived */
+  const sum = (key: 'totalCalories' | 'totalProtein' | 'totalCarbs' | 'totalFat') =>
+    dietPlan.meals.reduce((a, m) => (m.logged ? a + m[key] : a), 0);
 
-  if (!dietPlan) return <div className="text-white text-center p-12">Building your personalized diet plan...</div>;
+  const totalCals = sum('totalCalories');
+  const totalP    = sum('totalProtein');
+  const totalC    = sum('totalCarbs');
+  const totalF    = sum('totalFat');
 
-  // Calculate totals logged vs targets
-  const totalCals = dietPlan.meals.reduce((sum, m) => m.logged ? sum + m.totalCalories : sum, 0);
-  const totalP = dietPlan.meals.reduce((sum, m) => m.logged ? sum + m.totalProtein : sum, 0);
-  const totalC = dietPlan.meals.reduce((sum, m) => m.logged ? sum + m.totalCarbs : sum, 0);
-  const totalF = dietPlan.meals.reduce((sum, m) => m.logged ? sum + m.totalFat : sum, 0);
+  const pct = (v: number, t: number) => Math.min(100, Math.round((v / t) * 100));
 
-  const calPercent = Math.min(100, Math.round((totalCals / dietPlan.dailyCalories) * 100));
-  const proPercent = Math.min(100, Math.round((totalP / dietPlan.protein) * 100));
-  const carbPercent = Math.min(100, Math.round((totalC / dietPlan.carbs) * 100));
-  const fatPercent = Math.min(100, Math.round((totalF / dietPlan.fat) * 100));
+  const waterTarget = profile.dailyWaterIntakeLiters ?? 3.0;
+  const waterPct    = pct(water, waterTarget);
 
-  const waterTarget = profile.dailyWaterIntakeLiters || 3.0;
-  const waterPercent = Math.min(100, Math.round((todayWaterIntake / waterTarget) * 100));
+  const macros = [
+    { label: 'Calories',      cur: totalCals, tgt: dietPlan.dailyCalories, unit: 'kcal', p: pct(totalCals, dietPlan.dailyCalories), bar: 'bg-gradient-to-r from-amber-500 to-orange-500',   icon: Flame,    ring: 'border-amber-500/30  bg-amber-500/10  text-amber-400'   },
+    { label: 'Protein',       cur: totalP,    tgt: dietPlan.protein,       unit: 'g',    p: pct(totalP, dietPlan.protein),           bar: 'bg-gradient-to-r from-blue-500 to-indigo-500',    icon: Activity, ring: 'border-blue-500/30   bg-blue-500/10   text-blue-400'    },
+    { label: 'Carbohydrates', cur: totalC,    tgt: dietPlan.carbs,         unit: 'g',    p: pct(totalC, dietPlan.carbs),             bar: 'bg-gradient-to-r from-violet-500 to-purple-600',  icon: Utensils, ring: 'border-violet-500/30 bg-violet-500/10 text-violet-400'  },
+    { label: 'Healthy Fats',  cur: totalF,    tgt: dietPlan.fat,           unit: 'g',    p: pct(totalF, dietPlan.fat),               bar: 'bg-gradient-to-r from-rose-500 to-pink-500',      icon: Coffee,   ring: 'border-rose-500/30   bg-rose-500/10   text-rose-400'    },
+  ];
 
   const filteredMeals = dietPlan.meals.filter(m => {
-    if (mealFilter === 'pending') return !m.logged;
-    if (mealFilter === 'completed') return m.logged;
+    if (mealFilter === 'pending')   return !m.logged;
+    if (mealFilter === 'completed') return  m.logged;
     return true;
   });
 
+  const pending   = dietPlan.meals.filter(m => !m.logged).length;
+  const completed = dietPlan.meals.filter(m =>  m.logged).length;
+
+  /* ── render ──────────────────────────────────────────────────── */
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className="max-w-7xl mx-auto pb-24 space-y-8"
+      transition={{ duration: 0.3 }}
+      className="w-full space-y-4 pb-6"
     >
-      {/* Toast Banner */}
+
+      {/* toast */}
       <AnimatePresence>
         {toastMsg && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed top-6 right-6 z-50 bg-slate-900 border border-cyan-500/40 text-cyan-300 px-5 py-3 rounded-2xl shadow-2xl text-xs font-bold flex items-center gap-3 backdrop-blur-xl"
+            initial={{ opacity: 0, y: -14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -14 }}
+            className="fixed right-5 top-5 z-[60] flex items-center gap-2.5 rounded-2xl border border-cyan-500/40 bg-slate-900/95 px-4 py-2.5 shadow-2xl backdrop-blur-xl"
           >
-            <CheckCircle className="w-4 h-4 text-cyan-400" />
-            <span>{toastMsg}</span>
+            <CheckCircle className="h-4 w-4 shrink-0 text-cyan-400" />
+            <span className="text-xs font-bold text-cyan-200">{toastMsg}</span>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Header */}
-      <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-slate-900/50 backdrop-blur-2xl p-6 sm:p-8 rounded-[2.2rem] border border-white/10 shadow-2xl">
-        <div>
-          <div className="mb-2.5 inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-cyan-300">
-            <Sparkles className="w-3.5 h-3.5" />
-            Adaptive Nutrition Engine
-          </div>
-          <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight leading-tight">Diet & Nutrition Plan</h1>
-          <p className="text-gray-400 text-xs sm:text-sm font-medium mt-1">Metabolic target: <span className="text-white font-bold">{dietPlan.dailyCalories} kcal/day</span> tailored for {profile.goal || 'fitness'}.</p>
+      {/* ══ HEADER ══════════════════════════════════════════════ */}
+      <header className="flex flex-col gap-3 rounded-2xl border border-white/[0.08] bg-slate-900/60 px-5 py-4 backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between">
+        <div className="space-y-1.5">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-0.5 text-[10px] font-black uppercase tracking-widest text-cyan-300">
+            <Sparkles className="h-3 w-3" /> Adaptive Nutrition Engine
+          </span>
+          <h1 className="text-2xl font-black leading-tight tracking-tight text-white sm:text-3xl">
+            Diet &amp; Nutrition Plan
+          </h1>
+          <p className="text-xs text-slate-400">
+            Metabolic target: <span className="font-bold text-white">{dietPlan.dailyCalories} kcal / day</span>
+            {' '}— tailored for <span className="font-semibold capitalize text-cyan-300">{(profile.goal ?? 'fitness').replace('_', ' ')}</span>
+          </p>
         </div>
-
-        <div className="flex flex-wrap items-center gap-3">
-          <button
-            onClick={() => setDietPlan(generateAIDietPlan(profile))}
-            className="px-4 py-2.5 rounded-2xl bg-white/5 border border-white/10 text-xs font-bold text-gray-300 hover:text-white hover:bg-white/10 transition-all flex items-center gap-2"
-          >
-            <RefreshCw className="w-3.5 h-3.5" /> Reset Menu
-          </button>
-        </div>
+        <button
+          onClick={() => setDietPlan(generateAIDietPlan(profile))}
+          className="flex shrink-0 items-center gap-2 self-start rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-slate-300 transition hover:bg-white/10 hover:text-white sm:self-center"
+        >
+          <RefreshCw className="h-4 w-4" /> Reset Menu
+        </button>
       </header>
 
-      {/* Water & Hydration Tracker Bar */}
-      <div className="glass-card p-6 sm:p-8 rounded-[2rem] bg-gradient-to-r from-blue-950/40 via-slate-900/60 to-cyan-950/40 border border-blue-500/20 relative overflow-hidden">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-10">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-blue-500/20 border border-blue-500/30 flex items-center justify-center text-cyan-400 shadow-lg">
-              <Droplet className="w-6 h-6 animate-pulse" />
+      {/* ══ HYDRATION ═══════════════════════════════════════════ */}
+      <section className="rounded-2xl border border-blue-500/20 bg-gradient-to-r from-blue-950/50 via-slate-900/70 to-cyan-950/50 px-5 py-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          {/* info */}
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-blue-500/30 bg-blue-500/15 text-cyan-400">
+              <Droplet className="h-5 w-5 animate-pulse" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <h3 className="text-lg font-black text-white">Daily Hydration Log</h3>
-                <span className="text-[10px] font-bold text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded-full uppercase tracking-wider">{waterPercent}% Goal</span>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-sm font-black text-white">Daily Hydration Log</span>
+                <span className="rounded-full border border-cyan-500/25 bg-cyan-500/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-cyan-400">
+                  {waterPct}% of goal
+                </span>
               </div>
-              <p className="text-xs text-gray-400 font-medium mt-0.5">
-                Logged <span className="text-cyan-300 font-bold">{todayWaterIntake.toFixed(2)}L</span> / Target {waterTarget.toFixed(1)}L
+              <p className="mt-0.5 text-xs text-slate-400">
+                Logged <span className="font-bold text-cyan-300">{water.toFixed(2)} L</span>
+                {' '}of <span className="font-semibold text-white">{waterTarget.toFixed(1)} L</span>
               </p>
             </div>
           </div>
-
-          <div className="flex items-center gap-2 sm:gap-3">
-            <button
-              onClick={() => handleAddWater(0.25)}
-              className="px-3.5 py-2 rounded-xl bg-blue-500/15 border border-blue-500/30 text-cyan-300 hover:bg-blue-500/30 font-bold text-xs flex items-center gap-1.5 transition-all active:scale-95"
-            >
-              <Plus className="w-3.5 h-3.5" /> 250 ml
+          {/* buttons */}
+          <div className="flex items-center gap-2">
+            <button onClick={() => addWater(0.25)} className="flex items-center gap-1.5 rounded-xl border border-blue-500/30 bg-blue-500/10 px-3.5 py-2 text-xs font-bold text-cyan-300 transition hover:bg-blue-500/25 active:scale-95">
+              <Plus className="h-3.5 w-3.5" /> 250 ml
             </button>
-            <button
-              onClick={() => handleAddWater(0.5)}
-              className="px-3.5 py-2 rounded-xl bg-blue-500/25 border border-blue-500/40 text-cyan-200 hover:bg-blue-500/40 font-bold text-xs flex items-center gap-1.5 transition-all active:scale-95 shadow-lg"
-            >
-              <Plus className="w-3.5 h-3.5" /> 500 ml
+            <button onClick={() => addWater(0.5)} className="flex items-center gap-1.5 rounded-xl border border-blue-500/40 bg-blue-500/20 px-3.5 py-2 text-xs font-bold text-cyan-200 shadow transition hover:bg-blue-500/35 active:scale-95">
+              <Plus className="h-3.5 w-3.5" /> 500 ml
             </button>
           </div>
         </div>
-
-        {/* Progress Bar */}
-        <div className="mt-5 h-2 w-full bg-slate-950/80 rounded-full overflow-hidden border border-white/5">
+        {/* bar */}
+        <div className="mt-3 h-2 w-full overflow-hidden rounded-full border border-white/[0.04] bg-slate-950/70">
           <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: `${waterPercent}%` }}
-            className="h-full bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full shadow-[0_0_12px_rgba(6,182,212,0.6)]"
+            initial={{ width: 0 }} animate={{ width: `${waterPct}%` }} transition={{ duration: 0.65, ease: 'easeOut' }}
+            className="h-full rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.5)]"
           />
         </div>
-      </div>
+      </section>
 
-      {/* Progress Cards: Calories & Macros */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-        {[
-          { label: 'Calories', current: totalCals, target: dietPlan.dailyCalories, unit: 'kcal', color: 'from-amber-500 to-orange-500', pct: calPercent, icon: Flame },
-          { label: 'Protein', current: totalP, target: dietPlan.protein, unit: 'g', color: 'from-blue-500 to-indigo-500', pct: proPercent, icon: Activity },
-          { label: 'Carbohydrates', current: totalC, target: dietPlan.carbs, unit: 'g', color: 'from-purple-500 to-pink-500', pct: carbPercent, icon: Utensils },
-          { label: 'Healthy Fats', current: totalF, target: dietPlan.fat, unit: 'g', color: 'from-rose-500 to-pink-500', pct: fatPercent, icon: Coffee },
-        ].map((g, i) => (
-          <div key={i} className="stat-card !p-5 !bg-slate-900/60 !border-white/10 shadow-xl rounded-2xl hover:!bg-slate-900/90 transition-all">
-            <div className="flex justify-between items-start mb-3">
-              <div>
-                <span className="text-gray-400 text-[10px] font-extrabold uppercase tracking-widest block">{g.label}</span>
-                <div className="text-white font-black text-2xl mt-0.5">
-                  {g.current} <span className="text-gray-500 text-xs font-semibold">/ {g.target}{g.unit}</span>
-                </div>
-              </div>
-              <div className="p-2 rounded-xl bg-white/5 border border-white/10 text-gray-300">
-                <g.icon className="w-4 h-4" />
+      {/* ══ MACRO STAT CARDS ════════════════════════════════════ */}
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        {macros.map((g, i) => (
+          <motion.div
+            key={g.label}
+            initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
+            className="flex min-h-[118px] flex-col justify-between gap-2 rounded-2xl border border-white/[0.08] bg-slate-900/70 p-4 shadow-lg transition hover:border-white/[0.14]"
+          >
+            {/* label + icon */}
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-[9px] font-extrabold uppercase tracking-widest text-slate-400">{g.label}</span>
+              <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border ${g.ring}`}>
+                <g.icon className="h-3.5 w-3.5" />
               </div>
             </div>
-            <div className="h-2 w-full bg-slate-950 rounded-full overflow-hidden mb-2">
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: `${g.pct}%` }}
-                className={`h-full rounded-full bg-gradient-to-r ${g.color}`}
-              />
+            {/* value */}
+            <div className="leading-none">
+              <span className="text-xl font-black text-white">{g.cur}</span>
+              <span className="ml-1 text-[11px] font-semibold text-slate-500">/ {g.tgt}{g.unit}</span>
             </div>
-            <div className="flex justify-between items-center text-[10px] font-bold">
-              <span className="text-gray-500">{g.target - g.current > 0 ? `${g.target - g.current}${g.unit} remaining` : 'Target reached!'}</span>
-              <span className={g.pct >= 100 ? 'text-emerald-400' : 'text-gray-400'}>{g.pct}%</span>
+            {/* bar + pct */}
+            <div className="space-y-1">
+              <ProgressBar pct={g.p} colorClass={g.bar} />
+              <div className="flex items-center justify-between text-[9px] font-bold">
+                <span className="text-slate-500">{g.tgt - g.cur > 0 ? `${g.tgt - g.cur}${g.unit} left` : '✓ Done'}</span>
+                <span className={g.p >= 100 ? 'text-emerald-400' : 'text-slate-500'}>{g.p}%</span>
+              </div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
 
-      {/* Main Grid: Meals & Sidebar */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Meals Section */}
-        <div className="lg:col-span-8 space-y-5">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-1">
+      {/* ══ MAIN 2-COL ══════════════════════════════════════════
+          Left  : meal list   (fills remaining width, scrolls)
+          Right : sidebar     (340 px, sticky top)
+      ══════════════════════════════════════════════════════════ */}
+      <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[1fr_320px] xl:grid-cols-[1fr_340px]">
+
+        {/* ── MEALS ─────────────────────────────────────────── */}
+        <div className="min-w-0 space-y-3">
+
+          {/* section header + filter */}
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-1.5 h-5 bg-blue-500 rounded-full" />
-              <h2 className="text-white text-lg font-black tracking-tight">Today's Meals</h2>
+              <div className="h-5 w-1 rounded-full bg-blue-500" />
+              <h2 className="text-base font-black tracking-tight text-white">Today's Meals</h2>
             </div>
 
-            {/* Filter Tabs */}
-            <div className="flex items-center gap-1.5 p-1 bg-slate-900 border border-white/10 rounded-xl text-xs font-bold">
-              <button
-                onClick={() => setMealFilter('all')}
-                className={`px-3 py-1.5 rounded-lg transition-all ${mealFilter === 'all' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-400 hover:text-white'}`}
-              >
-                All Meals ({dietPlan.meals.length})
-              </button>
-              <button
-                onClick={() => setMealFilter('pending')}
-                className={`px-3 py-1.5 rounded-lg transition-all ${mealFilter === 'pending' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-400 hover:text-white'}`}
-              >
-                Pending ({dietPlan.meals.filter(m => !m.logged).length})
-              </button>
-              <button
-                onClick={() => setMealFilter('completed')}
-                className={`px-3 py-1.5 rounded-lg transition-all ${mealFilter === 'completed' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-400 hover:text-white'}`}
-              >
-                Completed ({dietPlan.meals.filter(m => m.logged).length})
-              </button>
+            <div className="flex items-center gap-1 rounded-xl border border-white/[0.08] bg-slate-900/80 p-1 text-xs font-bold">
+              {[
+                { key: 'all',       label: `All (${dietPlan.meals.length})` },
+                { key: 'pending',   label: `Pending (${pending})`           },
+                { key: 'completed', label: `Done (${completed})`            },
+              ].map(f => (
+                <button
+                  key={f.key}
+                  onClick={() => setMealFilter(f.key as typeof mealFilter)}
+                  className={`rounded-lg px-3 py-1.5 transition-all ${
+                    mealFilter === f.key ? 'bg-blue-600 text-white shadow' : 'text-slate-400 hover:text-white'
+                  }`}
+                >
+                  {f.label}
+                </button>
+              ))}
             </div>
           </div>
 
-          <div className="space-y-5">
-            {filteredMeals.map((meal) => (
-              <div 
-                key={meal.id} 
-                className={`stat-card !p-6 !bg-slate-900/60 border-white/10 hover:!border-white/20 transition-all rounded-[2rem] overflow-hidden ${
-                  meal.logged ? 'border-emerald-500/30 bg-emerald-950/10' : ''
+          {/* meal cards */}
+          <div className="space-y-3">
+            {filteredMeals.map((meal, idx) => (
+              <motion.div
+                key={meal.id}
+                initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.04 }}
+                className={`overflow-hidden rounded-2xl border transition-all ${
+                  meal.logged
+                    ? 'border-emerald-500/30 bg-emerald-950/20'
+                    : meal.skipped
+                    ? 'border-rose-500/15 bg-slate-900/40 opacity-70'
+                    : 'border-white/[0.08] bg-slate-900/60 hover:border-white/[0.16]'
                 }`}
               >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-white/5">
-                  <div className="flex items-center gap-4">
-                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all ${
+                {/* ── header row ── */}
+                <div className="flex items-center justify-between gap-3 border-b border-white/[0.06] px-4 py-3">
+                  {/* left: icon + name — truncates gracefully */}
+                  <div className="flex min-w-0 flex-1 items-center gap-3 overflow-hidden">
+                    <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border ${
                       meal.logged
-                        ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                        : 'bg-white/5 text-gray-400 border border-white/10'
+                        ? 'border-emerald-500/35 bg-emerald-500/15 text-emerald-400'
+                        : 'border-white/10 bg-white/5 text-slate-400'
                     }`}>
-                      {meal.logged ? <CheckCircle className="w-6 h-6" /> : <Utensils className="w-5 h-5" />}
+                      {meal.logged ? <CheckCircle className="h-4 w-4" /> : <Utensils className="h-4 w-4" />}
                     </div>
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-[10px] font-black uppercase tracking-wider text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-2 py-0.5 rounded-md">{meal.time}</span>
-                        {meal.skipped && <span className="text-[10px] font-black uppercase tracking-wider text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded-md">Skipped</span>}
+                    <div className="min-w-0 overflow-hidden">
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <span className="rounded border border-cyan-500/20 bg-cyan-500/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-cyan-400">
+                          {meal.time}
+                        </span>
+                        {meal.skipped && (
+                          <span className="rounded border border-rose-500/20 bg-rose-500/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-rose-400">
+                            Skipped
+                          </span>
+                        )}
                       </div>
-                      <h3 className="text-xl font-extrabold text-white tracking-tight">{meal.name}</h3>
+                      <h3 className="truncate text-sm font-extrabold leading-tight tracking-tight text-white">{meal.name}</h3>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <button 
+                  {/* right: actions — shrink-0 so they never collapse */}
+                  <div className="flex shrink-0 items-center gap-1.5">
+                    <button
                       onClick={() => handleRegenerate(meal.id)}
-                      title="Regenerate alternative meal"
-                      className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-all"
+                      title="Regenerate"
+                      className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-slate-400 transition hover:bg-white/10 hover:text-white"
                     >
-                      <RotateCw className="w-4 h-4" />
+                      <RotateCw className="h-3.5 w-3.5" />
                     </button>
-                    <button 
-                      onClick={() => handleSkipMeal(meal.id)}
-                      title="Skip meal and rebalance macros"
-                      className="px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-gray-400 hover:text-rose-400 transition-all"
+                    <button
+                      onClick={() => handleSkip(meal.id)}
+                      className="whitespace-nowrap rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-bold text-slate-400 transition hover:border-rose-500/30 hover:text-rose-400"
                     >
                       Skip
                     </button>
                     <button
-                      onClick={() => toggleMealLogged(meal.id)}
-                      className={`px-5 py-2.5 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all shadow-lg active:scale-95 flex items-center gap-1.5 ${
-                        meal.logged 
-                          ? 'bg-emerald-500 text-white shadow-emerald-500/20'
+                      onClick={() => handleLog(meal.id)}
+                      className={`flex shrink-0 items-center gap-1 whitespace-nowrap rounded-lg px-4 py-1.5 text-xs font-extrabold uppercase tracking-wide shadow transition active:scale-95 ${
+                        meal.logged
+                          ? 'bg-emerald-500 text-white hover:bg-emerald-600'
                           : 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:brightness-110'
                       }`}
                     >
-                      {meal.logged ? <><Check className="w-4 h-4" /> Logged</> : 'Log Meal'}
+                      {meal.logged ? <><Check className="h-3.5 w-3.5" /> Logged</> : 'Log Meal'}
                     </button>
                   </div>
                 </div>
 
-                {/* Ingredients & Macro Chip Breakdown */}
-                <div className="pt-5 grid grid-cols-1 md:grid-cols-12 gap-5">
-                  <div className="md:col-span-7 space-y-2">
-                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-gray-400 block mb-2">Ingredients</span>
-                    <div className="space-y-2">
-                      {meal.foods.map((food, idx) => (
-                        <div key={idx} className="flex justify-between items-center p-3 rounded-xl bg-black/40 border border-white/5 text-xs">
-                          <span className="text-gray-200 font-semibold">
-                            {food.name} <span className="text-gray-500 text-[11px]">({food.amount})</span>
+                {/* ── body: 68% ingredients | 32% summary ── */}
+                <div className="flex min-w-0 divide-x divide-white/[0.05]">
+
+                  {/* ingredients — 68% */}
+                  <div className="min-w-0 flex-[17] px-4 py-3 space-y-2">
+                    <p className="text-[9px] font-extrabold uppercase tracking-widest text-slate-500">Ingredients</p>
+                    <div className="space-y-1">
+                      {meal.foods.map((food, fi) => (
+                        <div key={fi} className="flex items-center justify-between gap-2 rounded-lg border border-white/[0.04] bg-black/20 px-3 py-1.5">
+                          <span className="min-w-0 truncate text-[11px] font-semibold text-slate-200">
+                            {food.name} <span className="text-slate-500">({food.amount})</span>
                           </span>
-                          <span className="text-gray-400 font-bold text-[11px]">
-                            {food.calories} kcal • <span className="text-blue-400">{food.protein}g P</span>
+                          <span className="ml-2 shrink-0 whitespace-nowrap text-[10px] font-bold text-slate-400">
+                            {food.calories} kcal · <span className="text-blue-400">{food.protein}g P</span>
                           </span>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  <div className="md:col-span-5 bg-slate-950/80 rounded-2xl p-4 border border-white/5 flex flex-col justify-center">
-                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-gray-400 block mb-3 text-center">Meal Summary</span>
-                    <div className="grid grid-cols-3 gap-2 text-center">
-                      <div className="p-2.5 rounded-xl bg-white/[0.03] border border-white/5">
-                        <span className="text-xs font-black text-white block">{meal.totalCalories}</span>
-                        <span className="text-[9px] text-gray-500 uppercase font-bold">Calories</span>
-                      </div>
-                      <div className="p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/20">
-                        <span className="text-xs font-black text-blue-300 block">{meal.totalProtein}g</span>
-                        <span className="text-[9px] text-blue-400 uppercase font-bold">Protein</span>
-                      </div>
-                      <div className="p-2.5 rounded-xl bg-purple-500/10 border border-purple-500/20">
-                        <span className="text-xs font-black text-purple-300 block">{meal.totalCarbs}g</span>
-                        <span className="text-[9px] text-purple-400 uppercase font-bold">Carbs</span>
-                      </div>
+                  {/* summary — 32% */}
+                  <div className="flex-[8] flex flex-col justify-center gap-1.5 px-3 py-3">
+                    <p className="text-[9px] font-extrabold uppercase tracking-widest text-slate-500">Summary</p>
+                    {/* calories */}
+                    <div className="flex min-h-[28px] items-center justify-between rounded-lg border border-white/[0.05] bg-white/[0.02] px-2.5">
+                      <span className="text-[9px] font-bold uppercase text-slate-500">kcal</span>
+                      <span className="text-xs font-black text-white">{meal.totalCalories}</span>
+                    </div>
+                    {/* protein */}
+                    <div className="flex min-h-[28px] items-center justify-between rounded-lg border border-blue-500/20 bg-blue-500/10 px-2.5">
+                      <span className="text-[9px] font-bold uppercase text-blue-400">Protein</span>
+                      <span className="text-xs font-black text-blue-300">{meal.totalProtein}g</span>
+                    </div>
+                    {/* carbs */}
+                    <div className="flex min-h-[28px] items-center justify-between rounded-lg border border-violet-500/20 bg-violet-500/10 px-2.5">
+                      <span className="text-[9px] font-bold uppercase text-violet-400">Carbs</span>
+                      <span className="text-xs font-black text-violet-300">{meal.totalCarbs}g</span>
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
+
+            {filteredMeals.length === 0 && (
+              <div className="rounded-2xl border border-white/[0.06] bg-slate-900/40 py-10 text-center text-sm text-slate-500">
+                No meals match this filter.
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Sidebar: Stack & Micronutrients */}
-        <div className="lg:col-span-4 space-y-6">
-          {/* Supplement Stack */}
-          <div className="stat-card !p-6 !bg-slate-900/60 border-white/10 rounded-[2rem] shadow-xl">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center border border-amber-500/30">
-                <Zap className="w-5 h-5" />
+        {/* ── SIDEBAR (sticky) ─────────────────────────────── */}
+        <div className="space-y-4 lg:sticky lg:top-4">
+
+          {/* Recommended Stack */}
+          <div className="rounded-2xl border border-white/[0.08] bg-slate-900/70 p-4 shadow-xl">
+            <div className="mb-4 flex items-center gap-3">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-amber-500/30 bg-amber-500/15 text-amber-400">
+                <Zap className="h-4 w-4" />
               </div>
               <div>
-                <h3 className="text-lg font-black text-white">Recommended Stack</h3>
-                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Targeted Performance</p>
+                <h3 className="text-sm font-black text-white">Recommended Stack</h3>
+                <p className="text-[9px] font-bold uppercase tracking-wider text-slate-500">Targeted Performance</p>
               </div>
             </div>
 
-            <div className="space-y-2.5">
+            <div className="space-y-2">
               {dietPlan.supplements.map((supp, i) => (
                 <button
-                  key={i} onClick={() => setSelectedSupp(supp)}
-                  className="w-full text-left p-4 rounded-xl bg-white/[0.03] border border-white/5 hover:border-amber-500/30 hover:bg-amber-500/5 transition-all flex items-center justify-between group"
+                  key={i}
+                  onClick={() => setSelectedSupp(supp)}
+                  className="group w-full rounded-xl border border-white/[0.05] bg-white/[0.02] px-3.5 py-3 text-left transition hover:border-amber-500/30 hover:bg-amber-500/5"
                 >
-                  <div>
-                    <p className="text-white font-bold text-xs group-hover:text-amber-300 transition-colors">{supp.name}</p>
-                    <p className="text-gray-500 text-[10px] font-medium mt-0.5">{supp.dosage} • {supp.timing}</p>
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                      <p className="break-words text-xs font-bold leading-snug text-white transition-colors group-hover:text-amber-300">{supp.name}</p>
+                      <p className="mt-0.5 break-words text-[10px] leading-snug text-slate-500">{supp.dosage} · {supp.timing}</p>
+                    </div>
+                    <ChevronRight className="mt-0.5 h-3.5 w-3.5 shrink-0 text-slate-600 transition group-hover:translate-x-0.5 group-hover:text-slate-300" />
                   </div>
-                  <ChevronRight className="w-4 h-4 text-gray-500 group-hover:text-white transition-all flex-shrink-0" />
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Micronutrients Grid */}
-          <div className="stat-card !p-6 !bg-slate-900/60 border-white/10 rounded-[2rem] shadow-xl">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30">
-                <ShieldCheck className="w-5 h-5" />
+          {/* Daily Micronutrients */}
+          <div className="rounded-2xl border border-white/[0.08] bg-slate-900/70 p-4 shadow-xl">
+            <div className="mb-4 flex items-center gap-3">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-500/15 text-emerald-400">
+                <ShieldCheck className="h-4 w-4" />
               </div>
               <div>
-                <h3 className="text-lg font-black text-white">Daily Micronutrients</h3>
-                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Essential Minerals</p>
+                <h3 className="text-sm font-black text-white">Daily Micronutrients</h3>
+                <p className="text-[9px] font-bold uppercase tracking-wider text-slate-500">Essential Minerals</p>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-2">
               {[
-                { label: 'Vit D3', val: dietPlan.micronutrients?.vitaminD },
+                { label: 'Vit D3',    val: dietPlan.micronutrients?.vitaminD  },
                 { label: 'Magnesium', val: dietPlan.micronutrients?.magnesium },
-                { label: 'Zinc', val: dietPlan.micronutrients?.zinc },
-                { label: 'Omega 3', val: dietPlan.micronutrients?.omega3 },
+                { label: 'Zinc',      val: dietPlan.micronutrients?.zinc      },
+                { label: 'Omega 3',   val: dietPlan.micronutrients?.omega3    },
               ].map((m, i) => (
-                <div key={i} className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 text-center">
-                  <span className="text-white font-black text-xs block">{m.val}</span>
-                  <span className="text-gray-500 text-[9px] font-extrabold uppercase tracking-wider">{m.label}</span>
+                <div key={i} className="flex flex-col items-center justify-center rounded-xl border border-white/[0.05] bg-white/[0.02] px-2 py-3 text-center transition hover:bg-white/[0.04]">
+                  <p className="text-sm font-black text-white">{m.val}</p>
+                  <p className="mt-0.5 text-[9px] font-extrabold uppercase tracking-widest text-slate-500">{m.label}</p>
                 </div>
               ))}
             </div>
@@ -477,38 +479,52 @@ export default function NutritionPage() {
         </div>
       </div>
 
-      {/* Supplement Detail Modal */}
+      {/* ══ SUPPLEMENT MODAL ════════════════════════════════════ */}
       <AnimatePresence>
         {selectedSupp && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-xl bg-black/70">
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-xl bg-black/65"
+            onClick={() => setSelectedSupp(null)}
+          >
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-slate-900 border border-white/10 rounded-[2rem] p-7 sm:p-8 max-w-md w-full shadow-2xl relative"
+              initial={{ opacity: 0, scale: 0.96, y: 8 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 8 }}
+              transition={{ duration: 0.18 }}
+              onClick={e => e.stopPropagation()}
+              className="relative w-full max-w-md rounded-3xl border border-white/10 bg-slate-900 p-6 shadow-2xl"
             >
-              <h3 className="text-2xl font-black text-white tracking-tight mb-4">{selectedSupp.name}</h3>
-              <div className="space-y-4 text-xs mb-6">
-                <div className="p-3 rounded-xl bg-white/5 border border-white/10">
-                  <span className="text-gray-400 text-[10px] font-extrabold uppercase tracking-widest block mb-1">Dosage & Timing</span>
-                  <span className="text-white font-bold">{selectedSupp.dosage} — {selectedSupp.timing}</span>
+              <button
+                onClick={() => setSelectedSupp(null)}
+                className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-400 transition hover:bg-white/10 hover:text-white"
+              >
+                <X className="h-4 w-4" />
+              </button>
+
+              <h3 className="mb-4 pr-8 text-xl font-black tracking-tight text-white">{selectedSupp.name}</h3>
+
+              <div className="space-y-3">
+                <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5">
+                  <p className="mb-1 text-[9px] font-extrabold uppercase tracking-widest text-slate-400">Dosage &amp; Timing</p>
+                  <p className="text-sm font-bold text-white">{selectedSupp.dosage} — {selectedSupp.timing}</p>
                 </div>
                 <div>
-                  <span className="text-gray-400 text-[10px] font-extrabold uppercase tracking-widest block mb-1">Key Benefits</span>
-                  <p className="text-gray-300 font-medium leading-relaxed">{selectedSupp.benefits}</p>
+                  <p className="mb-1 text-[9px] font-extrabold uppercase tracking-widest text-slate-400">Key Benefits</p>
+                  <p className="text-sm font-medium leading-relaxed text-slate-300">{selectedSupp.benefits}</p>
                 </div>
                 {selectedSupp.safetyWarning && (
-                  <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300">
-                    <span className="font-bold block mb-0.5 text-[11px]">Safety Guidance:</span>
-                    <p className="text-[11px] leading-relaxed">{selectedSupp.safetyWarning}</p>
+                  <div className="rounded-xl border border-rose-500/20 bg-rose-500/10 p-3.5">
+                    <p className="mb-0.5 text-xs font-bold text-rose-300">Safety Guidance</p>
+                    <p className="text-xs leading-relaxed text-rose-200/80">{selectedSupp.safetyWarning}</p>
                   </div>
                 )}
               </div>
+
               <button
                 onClick={() => setSelectedSupp(null)}
-                className="w-full py-3 rounded-xl bg-white text-black font-extrabold text-xs uppercase tracking-widest shadow-lg hover:bg-gray-100 transition-colors"
+                className="mt-5 w-full rounded-xl bg-white py-2.5 text-xs font-extrabold uppercase tracking-widest text-black shadow transition hover:bg-slate-100"
               >
-                Close Window
+                Close
               </button>
             </motion.div>
           </div>

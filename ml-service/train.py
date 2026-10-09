@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import sys
+import json
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 if ROOT not in sys.path:
@@ -21,6 +22,7 @@ DATASET_CANDIDATES = [
 ]
 DATA = next((p for p in DATASET_CANDIDATES if os.path.exists(p)), DATASET_CANDIDATES[0])
 MODEL_DIR = os.path.join(ROOT, "models")
+COACH_DATASET = os.path.join(ROOT, "data", "knowledge_base.json")
 FEATURES = ["age", "gender", "height", "weight", "body_fat", "experience", "goal", "days", "activity"]
 
 GOAL_MAP = {
@@ -263,19 +265,40 @@ def train_regressor(df: pd.DataFrame, label: str, name: str):
     return model
 
 
-def train_coach_intent_model(dataset_path: str = os.path.join(ROOT, "data", "coach_questions.csv")):
+def load_coach_training_data(dataset_path: str = COACH_DATASET) -> pd.DataFrame:
     if not os.path.exists(dataset_path):
-        print(f"Coach dataset not found at {dataset_path}; skipping intent model training.")
+        raise FileNotFoundError(f"Coach dataset not found at {dataset_path}")
+
+    with open(dataset_path, encoding="utf-8") as file:
+        docs = json.load(file).get("docs", [])
+
+    rows = [
+        {"question": question.strip(), "intent": doc["intent"], "topic": doc.get("topic", doc["id"])}
+        for doc in docs
+        for question in doc.get("questions", [])
+        if question.strip() and doc.get("intent")
+    ]
+    if not rows:
+        raise ValueError("Coach dataset must contain question examples and intent labels.")
+    return pd.DataFrame(rows)
+
+
+def train_coach_intent_model(dataset_path: str = COACH_DATASET):
+    df = load_coach_training_data(dataset_path)
+    if df["intent"].nunique() < 2:
+        print("Coach dataset needs at least two intent labels; skipping intent model training.")
         return None
 
-    df = pd.read_csv(dataset_path)
-    if {"question", "intent"}.difference(df.columns):
-        print("Coach dataset is missing required columns: question and intent.")
-        return None
+    X_train, X_test, y_train, y_test = train_test_split(
+        df["question"], df["intent"], test_size=0.25, random_state=42, stratify=df["intent"]
+    )
+    eval_vectorizer = TfidfVectorizer(ngram_range=(1, 2), min_df=1)
+    eval_model = LogisticRegression(max_iter=1000)
+    eval_model.fit(eval_vectorizer.fit_transform(X_train), y_train)
+    print(f"Coach intent holdout accuracy: {accuracy_score(y_test, eval_model.predict(eval_vectorizer.transform(X_test))):.3f}")
 
-    X = df["question"].fillna("")
-    y = df["intent"].fillna("general")
-
+    X = df["question"]
+    y = df["intent"]
     vectorizer = TfidfVectorizer(ngram_range=(1, 2), min_df=1)
     X_vec = vectorizer.fit_transform(X)
     model = LogisticRegression(max_iter=1000)
@@ -284,7 +307,6 @@ def train_coach_intent_model(dataset_path: str = os.path.join(ROOT, "data", "coa
     joblib.dump(vectorizer, os.path.join(MODEL_DIR, "coach_intent_vectorizer.joblib"))
     joblib.dump(model, os.path.join(MODEL_DIR, "coach_intent_model.joblib"))
     print(f"Saved coach intent model to {MODEL_DIR}")
-    print(f"Coach intent accuracy: {accuracy_score(y, model.predict(X_vec)):.3f}")
     return model
 
 

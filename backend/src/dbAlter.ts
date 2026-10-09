@@ -1,13 +1,9 @@
 import * as mysql from 'mysql2/promise';
+import { databaseOptions } from './dbConfig';
 
 async function alterDatabase() {
   try {
-    const connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: 'user1',
-      database: 'gym_ai'
-    });
+    const connection = await mysql.createConnection(databaseOptions);
 
     console.log('Connected to MySQL server.');
 

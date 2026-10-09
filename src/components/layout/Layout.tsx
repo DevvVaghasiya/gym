@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Outlet, NavLink } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { Outlet, NavLink, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Dumbbell, LayoutDashboard, Target, Utensils, Settings, MessageCircle, Menu, X } from 'lucide-react';
 import { useUserStore } from '../../store/useUserStore';
@@ -8,6 +8,8 @@ export default function Layout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' ? window.innerWidth < 1024 : false);
   const profile = useUserStore(state => state.profile);
+  const location = useLocation();
+  const mainRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 1024);
@@ -15,6 +17,11 @@ export default function Layout() {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  useEffect(() => {
+    mainRef.current?.scrollTo(0, 0);
+    setIsSidebarOpen(false);
+  }, [location.pathname]);
 
   const navItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
@@ -26,7 +33,7 @@ export default function Layout() {
   ];
 
   return (
-    <div className="relative flex h-screen overflow-hidden bg-[#070B14] font-sans text-slate-100 selection:bg-cyan-500/30">
+    <div className="relative flex h-[100dvh] overflow-hidden bg-[#070B14] font-sans text-slate-100 selection:bg-cyan-500/30">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.12),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(103,232,249,0.08),_transparent_35%)]" />
       <div className="absolute top-[-12%] left-[-8%] h-[26rem] w-[26rem] rounded-full bg-blue-500/10 blur-[120px] animate-pulse-glow" />
       <div className="absolute bottom-[-10%] right-[-8%] h-[24rem] w-[24rem] rounded-full bg-cyan-500/10 blur-[120px] animate-pulse-glow" style={{ animationDelay: '1.5s' }} />
@@ -42,6 +49,8 @@ export default function Layout() {
         </div>
         <button
           aria-label="Open navigation menu"
+          aria-expanded={isSidebarOpen}
+          aria-controls="primary-navigation"
           onClick={() => setIsSidebarOpen(true)}
           className="w-9 h-9 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 transition hover:bg-white/10"
         >
@@ -64,6 +73,7 @@ export default function Layout() {
 
       {/* Sidebar */}
       <motion.aside 
+        id="primary-navigation"
         initial={false}
         animate={{
           x: isMobile ? (isSidebarOpen ? 0 : -300) : 0,
@@ -144,7 +154,7 @@ export default function Layout() {
       </motion.aside>
 
       {/* Main Content Area */}
-      <main className="relative z-10 flex-1 min-w-0 overflow-y-auto px-3 py-4 sm:px-5 lg:px-6 lg:py-6 mt-16 lg:mt-0 mb-16 lg:mb-0 custom-scrollbar">
+      <main ref={mainRef} className="fixed inset-x-0 top-16 bottom-[calc(4rem+env(safe-area-inset-bottom))] z-10 min-w-0 overflow-y-auto px-3 py-4 sm:px-5 custom-scrollbar lg:relative lg:inset-auto lg:flex-1 lg:px-6 lg:py-6">
         <div className="mx-auto h-full w-full max-w-[1440px]">
           <div className="mx-auto w-full max-w-[1360px]">
             <Outlet />
@@ -153,13 +163,13 @@ export default function Layout() {
       </main>
 
       {/* Mobile App Bottom Navigation Bar */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-slate-950/90 backdrop-blur-xl border-t border-white/10 px-2 pb-[env(safe-area-inset-bottom)] pt-2 flex items-center justify-around shadow-[0_-10px_25px_rgba(0,0,0,0.5)]">
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-30 flex min-h-16 items-center justify-around border-t border-white/10 bg-slate-950/90 px-2 pb-[env(safe-area-inset-bottom)] pt-2 shadow-[0_-10px_25px_rgba(0,0,0,0.5)] backdrop-blur-xl">
         {navItems.slice(0, 5).map((item) => (
           <NavLink
             key={item.path}
             to={item.path}
             className={({ isActive }) =>
-              `flex flex-col items-center justify-center py-1.5 px-3 rounded-xl transition-all duration-200 ${
+              `flex min-h-12 min-w-0 flex-1 flex-col items-center justify-center rounded-xl px-1 py-1.5 transition-all duration-200 ${
                 isActive ? 'text-blue-400 scale-105 font-bold' : 'text-slate-400 hover:text-slate-200'
               }`
             }

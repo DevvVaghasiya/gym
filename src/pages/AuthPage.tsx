@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore } from '../store/useAuthStore';
@@ -6,14 +6,12 @@ import { useUserStore } from '../store/useUserStore';
 import { API_BASE } from '../lib/api';
 import {
   Dumbbell, ArrowRight, CheckCircle2, AlertCircle, Mail,
-  Lock, User, Phone, Eye, EyeOff, Loader2, Zap, Sparkles
+  Lock, User, Phone, Eye, EyeOff, Loader2, Zap
 } from 'lucide-react';
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
-  const [isOtpPending, setIsOtpPending] = useState(false);
-  const [otpCode, setOtpCode] = useState(['', '', '', '']);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -25,8 +23,6 @@ export default function AuthPage() {
   const setAuth = useAuthStore(state => state.setAuth);
   const setProfile = useUserStore(state => state.setProfile);
   const clearProfile = useUserStore(state => state.clearProfile);
-
-  const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   // 1-Click Demo Login
   const handleDemoLogin = () => {
@@ -103,18 +99,7 @@ export default function AuthPage() {
       return;
     }
 
-    if (!isLogin && !isOtpPending) {
-      setTimeout(() => {
-        setIsOtpPending(true);
-        setSuccessMsg("Verification code sent! Use OTP '1234' to verify.");
-        setIsLoading(false);
-      }, 700);
-      return;
-    }
-
     try {
-      await new Promise(resolve => setTimeout(resolve, 500));
-
       if (isLogin) {
         if (!formData.email.trim() || formData.password.length < 4) {
           throw new Error('Please enter a valid email and password.');
@@ -141,9 +126,15 @@ export default function AuthPage() {
           navigate('/onboarding', { state: { prefill: { email: formData.email } } });
         }
       } else {
-        const joinedOtp = otpCode.join('');
-        if (joinedOtp !== '1234') {
-          throw new Error('Invalid OTP code. Enter 1234.');
+        // Direct Sign-Up without OTP barrier
+        if (!formData.name.trim()) {
+          throw new Error('Please enter your full name.');
+        }
+        if (!formData.email.trim()) {
+          throw new Error('Please enter a valid email address.');
+        }
+        if (formData.password.length < 4) {
+          throw new Error('Password must be at least 4 characters.');
         }
 
         try {
@@ -151,9 +142,9 @@ export default function AuthPage() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              name: formData.name || 'New User',
-              email: formData.email,
-              phone: formData.phone,
+              name: formData.name.trim(),
+              email: formData.email.trim(),
+              phone: formData.phone.trim() || null,
               password: formData.password,
             }),
           });
@@ -167,7 +158,13 @@ export default function AuthPage() {
 
         clearProfile();
         navigate('/onboarding', {
-          state: { prefill: { name: formData.name, email: formData.email, phone: formData.phone } },
+          state: {
+            prefill: {
+              name: formData.name.trim(),
+              email: formData.email.trim(),
+              phone: formData.phone.trim(),
+            },
+          },
         });
       }
     } catch (err: any) {
@@ -203,25 +200,6 @@ export default function AuthPage() {
       setError('Social authentication failed.');
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleOtpChange = (index: number, val: string) => {
-    if (!/^\d*$/.test(val)) return;
-    if (val.length > 1) val = val[val.length - 1];
-
-    const newOtp = [...otpCode];
-    newOtp[index] = val;
-    setOtpCode(newOtp);
-
-    if (val !== '' && index < 3) {
-      otpRefs.current[index + 1]?.focus();
-    }
-  };
-
-  const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Backspace' && otpCode[index] === '' && index > 0) {
-      otpRefs.current[index - 1]?.focus();
     }
   };
 
@@ -282,8 +260,6 @@ export default function AuthPage() {
             <h2 className="text-xl font-extrabold tracking-tight text-white">
               {isForgotPassword
                 ? 'Reset Password'
-                : isOtpPending
-                ? 'Verify Code'
                 : isLogin
                 ? 'Welcome Back'
                 : 'Create Account'}
@@ -291,8 +267,6 @@ export default function AuthPage() {
             <p className="mt-1 text-xs text-slate-400">
               {isForgotPassword
                 ? 'Enter your email to receive recovery instructions.'
-                : isOtpPending
-                ? 'Enter code 1234 to verify your registration.'
                 : isLogin
                 ? 'Sign in to access your workout, diet and progress plans.'
                 : 'Get started with an AI-tailored health routine.'}
@@ -349,32 +323,6 @@ export default function AuthPage() {
                     {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Send Reset Link'}
                   </button>
                 </motion.div>
-              ) : isOtpPending ? (
-                <motion.div key="otp" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-5 text-center">
-                  <p className="text-xs text-slate-400">Demo verification code is <strong className="text-violet-300">1234</strong></p>
-                  <div className="flex justify-center gap-3">
-                    {otpCode.map((digit, idx) => (
-                      <input
-                        key={idx}
-                        ref={el => { otpRefs.current[idx] = el; }}
-                        type="text"
-                        maxLength={1}
-                        className="h-14 w-12 rounded-2xl border border-white/10 bg-white/5 text-center text-2xl font-black text-white outline-none transition-all focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30"
-                        value={digit}
-                        onChange={e => handleOtpChange(idx, e.target.value)}
-                        onKeyDown={e => handleOtpKeyDown(idx, e)}
-                        disabled={isLoading}
-                      />
-                    ))}
-                  </div>
-                  <button
-                    type="submit"
-                    disabled={isLoading}
-                    className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 py-3.5 text-sm font-extrabold text-white shadow-lg shadow-violet-500/25 transition-all hover:from-violet-500 hover:to-indigo-500 active:scale-[0.99]"
-                  >
-                    {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Verify & Continue'}
-                  </button>
-                </motion.div>
               ) : (
                 <motion.div key="auth" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3.5">
                   {!isLogin && (
@@ -413,12 +361,11 @@ export default function AuthPage() {
 
                   {!isLogin && (
                     <div>
-                      <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-widest text-slate-400">Phone Number</label>
+                      <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-widest text-slate-400">Phone Number <span className="normal-case tracking-normal text-slate-600">(optional)</span></label>
                       <div className="relative">
                         <Phone className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
                         <input
                           type="tel"
-                          required={!isLogin}
                           placeholder="+1 555-0199"
                           className="w-full rounded-2xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-sm font-semibold text-white placeholder-slate-500 transition-all focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500/30"
                           value={formData.phone}
@@ -495,7 +442,7 @@ export default function AuthPage() {
           </form>
 
           {/* Social Sign-In */}
-          {!isForgotPassword && !isOtpPending && (
+          {!isForgotPassword && (
             <div className="mt-6 border-t border-white/8 pt-5">
               <p className="mb-3 text-center text-[10px] font-bold uppercase tracking-wider text-slate-500">
                 Or continue with

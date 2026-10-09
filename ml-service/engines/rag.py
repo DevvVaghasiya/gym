@@ -54,6 +54,24 @@ def _load():
     return docs, word_vectorizer, word_vectorizer.fit_transform(corpus), char_vectorizer, char_vectorizer.fit_transform(corpus)
 
 
+def _question_match_boost(doc: dict, normalized_query: str) -> float:
+    boost = 0.0
+    query_terms = set(normalized_query.split())
+    for question in doc.get("questions", []):
+        normalized_question = normalize_query(question)
+        if normalized_question == normalized_query:
+            return 0.28
+        if normalized_query in normalized_question or normalized_question in normalized_query:
+            boost = max(boost, 0.2)
+            continue
+        if len(query_terms) >= 4:
+            question_terms = set(normalized_question.split())
+            overlap = len(query_terms & question_terms) / len(query_terms)
+            if overlap >= 0.9:
+                boost = max(boost, 0.16)
+    return boost
+
+
 def _rank_documents(query: str):
     docs, word_vectorizer, word_matrix, char_vectorizer, char_matrix = _load()
     normalized = normalize_query(query)
@@ -68,6 +86,7 @@ def _rank_documents(query: str):
     for index, base_score in enumerate(scores):
         doc = docs[index]
         score = float(base_score)
+        score += _question_match_boost(doc, normalized)
         if detected_intent != "general" and doc.get("intent") == detected_intent:
             score += 0.08
         topic_terms = set(re.split(r"[-_]", doc.get("topic", doc["id"])))
@@ -86,8 +105,12 @@ def detect_intent(question: str) -> str:
     s = normalize_query(question)
     if is_safety_question(s):
         return "safety"
-    if re.search(r"miss(ed)?|skip|forgot", s) and re.search(r"workout|session|leg|gym", s):
+    if re.search(r"miss(ed)?|skip|forgot|cram|make up|makeup", s) and re.search(
+        r"workout|session|leg|gym|training day", s
+    ):
         return "schedule_adjustment"
+    if re.search(r"interval|hiit|cardio|running|treadmill|cycling|walk", s):
+        return "exercise_advice"
     if re.search(r"replac|substitut|instead of|alternative|swap", s):
         return "substitution"
     if re.search(r"caffeine|coffee|energy drink|pre workout|supplement|creatine|whey|protein powder|vitamin", s):

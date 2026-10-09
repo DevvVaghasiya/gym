@@ -530,6 +530,14 @@ app.post('/api/daily-stats', authenticateToken, async (req: any, res: any) => {
   }
 });
 
+app.get('/health', (_req: Request, res: Response) => {
+  res.status(200).json({ status: 'ok' });
+});
+
+app.get('/', (_req: Request, res: Response) => {
+  res.status(200).json({ status: 'ok', message: 'FitAI Backend API is running' });
+});
+
 const PORT = Number(process.env.PORT || 3000);
 const HOST = process.env.HOST || '0.0.0.0';
 app.listen(PORT, HOST, () => {

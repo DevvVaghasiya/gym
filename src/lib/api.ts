@@ -1,8 +1,16 @@
 const getApiBase = () => {
-  if (import.meta.env.VITE_API_BASE) return import.meta.env.VITE_API_BASE;
-  if (typeof window !== 'undefined' && window.location.hostname && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-    return `${window.location.protocol}//${window.location.hostname}:3000`;
+  if (import.meta.env.VITE_API_BASE) {
+    return import.meta.env.VITE_API_BASE.replace(/\/$/, '');
   }
+
+  if (
+    typeof window !== 'undefined' &&
+    window.location.hostname !== 'localhost' &&
+    window.location.hostname !== '127.0.0.1'
+  ) {
+    return ''; // Use same-origin requests if no API URL is configured
+  }
+
   return 'http://localhost:3000';
 };
 

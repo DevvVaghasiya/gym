@@ -9,7 +9,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const JWT_SECRET = 'gym_ai_super_secret_key_123';
+const JWT_SECRET = process.env.JWT_SECRET;
+
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is required');
+}
 
 const resolveUserId = (req: any) => {
   const authHeader = req.headers['authorization'];

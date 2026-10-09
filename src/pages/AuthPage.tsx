@@ -24,6 +24,7 @@ export default function AuthPage() {
   const navigate = useNavigate();
   const setAuth = useAuthStore(state => state.setAuth);
   const setProfile = useUserStore(state => state.setProfile);
+  const clearProfile = useUserStore(state => state.clearProfile);
 
   const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -137,7 +138,7 @@ export default function AuthPage() {
         if (profile && profile.name && profile.heightCm > 0) {
           navigate('/');
         } else {
-          navigate('/onboarding');
+          navigate('/onboarding', { state: { prefill: { email: formData.email } } });
         }
       } else {
         const joinedOtp = otpCode.join('');
@@ -164,54 +165,10 @@ export default function AuthPage() {
           setAuth(mockToken);
         }
 
-        setProfile({
-          name: formData.name || 'New Athlete',
-          email: formData.email,
-          phone: formData.phone,
-          age: 25,
-          gender: 'male',
-          heightCm: 175,
-          weightKg: 70,
-          goalWeightKg: 70,
-          bodyFatPercent: 15,
-          muscleMassPercent: 40,
-          waterPercent: 60,
-          bmi: 22.9,
-          bmr: 1650,
-          tdee: 2200,
-          experience: 'beginner',
-          goal: 'recomposition',
-          daysPerWeek: 3,
-          workoutDuration: 60,
-          gymType: 'commercial',
-          availableEquipment: ['dumbbell', 'barbell', 'bodyweight'],
-          injuries: [],
-          mobilityIssues: [],
-          previousSurgeries: [],
-          activityLevel: 'moderate',
-          occupation: 'Office Worker',
-          sleepHours: 7,
-          stressLevel: 'low',
-          dailyWaterIntakeLiters: 2.5,
-          smokingHabit: false,
-          alcoholConsumption: 'none',
-          country: 'India',
-          foodPreference: 'vegetarian',
-          dailyFoodBudget: 300,
-          numberOfMeals: 3,
-          allergies: [],
-          favoriteFoods: [],
-          dislikedFoods: [],
-          workoutTime: '07:00',
-          wakeupTime: '06:00',
-          sleepTime: '22:30',
-          xp: 100,
-          level: 1,
-          badges: [],
-          streak: 1,
+        clearProfile();
+        navigate('/onboarding', {
+          state: { prefill: { name: formData.name, email: formData.email, phone: formData.phone } },
         });
-
-        navigate('/');
       }
     } catch (err: any) {
       setError(err.message);
@@ -232,52 +189,15 @@ export default function AuthPage() {
       if (profile && profile.name && profile.heightCm > 0) {
         navigate('/');
       } else {
-        setProfile({
-          name: provider === 'google' ? 'Google User' : 'Apple User',
-          email: `${provider}user@example.com`,
-          age: 28,
-          gender: 'male',
-          heightCm: 175,
-          weightKg: 74,
-          goalWeightKg: 70,
-          bodyFatPercent: 16,
-          muscleMassPercent: 42,
-          waterPercent: 58,
-          bmi: 24.1,
-          bmr: 1720,
-          tdee: 2350,
-          experience: 'intermediate',
-          goal: 'recomposition',
-          daysPerWeek: 4,
-          workoutDuration: 60,
-          gymType: 'commercial',
-          availableEquipment: ['dumbbell', 'barbell', 'cable'],
-          injuries: [],
-          mobilityIssues: [],
-          previousSurgeries: [],
-          activityLevel: 'moderate',
-          occupation: 'Engineer',
-          sleepHours: 8,
-          stressLevel: 'medium',
-          dailyWaterIntakeLiters: 3,
-          smokingHabit: false,
-          alcoholConsumption: 'light',
-          country: 'USA',
-          foodPreference: 'non_veg',
-          dailyFoodBudget: 25,
-          numberOfMeals: 4,
-          allergies: [],
-          favoriteFoods: [],
-          dislikedFoods: [],
-          workoutTime: '18:00',
-          wakeupTime: '07:00',
-          sleepTime: '23:00',
-          xp: 200,
-          level: 2,
-          badges: [],
-          streak: 2,
+        clearProfile();
+        navigate('/onboarding', {
+          state: {
+            prefill: {
+              name: provider === 'google' ? 'Google User' : 'Apple User',
+              email: `${provider}user@example.com`,
+            },
+          },
         });
-        navigate('/');
       }
     } catch (err: any) {
       setError('Social authentication failed.');

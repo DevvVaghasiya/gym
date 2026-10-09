@@ -1,6 +1,7 @@
 import { UserProfile } from '../types/user';
 import { ProgressEntry, PRRecord } from '../types/progress';
 import { WorkoutPlan } from '../types/workout';
+import { NutritionPlan } from '../types/nutrition';
 import { KNOWLEDGE_BASE } from '../data/knowledgeBase';
 
 export interface ChatMessage {
@@ -13,19 +14,26 @@ export interface ChatMessage {
 export interface CoachContext {
   profile: UserProfile | null;
   workoutPlan: WorkoutPlan | null;
+  dietPlan?: NutritionPlan | null;
   progressEntries: ProgressEntry[];
   prs: PRRecord[];
   todayWater: number;
+  conversationHistory?: Array<{ role: 'user' | 'assistant'; content: string }>;
 }
 
-const normalize = (value: string) => value.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+const normalize = (value: string) => value.toLowerCase()
+  .replace(/\b(proten|proteen|protien|protean)\b/g, 'protein')
+  .replace(/\b(calroies|caleries)\b/g, 'calories')
+  .replace(/\b(workuot|workot)\b/g, 'workout')
+  .replace(/\bcreatin\b/g, 'creatine')
+  .replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
 
 const pickRelevantKnowledge = (message: string) => {
   const lower = normalize(message);
 
   const docs = KNOWLEDGE_BASE
     .map(doc => {
-      const keywords = [...doc.tags, doc.title, ...doc.content.split(' ')].map(normalize).filter(Boolean);
+      const keywords = [...doc.tags, doc.title, ...doc.questions, ...doc.content.split(' ')].map(normalize).filter(Boolean);
       const score = keywords.reduce((total, keyword) => {
         if (!keyword) return total;
         return total + (lower.includes(keyword) ? 2 : 0);
@@ -166,21 +174,48 @@ export const generateCoachResponse = (
   message: string,
   context: CoachContext
 ): string => {
-  const lowerMsg = normalize(message);
+  const currentMessage = normalize(message);
+  const previousUserMessage = [...(context.conversationHistory ?? [])].reverse().find(item => item.role === 'user')?.content;
+  const isFollowUp = /\b(what about tomorrow|what about that|can i replace that|replace it|and then|those)\b/.test(currentMessage);
+  const lowerMsg = normalize(isFollowUp && previousUserMessage ? `${previousUserMessage} ${message}` : message);
   const { profile, workoutPlan, prs } = context;
 
-  if (!profile) {
-    return 'I need you to complete your onboarding diagnostic first so I can understand your body and goals.';
+  if (/chest pain|chest pressure|faint|passed out|severe shortness of breath|cannot breathe|sudden confusion/.test(currentMessage)) {
+    return 'Stop exercising now. Chest pain or pressure, fainting, severe breathing trouble, or sudden confusion can be an emergency. Call your local emergency number or seek urgent medical care; do not continue the workout.';
+  }
+  if (/starv|purge|laxative|anorex|bulimi|eating disorder|crash diet|under 800|very low calorie/.test(currentMessage)) {
+    return 'I cannot help with starvation, purging, laxatives, or extreme restriction. You deserve support from a qualified healthcare professional or eating-disorder specialist. If you are in immediate danger, contact local emergency services or a crisis service now.';
+  }
+  if (/sharp pain|severe pain|injur|fracture|dislocat|pregnan|surgery|medical condition|dizz|lightheaded/.test(currentMessage)) {
+    return 'Stop the movement that causes sharp or severe pain. Dizziness means stop and sit or lie somewhere safe; do not resume if it persists or returns. Please get medical advice for ongoing symptoms, known conditions, pregnancy, or post-surgery exercise.';
   }
 
-  const sleep = profile.sleepHours || 8;
+  const sleep = profile?.sleepHours || 8;
   const recoveryScore = sleep >= 8 ? 88 : sleep >= 7 ? 74 : 52;
   const isFatigued = recoveryScore < 60 || lowerMsg.includes('tired') || lowerMsg.includes('sore') || lowerMsg.includes('fatigue') || lowerMsg.includes('exhausted');
-  const goalText = goalLabel(profile.goal);
-  const relevantDoc = pickRelevantKnowledge(message);
+  const goalText = profile ? goalLabel(profile.goal) : 'not set';
+  const relevantDoc = pickRelevantKnowledge(lowerMsg);
 
-  if (lowerMsg.includes('pain') || lowerMsg.includes('hurt') || lowerMsg.includes('injur') || lowerMsg.includes('medical') || lowerMsg.includes('doctor') || lowerMsg.includes('surgery')) {
-    return '**SAFETY ALERT:** I am an AI coach, not a medical professional. If you are experiencing sharp pain or suspect an injury, stop the movement immediately and consult a doctor or physical therapist. Do not push through joint pain.';
+  if (/protein/.test(lowerMsg) && /(how much|how many|target|grams|need|per day|eat)/.test(lowerMsg)) {
+    if (!profile?.weightKg) {
+      return 'I can estimate a useful protein range. What is your current weight, and is your main goal muscle gain, fat loss, or maintenance?';
+    }
+    const planTarget = context.dietPlan?.protein ?? profile.proteinTarget;
+    const low = Math.round(profile.weightKg * 1.6);
+    const high = Math.round(profile.weightKg * 2.2);
+    const target = planTarget ? `Your saved plan targets ${planTarget} g/day. ` : `For your ${profile.weightKg} kg body weight, a practical muscle-building range is about ${low}-${high} g/day; it is a guide, not a requirement. `;
+    const foodOptions = profile.foodPreference === 'vegan'
+      ? 'Budget-friendly choices include lentils, soya chunks, tofu, and beans.'
+      : 'Affordable options include dal, soya chunks, curd, tofu, paneer, and eggs if you eat them.';
+    return `${target}${foodOptions} Approximate portions vary by recipe; 1 cup cooked dal provides about 15-18 g protein and 50 g dry soya chunks about 25 g.`;
+  }
+
+  if (!profile) {
+    if (relevantDoc?.topic === 'protein') {
+      return 'I can estimate a practical daily protein range from your body weight and goal. What is your current weight, and are you aiming to gain muscle, lose fat, or maintain?';
+    }
+    if (relevantDoc) return `${relevantDoc.content} Share your goal and schedule if you want me to tailor this to you.`;
+    return 'I can help with training, nutrition, and recovery. Tell me your question; if you want a personalized estimate, include your weight and goal.';
   }
 
   const asksAboutRecovery = /(workout|train|recover|recovery|sore|fatigue|tired|exhausted|rest|sleep)/.test(lowerMsg);

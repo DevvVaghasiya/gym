@@ -51,6 +51,10 @@ export async function fetchChatAnswer(payload: {
   profile?: unknown;
   workoutPlan?: unknown;
   dietPlan?: unknown;
+  history?: Array<{ role: 'user' | 'assistant'; content: string }>;
+  progressEntries?: unknown[];
+  prs?: unknown[];
+  todayWater?: number;
 }, token?: string | null) {
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
   if (token) headers.Authorization = `Bearer ${token}`;
@@ -61,7 +65,19 @@ export async function fetchChatAnswer(payload: {
     body: JSON.stringify(payload),
   });
   if (!res.ok) throw new Error('Chat service unavailable');
-  return res.json() as Promise<{ answer: string; intent: string; sources: string[]; usedPlanData: boolean }>;
+  return res.json() as Promise<{
+    answer: string;
+    intent: string;
+    topic?: string | null;
+    category?: string;
+    answerType?: string;
+    safetyLevel?: string;
+    sources: string[];
+    references?: string[];
+    relatedTopics?: string[];
+    followUpQuestions?: string[];
+    usedPlanData: boolean;
+  }>;
 }
 
 export type ProgressLogPayload = {

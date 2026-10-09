@@ -16,7 +16,9 @@ export default function ChatPage() {
   const dietPlan = useNutritionStore(s => s.currentPlan);
   const token = useAuthStore(s => s.token);
   const { entries, prs } = useProgressStore();
-  const water = profile?.dailyWaterIntakeLiters ?? 3.0;
+  const waterLogKey = `fitai_water_${new Date().toISOString().slice(0, 10)}`;
+  const savedWater = typeof localStorage !== 'undefined' ? localStorage.getItem(waterLogKey) : null;
+  const todayWater = savedWater === null ? undefined : Number(savedWater);
 
   const { messages, addMessage, clear } = useChatStore();
 
@@ -62,25 +64,38 @@ export default function ChatPage() {
     
     setInput('');
     setIsTyping(true);
+    const recentHistory = messages.slice(-8).map(({ role, content }) => ({ role, content }));
 
     const context: CoachContext = {
       profile,
       workoutPlan,
+      dietPlan,
       progressEntries: entries,
       prs: prs,
-      todayWater: water
+      todayWater: todayWater ?? 0,
+      conversationHistory: recentHistory,
     };
 
     setTimeout(async () => {
       let responseContent: string;
+      let responseSources: string[] = [];
+      let responseReferences: string[] = [];
+      let followUpQuestions: string[] = [];
       try {
         const result = await fetchChatAnswer({
           message: question,
           profile,
           workoutPlan,
           dietPlan,
+          history: recentHistory,
+          progressEntries: entries,
+          prs,
+          todayWater,
         }, token);
         responseContent = result.answer;
+        responseSources = result.sources ?? [];
+        responseReferences = result.references ?? [];
+        followUpQuestions = result.followUpQuestions ?? [];
       } catch {
         responseContent = generateCoachResponse(question, context);
       }
@@ -88,6 +103,9 @@ export default function ChatPage() {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
         content: responseContent,
+        sources: responseSources,
+        references: responseReferences,
+        followUpQuestions,
         createdAt: new Date().toISOString()
       });
       setIsTyping(false);
@@ -99,7 +117,7 @@ export default function ChatPage() {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35 }}
-      className="flex h-[calc(100vh-40px)] w-full max-w-[1600px] flex-col overflow-hidden rounded-[30px] border border-white/10 bg-[#07111d]/90 shadow-[0_30px_80px_-20px_rgba(15,23,42,0.9)] backdrop-blur-xl"
+      className="flex h-[calc(100dvh-10rem)] min-h-0 w-full max-w-[1600px] flex-col overflow-hidden rounded-[24px] border border-white/10 bg-[#07111d]/90 shadow-[0_30px_80px_-20px_rgba(15,23,42,0.9)] backdrop-blur-xl lg:h-[calc(100dvh-3rem)]"
     >
       <header className="flex items-center justify-between gap-4 border-b border-white/10 bg-slate-950/40 px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-3 min-w-0">
@@ -186,6 +204,21 @@ export default function ChatPage() {
                       </p>
                     ))}
                   </div>
+                  {msg.role === 'assistant' && !!msg.sources?.length && (
+                    <div className="mt-2 space-y-1 text-[10px] leading-relaxed text-slate-500">
+                      <p>Sources: {msg.sources.join(', ')}</p>
+                      {!!msg.references?.length && <p>References: {msg.references.join(' · ')}</p>}
+                    </div>
+                  )}
+                  {msg.role === 'assistant' && !!msg.followUpQuestions?.length && (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {msg.followUpQuestions.map(prompt => (
+                        <button key={prompt} type="button" onClick={() => setInput(prompt)} className="min-h-10 rounded-xl border border-cyan-500/20 bg-cyan-500/[0.06] px-3 py-2 text-left text-xs font-semibold text-cyan-100 transition hover:border-cyan-400/40 hover:bg-cyan-500/10">
+                          {prompt}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {msg.role === 'user' && (

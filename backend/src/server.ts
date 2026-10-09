@@ -3,6 +3,7 @@ import cors from 'cors';
 import * as mysql from 'mysql2/promise';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { databaseOptions } from './dbConfig';
 
 const app = express();
 app.use(cors());
@@ -25,10 +26,7 @@ const resolveUserId = (req: any) => {
 };
 
 const pool = mysql.createPool({
-  host: 'localhost',
-  user: 'root',
-  password: 'user1',
-  database: 'gym_ai',
+  ...databaseOptions,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0

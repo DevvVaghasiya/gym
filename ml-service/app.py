@@ -12,7 +12,7 @@ import joblib
 import pandas as pd
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 # Keep the default signup flow offline and fast. The full FitCoach model should only be
 # loaded when the environment explicitly enables it.
@@ -112,6 +112,10 @@ class ChatIn(BaseModel):
     profile: dict[str, Any] | None = None
     workoutPlan: dict[str, Any] | None = None
     dietPlan: dict[str, Any] | None = None
+    history: list[dict[str, Any]] = Field(default_factory=list)
+    progressEntries: list[dict[str, Any]] = Field(default_factory=list)
+    prs: list[dict[str, Any]] = Field(default_factory=list)
+    todayWater: float | None = None
 
 
 def feature_row(p: dict) -> pd.DataFrame:
@@ -218,9 +222,19 @@ def build_diet_plan_from_profile(profile: dict, calories: int, protein: int, car
     }
 
 
-def generate_fitcoach_reply(message: str, profile: dict | None, diet_plan: dict | None, workout_plan: dict | None):
-    if fitcoach_model is None or fitcoach_tokenizer is None:
-        return rag_answer(message, profile, diet_plan, workout_plan)
+def generate_fitcoach_reply(
+    message: str,
+    profile: dict | None,
+    diet_plan: dict | None,
+    workout_plan: dict | None,
+    history: list[dict] | None = None,
+    progress_entries: list[dict] | None = None,
+    prs: list[dict] | None = None,
+    today_water: float | None = None,
+):
+    grounded = rag_answer(message, profile, diet_plan, workout_plan, history, progress_entries, prs, today_water)
+    if grounded.get("intent") == "safety" or fitcoach_model is None or fitcoach_tokenizer is None:
+        return grounded
 
     try:
         profile_summary = ""
@@ -242,10 +256,24 @@ def generate_fitcoach_reply(message: str, profile: dict | None, diet_plan: dict 
         if workout_plan:
             workout_summary = f"Workout split: {workout_plan.get('split', 'general')} . "
 
+        progress_summary = ""
+        if progress_entries:
+            latest = progress_entries[-1]
+            progress_summary = f"Latest logged weight: {latest.get('weightKg')} kg. "
+        if prs:
+            latest_pr = prs[-1]
+            progress_summary += f"Recent PR: {latest_pr.get('exerciseName')} at {latest_pr.get('weight')} kg for {latest_pr.get('reps')} reps. "
+
         messages = [
-            {"role": "system", "content": "You are FitCoach, a friendly fitness and nutrition coach. Give practical, safe and personalized advice for Indian and international training and nutrition contexts."},
-            {"role": "user", "content": f"{profile_summary}{diet_summary}{workout_summary}Question: {message}"},
+            {"role": "system", "content": "You are FitCoach, a friendly fitness coach. Use the retrieved evidence and supplied user context; do not invent medical claims, numeric targets, or citations. Follow safety instructions and ask for missing details instead of guessing."},
+            {"role": "system", "content": f"Grounded answer context: {grounded.get('answer')} References: {', '.join(grounded.get('references', []))}"},
         ]
+        messages.extend(
+            {"role": item.get("role"), "content": str(item.get("content", ""))[:1200]}
+            for item in (history or [])[-6:]
+            if item.get("role") in {"user", "assistant"} and item.get("content")
+        )
+        messages.append({"role": "user", "content": f"{profile_summary}{diet_summary}{workout_summary}{progress_summary}Question: {message}"})
 
         encoded = fitcoach_tokenizer.apply_chat_template(
             messages,
@@ -259,28 +287,36 @@ def generate_fitcoach_reply(message: str, profile: dict | None, diet_plan: dict 
             input_ids=input_ids,
             max_new_tokens=512,
             do_sample=True,
-            temperature=0.7,
+            temperature=0.3,
             top_p=0.9,
             pad_token_id=getattr(fitcoach_tokenizer, "pad_token_id", fitcoach_tokenizer.eos_token_id),
         )
         generated = fitcoach_tokenizer.decode(output[0][input_ids.shape[-1]:], skip_special_tokens=True).strip()
         if not generated:
-            return rag_answer(message, profile, diet_plan, workout_plan)
+            return grounded
 
         return {
+            **grounded,
             "answer": generated,
-            "intent": "general",
-            "sources": ["Harsh-k-007/fitcoach-3b"],
-            "usedPlanData": bool(profile or diet_plan or workout_plan),
+            "usedPlanData": bool(profile or diet_plan or workout_plan or progress_entries or prs),
         }
     except Exception as exc:
         print("FitCoach generation failed:", exc)
-        return rag_answer(message, profile, diet_plan, workout_plan)
+        return grounded
 
 
 @app.post("/chat")
 def chat(payload: ChatIn):
-    result = generate_fitcoach_reply(payload.message, payload.profile, payload.dietPlan, payload.workoutPlan)
+    result = generate_fitcoach_reply(
+        payload.message,
+        payload.profile,
+        payload.dietPlan,
+        payload.workoutPlan,
+        payload.history,
+        payload.progressEntries,
+        payload.prs,
+        payload.todayWater,
+    )
 
     if result.get("intent") == "general" and coach_intent_vectorizer is not None and coach_intent_model is not None:
         try:

@@ -1,1528 +1,2065 @@
 {
-        "docs": [
-          {
-            "id": "calories-tdee",
-            "title": "Calories, BMR and TDEE",
-            "intent": "calculation",
-            "tags": [
-              "calories",
-              "tdee",
-              "bmr",
-              "deficit",
-              "surplus",
-              "eat"
-            ],
-            "questions": [
-              "How many calories should I eat each day?",
-              "How do I calculate maintenance calories?",
-              "What calorie deficit should I use to lose fat?",
-              "How many calories should I eat to build muscle?",
-              "What are BMR and TDEE?",
-              "How can I estimate how many calories I burn in a day?",
-              "Should I eat at maintenance or in a deficit?",
-              "How much should I eat to lose weight gradually?",
-              "How much of a surplus do I need for a lean bulk?",
-              "Can I use my TDEE to set a calorie target?",
-              "How do I adjust calories if my weight stops changing?",
-              "Is eating below my BMR a good idea?",
-              "Why is my calorie target different from someone else's?",
-              "How do I know if my calorie target is working?",
-              "Should I change calories based on weekly weight averages?",
-              "What is a sensible starting calorie target for fat loss?",
-              "How many calories should I add for gradual muscle gain?"
-            ],
-            "content": "Daily calorie estimates can start with BMR (Mifflin-St Jeor) and an activity-based TDEE estimate. A modest adjustment from estimated maintenance may support gradual fat loss or muscle gain, but the right target varies with the person and should be checked against several weeks of weight, energy, and training trends. There is no universal calorie minimum that is safe for everyone; avoid aggressive restriction and seek individualized clinical guidance when needed.",
-            "topic": "calories-tdee",
-            "category": "nutrition",
-            "follow_up_questions": [
-              "What is your current weight, goal, and food preference?"
-            ],
-            "related_topics": [
-              "protein",
-              "food-subs-veg",
-              "indian-diet"
-            ],
-            "source": [
-              "Mifflin et al., American Journal of Clinical Nutrition, 1990;51:241-247."
-            ],
-            "safety_level": "caution",
-            "answer_type": "calculation"
-          },
-          {
-            "id": "protein",
-            "title": "Protein targets",
-            "intent": "calculation",
-            "tags": [
-              "protein",
-              "macros",
-              "muscle",
-              "grams"
-            ],
-            "questions": [
-              "How much protein do I need per day?",
-              "How many grams of protein per kilogram should I eat?",
-              "What protein target helps preserve muscle while losing fat?",
-              "Can I get enough protein on a vegetarian diet?",
-              "How should I spread protein across meals?",
-              "How many grams of protein should I aim for at my body weight?",
-              "Does protein need to be higher when cutting?",
-              "How much protein per meal is useful?",
-              "What are affordable vegetarian high-protein foods?",
-              "Can lentils and rice help me meet my protein target?",
-              "Is protein powder necessary if I eat enough protein?",
-              "Should I eat protein on rest days too?",
-              "How can I estimate a protein target from my weight?",
-              "Does my protein goal change on days I don't train?",
-              "What are simple ways to add protein to breakfast?",
-              "Can I spread protein across three meals instead of five?",
-              "Is more protein always better for building muscle?"
-            ],
-            "content": "For many healthy adults who resistance train, 1.6-2.2 g protein/kg body weight/day is a practical muscle-building range, not a mandatory target. Needs vary with goals, diet, and health; ask a clinician for individualized advice if you have kidney disease or another relevant condition. Spread protein across 3-5 meals if convenient. Affordable examples are 2 eggs (about 12 g protein, 140 kcal), 1 cup cooked dal (about 15-18 g, 200-250 kcal), 100 g tofu (about 8-15 g, 80-170 kcal), 50 g dry soya chunks (about 25 g, 170 kcal before added oil), or 100 g paneer (about 18 g, 250-300 kcal). Values vary by product and recipe; check package labels when available.",
-            "portion_notes": "Approximate serving guide: 2 eggs provide about 12 g protein and 140 kcal; 1 cup cooked dal about 15-18 g and 200-250 kcal; 100 g tofu about 8-15 g and 80-170 kcal; 50 g dry soya chunks about 25 g and 170 kcal before oil; 100 g paneer about 18 g and 250-300 kcal. Values vary by product and recipe.",
-            "topic": "protein",
-            "category": "nutrition",
-            "follow_up_questions": [
-              "What is your current weight, goal, and food preference?"
-            ],
-            "related_topics": [
-              "calories-tdee",
-              "food-subs-veg",
-              "indian-diet"
-            ],
-            "source": [
-              "Jager et al., JISSN, 2017;14:20.",
-              "Morton et al., BJSM, 2018;52:376-384."
-            ],
-            "safety_level": "caution",
-            "answer_type": "calculation"
-          },
-          {
-            "id": "missed-workout",
-            "title": "Missed workouts",
-            "intent": "schedule_adjustment",
-            "tags": [
-              "missed",
-              "skip",
-              "miss",
-              "reschedule"
-            ],
-            "questions": [
-              "I missed a workout; should I make it up tomorrow?",
-              "What should I do if I skip leg day?",
-              "Can I double my workout after missing a session?",
-              "How should I adjust my week after missing the gym?",
-              "I missed leg day yesterday; should I move it to today?",
-              "Should I cram two training days together?",
-              "Can I skip an accessory workout and stay on schedule?",
-              "My week got busy and I lost a gym day. How do I reset?",
-              "Do I need to repeat the entire split next week?",
-              "Should I train the missed body part on my rest day?",
-              "I skipped the gym while traveling. How should I restart?",
-              "Will one missed workout ruin my progress?",
-              "Should I make up a missed workout or continue my schedule?",
-              "I missed two sessions this week; should I train extra next week?",
-              "Can I move today's workout to tomorrow and take a rest day later?",
-              "What if I miss a workout because I am sick?"
-            ],
-            "content": "Do not double tomorrow's session after a missed workout. Shift the remaining week forward by one day or skip the least important accessory day. Protect rest.",
-            "topic": "missed-workout",
-            "category": "training",
-            "follow_up_questions": [
-              "How many days can you train, and what equipment do you have?"
-            ],
-            "related_topics": [
-              "exercise-subs-chest",
-              "splits",
-              "progressive-overload"
-            ],
-            "source": [
-              "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
-            ],
-            "safety_level": "routine",
-            "answer_type": "personalized_plan"
-          },
-          {
-            "id": "exercise-subs-chest",
-            "title": "Chest exercise substitutions",
-            "intent": "substitution",
-            "tags": [
-              "replace",
-              "substitute",
-              "bench",
-              "chest",
-              "press"
-            ],
-            "questions": [
-              "What can I do instead of barbell bench press?",
-              "How can I replace bench press without a barbell?",
-              "What is a good chest press alternative?",
-              "Can dumbbells replace a bench press?",
-              "I don't have a barbell; what chest movement can I do?",
-              "Can I use a chest press machine instead of bench?",
-              "What push exercise trains chest like the bench press?",
-              "How can I train chest at home without a bench?",
-              "Are push-ups an effective bench press substitute?",
-              "What equipment swap works for flat bench?",
-              "Can dumbbell presses replace barbell presses?",
-              "What's another exercise for pressing my chest?",
-              "What can replace bench press in my workout today?",
-              "How do I work chest if the bench stations are busy?",
-              "Could floor presses substitute for bench press?",
-              "What chest exercise can I do with only dumbbells?"
-            ],
-            "content": "Barbell bench press can be replaced with dumbbell bench press, machine chest press, or weighted push-ups. Dumbbells are usually the closest hypertrophy substitute.",
-            "topic": "exercise-subs-chest",
-            "category": "training",
-            "follow_up_questions": [
-              "How many days can you train, and what equipment do you have?"
-            ],
-            "related_topics": [
-              "missed-workout",
-              "splits",
-              "progressive-overload"
-            ],
-            "source": [
-              "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
-            ],
-            "safety_level": "routine",
-            "answer_type": "general_advice"
-          },
-          {
-            "id": "food-subs-veg",
-            "title": "Vegetarian protein swaps",
-            "intent": "substitution",
-            "tags": [
-              "paneer",
-              "replace",
-              "vegetarian",
-              "protein",
-              "tofu",
-              "dal"
-            ],
-            "questions": [
-              "What can I eat instead of paneer for protein?",
-              "Can tofu replace chicken in my meal plan?",
-              "What are vegetarian alternatives with similar protein?",
-              "How do I swap foods and keep my protein intake similar?",
-              "What protein-rich vegetarian foods can replace paneer?",
-              "I need a chicken alternative with similar protein; any ideas?",
-              "What can I use instead of meat in this meal?",
-              "Could I use soy chunks instead of chicken?",
-              "Which vegetarian foods have a similar protein serving?",
-              "How do I replace paneer in my diet?",
-              "Is tofu a suitable high-protein swap for chicken?",
-              "Could yogurt or dal replace some of my chicken?",
-              "What is a high-protein replacement for fish in dinner?",
-              "How can I swap meat for vegetarian protein without changing my meal much?",
-              "Can I use beans or lentils instead of meat?",
-              "What can replace dairy protein if I am vegan?"
-            ],
-            "content": "Useful vegetarian swaps include tofu, soya chunks, curd or Greek yogurt, eggs if included in your diet, and dal or beans. Compare approximate protein per portion rather than food volume: 50 g dry soya chunks can provide about 25 g protein; 100 g paneer about 18 g; 100 g tofu about 8-15 g; 1 cup cooked dal about 15-18 g. Calories vary substantially by brand, fat content, and cooking oil, so use package labels or a trusted local food database for precise logging.",
-            "portion_notes": "Approximate servings: 50 g dry soya chunks about 25 g protein; 100 g paneer about 18 g; 100 g tofu about 8-15 g; 1 cup cooked dal about 15-18 g. Calories vary by brand, fat content, and cooking oil.",
-            "topic": "food-subs-veg",
-            "category": "nutrition",
-            "follow_up_questions": [
-              "What is your current weight, goal, and food preference?"
-            ],
-            "related_topics": [
-              "calories-tdee",
-              "protein",
-              "indian-diet"
-            ],
-            "source": [
-              "Indian Food Composition Tables, National Institute of Nutrition, 2017; values vary by recipe and product label."
-            ],
-            "safety_level": "routine",
-            "answer_type": "general_advice"
-          },
-          {
-            "id": "splits",
-            "title": "Choosing a training split",
-            "intent": "planning",
-            "tags": [
-              "split",
-              "ppl",
-              "upper",
-              "lower",
-              "full body",
-              "days"
-            ],
-            "questions": [
-              "Which workout routine should I use for my training days?",
-              "Is full body or push pull legs better for a beginner?",
-              "How should I organize four gym days each week?",
-              "What is a good upper lower routine?",
-              "How many days should I train each muscle?",
-              "I can train three days a week; what split suits me?",
-              "Is upper/lower good if I can go four days?",
-              "Would full-body training work three days per week?",
-              "How should I split a five-day lifting week?",
-              "Which routine suits a beginner with limited training days?",
-              "Is push pull legs suitable for a three-day schedule?",
-              "How do I arrange upper and lower days?",
-              "Should I choose a split based on my goal or my schedule?",
-              "I only have two days for weights; what routine makes sense?",
-              "Can I train each body part twice weekly with four days?",
-              "Which split is easiest to recover from as a new lifter?",
-              "How should I schedule rest days around a weekly split?"
-            ],
-            "content": "Beginners on 2-3 days should use full body. Four days is usually upper/lower. Intermediate 3-day is Push/Pull/Legs. Do not pick PPL only because the goal is muscle gain.",
-            "topic": "splits",
-            "category": "training",
-            "follow_up_questions": [
-              "How many days can you train, and what equipment do you have?"
-            ],
-            "related_topics": [
-              "missed-workout",
-              "exercise-subs-chest",
-              "progressive-overload"
-            ],
-            "source": [
-              "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
-            ],
-            "safety_level": "routine",
-            "answer_type": "personalized_plan"
-          },
-          {
-            "id": "progressive-overload",
-            "title": "Progressive overload",
-            "intent": "exercise_advice",
-            "tags": [
-              "overload",
-              "progress",
-              "weight",
-              "reps"
-            ],
-            "questions": [
-              "How do I get stronger over time?",
-              "When should I increase the weight I lift?",
-              "I am stuck at the same reps and weight; what now?",
-              "How does progressive overload work?",
-              "How should I progress my lifts week to week?",
-              "When should I add another rep or more weight?",
-              "I can do all my reps easily; should I increase the load?",
-              "What do I do when I am not getting stronger?",
-              "Should I add weight every workout?",
-              "How can I track gradual strength progress?",
-              "Is it better to add reps before load?",
-              "What should I change if one of my lifts stalls?",
-              "How small should my weight increases be?",
-              "Should I keep the same load until every set reaches the target reps?",
-              "What does double progression mean in weight training?",
-              "How do I progress if my gym has limited weight increments?"
-            ],
-            "content": "Add load or reps when you hit the top of the rep range with good form. Example: 40 kg x 8 -> 40 kg x 10 -> 42.5 kg x 8. If form breaks down, hold the weight or deload rather than forcing jumps.",
-            "topic": "progressive-overload",
-            "category": "training",
-            "follow_up_questions": [
-              "How many days can you train, and what equipment do you have?"
-            ],
-            "related_topics": [
-              "missed-workout",
-              "exercise-subs-chest",
-              "splits"
-            ],
-            "source": [
-              "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
-            ],
-            "safety_level": "routine",
-            "answer_type": "general_advice"
-          },
-          {
-            "id": "recovery",
-            "title": "Recovery, sleep and stress",
-            "intent": "recovery_advice",
-            "tags": [
-              "recovery",
-              "sleep",
-              "rest",
-              "stress"
-            ],
-            "questions": [
-              "How many hours should I sleep to recover from training?",
-              "Why am I tired after workouts and how can I recover?",
-              "Should I take a rest day when I feel run down?",
-              "How do stress and sleep affect muscle growth?",
-              "How can I improve recovery between gym sessions?",
-              "Is seven hours of sleep enough for training?",
-              "Could poor sleep affect my workout performance?",
-              "Should I reduce training when work stress is high?",
-              "How do I know if I need an extra rest day?",
-              "Would a deload help if I am constantly fatigued?",
-              "What habits matter most for muscle recovery?",
-              "Does stress slow down progress in the gym?",
-              "Why do my legs still feel heavy before my next session?",
-              "Can an easy rest day help me recover better?",
-              "How should I adjust my training after a poor night of sleep?",
-              "Does taking a rest day make me lose fitness?"
-            ],
-            "content": "Aim for 7-9 hours of sleep. High stress and poor sleep are reasons to keep calories closer to maintenance and reduce extra isolation volume.",
-            "topic": "recovery",
-            "category": "recovery",
-            "follow_up_questions": [
-              "How have sleep, soreness, and recent training been?"
-            ],
-            "related_topics": [
-              "soreness",
-              "deload",
-              "rest-days"
-            ],
-            "source": [
-              "ACSM Guidelines for Exercise Testing and Prescription, 11th edition."
-            ],
-            "safety_level": "caution",
-            "answer_type": "general_advice"
-          },
-          {
-            "id": "indian-diet",
-            "title": "Indian gym diet patterns",
-            "intent": "meal_planning",
-            "tags": [
-              "indian",
-              "gujarati",
-              "punjabi",
-              "south",
-              "roti",
-              "dal",
-              "rice"
-            ],
-            "questions": [
-              "Can you suggest a high protein Indian meal plan?",
-              "What Indian foods should I eat before and after a workout?",
-              "How can I add protein to dal, rice, and roti meals?",
-              "What are some vegetarian Indian foods for muscle gain?",
-              "Build me a high-protein Indian vegetarian menu.",
-              "How can I make my roti meal higher in protein?",
-              "Which Indian breakfast is good for muscle building?",
-              "Can I get enough protein from dal and curd?",
-              "What are easy Indian post-training meal options?",
-              "Suggest foods for a vegetarian Indian fat-loss diet.",
-              "How can paneer or tofu fit into Indian meals?",
-              "What can I eat using rice, dal, and vegetables?",
-              "What high-protein snack can I make with curd?",
-              "How do I add more protein to idli or dosa?",
-              "Can you suggest an Indian meal using soya chunks?",
-              "What can I order at an Indian restaurant that has protein?"
-            ],
-            "content": "A flexible Indian meal template: breakfast oats with milk/curd, or idli/dosa with sambar and eggs if preferred; lunch rice or roti with dal, vegetables, and tofu, soya, paneer, eggs, chicken, or fish; snack roasted chana or curd; dinner roti or rice with a protein food and vegetables. For lower-cost protein, 1 cup cooked dal is roughly 15-18 g protein and 50 g dry soya chunks roughly 25 g; actual calories depend on portions, oil, and recipe. Adjust portions to the person's calorie and protein targets rather than treating this as a fixed prescription.",
-            "portion_notes": "Low-cost protein examples: 1 cup cooked dal is about 15-18 g protein; 50 g dry soya chunks about 25 g; 2 eggs about 12 g; 100 g curd often about 3-5 g. Serving calories vary by recipe and oil.",
-            "topic": "indian-diet",
-            "category": "nutrition",
-            "follow_up_questions": [
-              "What is your current weight, goal, and food preference?"
-            ],
-            "related_topics": [
-              "calories-tdee",
-              "protein",
-              "food-subs-veg"
-            ],
-            "source": [
-              "National Institute of Nutrition, Indian Food Composition Tables, 2017."
-            ],
-            "safety_level": "routine",
-            "answer_type": "personalized_plan"
-          },
-          {
-            "id": "safety",
-            "title": "Safety and medical limits",
-            "intent": "safety",
-            "tags": [
-              "injury",
-              "pain",
-              "medical",
-              "disorder",
-              "starvation"
-            ],
-            "questions": [
-              "I have sharp pain during an exercise; should I continue?",
-              "Can you prescribe a diet for my medical condition?",
-              "How do I lose weight by starving myself?",
-              "What should I do about chest pain during exercise?",
-              "I feel sharp knee pain during squats. Should I push through?",
-              "Can you help me lose weight with a very low-calorie diet?",
-              "I get chest pain when I exercise. What should I do?",
-              "Is it okay to keep lifting through sharp joint pain?",
-              "I have a diagnosed condition; can you prescribe a diet and workout?",
-              "I have been purging to lose weight. How can I continue safely?",
-              "Should I train soon after surgery without medical advice?",
-              "What should I do about severe pain during exercise?",
-              "I feel dizzy and faint while exercising. Should I keep going?",
-              "Can you diagnose why my shoulder hurts when I press?",
-              "I have a heart condition; what intensity should I train at?",
-              "I want to stop eating to lose weight quickly. Is that safe?"
-            ],
-            "content": "Stop exercise immediately for chest pain or pressure, fainting or near-fainting, severe or unusual shortness of breath, or sudden confusion/weakness; seek urgent medical care or call local emergency services for severe or persistent symptoms. Stop for sharp or severe injury pain and get clinical assessment before returning. Dizziness during exercise means stop, sit or lie somewhere safe, and do not resume that session if symptoms persist or recur. Do not provide weight-loss or workout instructions that encourage starvation, purging, laxatives, or hiding an eating disorder; respond supportively and encourage a qualified healthcare professional. Medical conditions, pregnancy, medication interactions, and post-surgery training require individualized clinician advice.",
-            "topic": "safety",
-            "category": "safety",
-            "follow_up_questions": [
-              "Are you experiencing severe symptoms right now?"
-            ],
-            "related_topics": [],
-            "source": [
-              "American Heart Association: Warning Signs of a Heart Attack.",
-              "National Eating Disorders Association: Help and Support."
-            ],
-            "safety_level": "high",
-            "answer_type": "safety_response"
-          },
-          {
-            "id": "supplements",
-            "title": "Supplements",
-            "intent": "supplement_advice",
-            "tags": [
-              "supplement",
-              "whey",
-              "creatine",
-              "vitamin"
-            ],
-            "questions": [
-              "Is creatine safe and how much should I take?",
-              "Do I need whey protein to build muscle?",
-              "Which supplements are useful for strength training?",
-              "Can supplements replace a balanced diet?",
-              "What daily creatine dose is commonly used?",
-              "Is whey just a convenient source of protein?",
-              "Do I need a multivitamin for gym training?",
-              "Which supplements have good evidence for lifting?",
-              "Can I build muscle without taking supplements?",
-              "When should I take creatine during the day?",
-              "Is protein powder required after every workout?",
-              "Should I ask my doctor before taking supplements?",
-              "Does creatine need to be cycled?",
-              "Can I mix creatine into my regular drink?",
-              "Are fat-burning supplements necessary for losing weight?",
-              "How can I tell if a supplement claim is trustworthy?"
-            ],
-            "content": "Food first. Creatine monohydrate (commonly 3-5 g/day for healthy adults) is well studied, and protein powder is a convenience if food does not meet a person's needs. Fat burners are not necessary and may contain stimulants with meaningful risks. Supplements can interact with medicines or be unsuitable with kidney/liver disease, pregnancy, or other conditions; check with a clinician or pharmacist for personal advice. Do not present supplements as required or as treatment.",
-            "topic": "supplements",
-            "category": "nutrition",
-            "follow_up_questions": [
-              "What is your current weight, goal, and food preference?"
-            ],
-            "related_topics": [
-              "calories-tdee",
-              "protein",
-              "food-subs-veg"
-            ],
-            "source": [
-              "Kreider et al., JISSN, 2017;14:18.",
-              "NIH Office of Dietary Supplements fact sheets."
-            ],
-            "safety_level": "caution",
-            "answer_type": "general_advice"
-          },
-          {
-            "id": "water",
-            "title": "Hydration",
-            "intent": "calculation",
-            "tags": [
-              "water",
-              "hydration"
-            ],
-            "questions": [
-              "How much water should I drink based on my weight?",
-              "Do I need extra water on workout days?",
-              "How can I tell whether I am drinking enough?",
-              "Can drinking more water build muscle?",
-              "How many liters of water should I drink at the gym?",
-              "Should I drink more when it is hot outside?",
-              "How can I stay hydrated during a long workout?",
-              "Is clear urine always a sign I drank enough?",
-              "Can I drink too much water too quickly?",
-              "Do athletes need a fixed daily water amount?",
-              "Should I drink water during strength training?",
-              "How much extra fluid do I need when I sweat a lot?",
-              "Should I sip water between sets?",
-              "Do I need electrolytes for a normal gym session?",
-              "How should I hydrate before an early workout?",
-              "Can thirst help me decide when to drink?"
-            ],
-            "content": "About 30-35 ml of water per kg of body weight, plus extra on training days. Pale straw urine is a practical check.",
-            "topic": "water",
-            "category": "nutrition",
-            "follow_up_questions": [
-              "What is your current weight, goal, and food preference?"
-            ],
-            "related_topics": [
-              "calories-tdee",
-              "protein",
-              "food-subs-veg"
-            ],
-            "source": [
-              "Thomas et al., Journal of the Academy of Nutrition and Dietetics, 2016;116(3):501-528."
-            ],
-            "safety_level": "caution",
-            "answer_type": "calculation"
-          },
-          {
-            "id": "carbs-fat",
-            "title": "Carbohydrates and dietary fat",
-            "intent": "calculation",
-            "tags": [
-              "carbs",
-              "carbohydrates",
-              "fat",
-              "macros",
-              "energy",
-              "fuel"
-            ],
-            "questions": [
-              "How many carbs and fats should I eat?",
-              "Are carbohydrates bad for fat loss?",
-              "How much dietary fat do I need?",
-              "What should my macros be after setting protein?",
-              "Should I avoid carbs to lose body fat?",
-              "How do I divide calories between carbs and fat?",
-              "What percentage of calories should come from fat?",
-              "Do carbohydrates help me lift better?",
-              "Is a low-carb diet necessary for weight loss?",
-              "How much fat should I keep in my diet?",
-              "Can I eat carbs at dinner and still lose weight?",
-              "Which macros should I set after protein?",
-              "What macro split should I use on a non-training day?",
-              "Can I choose macros based on the foods I enjoy?",
-              "What happens if I eat too little dietary fat?",
-              "Do I need to track every macro to make progress?"
-            ],
-            "content": "After protein is set, remaining calories can be split between carbohydrates and fat based on preference and training. Fat often starts near 20-30% of calories. Carbohydrates support training fuel; placing some around workouts can help performance. Avoid extremely low fat intake because dietary fat supports normal hormone function and vitamin absorption.",
-            "topic": "carbs-fat",
-            "category": "nutrition",
-            "follow_up_questions": [
-              "What is your current weight, goal, and food preference?"
-            ],
-            "related_topics": [
-              "calories-tdee",
-              "protein",
-              "food-subs-veg"
-            ],
-            "source": [
-              "National Academies Dietary Reference Intakes for Macronutrients, 2005."
-            ],
-            "safety_level": "routine",
-            "answer_type": "calculation"
-          },
-          {
-            "id": "caffeine",
-            "title": "Caffeine and pre-workout",
-            "intent": "supplement_advice",
-            "tags": [
-              "caffeine",
-              "coffee",
-              "pre-workout",
-              "energy",
-              "stimulant"
-            ],
-            "questions": [
-              "How much caffeine should I take before lifting?",
-              "Is coffee good before a workout?",
-              "How late can I take pre-workout?",
-              "What is a safe daily caffeine limit?",
-              "How many milligrams of caffeine are in a useful pre-workout dose?",
-              "Can coffee improve my gym performance?",
-              "Will caffeine at night affect my sleep?",
-              "How long before training should I have coffee?",
-              "Is taking an energy drink before every workout okay?",
-              "Should I lower caffeine if I feel jittery?",
-              "Does pre-workout have too much caffeine?",
-              "Can I take caffeine while trying to lose weight?",
-              "Can I train well without using caffeine?",
-              "What should I do if caffeine makes my heart race?",
-              "Is one cup of coffee enough before a workout?",
-              "How many hours before bed should I stop caffeine?"
-            ],
-            "content": "Caffeine may improve training performance. If you tolerate it, start with a low dose; commonly studied doses are about 3-6 mg/kg 30-90 minutes before exercise. Keep total daily caffeine under about 400 mg for most healthy adults and use less if sensitive. Avoid late-day doses that disrupt sleep. This guidance is not suitable for everyone, including some medical conditions or pregnancy.",
-            "topic": "caffeine",
-            "category": "nutrition",
-            "follow_up_questions": [
-              "What is your current weight, goal, and food preference?"
-            ],
-            "related_topics": [
-              "calories-tdee",
-              "protein",
-              "food-subs-veg"
-            ],
-            "source": [
-              "Guest et al., JISSN, 2021;18:1."
-            ],
-            "safety_level": "caution",
-            "answer_type": "general_advice"
-          },
-          {
-            "id": "cardio",
-            "title": "Cardio alongside strength training",
-            "intent": "exercise_advice",
-            "tags": [
-              "cardio",
-              "running",
-              "walking",
-              "cycling",
-              "hiit",
-              "endurance"
-            ],
-            "questions": [
-              "How much cardio should I do while lifting?",
-              "Will running stop me from building muscle?",
-              "Should I do HIIT every day?",
-              "How many days should I walk or cycle?",
-              "Can I do cardio and weights on the same day?",
-              "How many minutes of cardio should a beginner do?",
-              "Is walking enough cardio for general fitness?",
-              "How can I improve cardio without hurting leg recovery?",
-              "Should I run before or after lifting weights?",
-              "How often should I do interval training?",
-              "Will cycling interfere with strength gains?",
-              "What is a reasonable amount of cardio during a bulk?",
-              "Can low-intensity cardio help my fitness?",
-              "How should I combine running with leg training?",
-              "Is it okay to do a short walk every day?",
-              "How do I add cardio without feeling exhausted?"
-            ],
-            "content": "Cardio can support cardiovascular health and body composition alongside lifting. A practical starting point is 20-40 minutes of easy-to-moderate work two to four times weekly, adjusted for goals and recovery. Limit frequent hard intervals if they reduce lifting quality or recovery.",
-            "topic": "cardio",
-            "category": "training",
-            "follow_up_questions": [
-              "How many days can you train, and what equipment do you have?"
-            ],
-            "related_topics": [
-              "missed-workout",
-              "exercise-subs-chest",
-              "splits"
-            ],
-            "source": [
-              "WHO Guidelines on Physical Activity and Sedentary Behaviour, 2020."
-            ],
-            "safety_level": "routine",
-            "answer_type": "general_advice"
-          },
-          {
-            "id": "soreness",
-            "title": "Muscle soreness after training",
-            "intent": "recovery_advice",
-            "tags": [
-              "sore",
-              "soreness",
-              "doms",
-              "muscle pain",
-              "stiffness",
-              "recovery"
-            ],
-            "questions": [
-              "Why am I sore after leg day?",
-              "Should I work out when my muscles are sore?",
-              "How can I recover from DOMS?",
-              "Is muscle soreness required for growth?",
-              "My quads are sore two days after squats; is that normal?",
-              "Can I train a different muscle while sore?",
-              "Does soreness mean my workout was effective?",
-              "What can I do for mild delayed soreness?",
-              "Should I stretch if my muscles are sore?",
-              "When should soreness make me skip training?",
-              "How long does normal post-workout soreness last?",
-              "Is joint pain the same as muscle soreness?",
-              "Why do I get sore after changing my exercises?",
-              "Can light cycling help with sore legs?",
-              "Should I wait until all soreness is gone before training?",
-              "When is muscle pain a reason to seek medical help?"
-            ],
-            "content": "Mild delayed-onset muscle soreness can happen after unfamiliar or demanding training and usually settles over several days. Gentle movement is fine if it feels comfortable; reduce load or rest if movement is limited. Soreness is not required for progress. Sharp, severe, persistent, or joint pain needs medical assessment rather than coaching advice.",
-            "topic": "soreness",
-            "category": "recovery",
-            "follow_up_questions": [
-              "How have sleep, soreness, and recent training been?"
-            ],
-            "related_topics": [
-              "recovery",
-              "deload",
-              "rest-days"
-            ],
-            "source": [
-              "ACSM Guidelines for Exercise Testing and Prescription, 11th edition."
-            ],
-            "safety_level": "caution",
-            "answer_type": "general_advice"
-          },
-          {
-            "id": "meal-timing",
-            "title": "Meal timing around workouts",
-            "intent": "meal_planning",
-            "tags": [
-              "meal",
-              "timing",
-              "breakfast",
-              "lunch",
-              "dinner",
-              "pre-workout",
-              "post-workout",
-              "food"
-            ],
-            "questions": [
-              "What should I eat before training?",
-              "What is a good post-workout meal?",
-              "Do I need to eat immediately after lifting?",
-              "Can you suggest a high-protein day of meals?",
-              "How soon before a workout should I eat?",
-              "Is a banana and yogurt okay before the gym?",
-              "Do I need a protein shake right after exercise?",
-              "What should I eat after an evening workout?",
-              "Does meal timing matter more than daily protein?",
-              "Can you suggest a simple training-day menu?",
-              "Should I eat carbs before strength training?",
-              "What is a light snack before lifting weights?",
-              "What if I train early and don't feel hungry?",
-              "Can I have my normal dinner after a late workout?",
-              "Is there a special anabolic window after training?",
-              "What are quick pre-workout snacks that are easy to digest?"
-            ],
-            "content": "Total daily calories and protein matter more than precise meal timing. If useful, have a familiar meal with protein and carbohydrates one to three hours before training. Afterward, have a normal protein-containing meal when convenient. Examples include yogurt or eggs with oats and fruit, or tofu, paneer, chicken, or dal with rice or roti and vegetables.",
-            "topic": "meal-timing",
-            "category": "nutrition",
-            "follow_up_questions": [
-              "What is your current weight, goal, and food preference?"
-            ],
-            "related_topics": [
-              "calories-tdee",
-              "protein",
-              "food-subs-veg"
-            ],
-            "source": [
-              "Thomas et al., Journal of the Academy of Nutrition and Dietetics, 2016;116(3):501-528."
-            ],
-            "safety_level": "routine",
-            "answer_type": "personalized_plan"
-          },
-          {
-            "id": "training-volume",
-            "title": "Weekly training volume",
-            "intent": "exercise_advice",
-            "tags": [
-              "sets",
-              "volume",
-              "hypertrophy",
-              "frequency",
-              "muscle growth"
-            ],
-            "questions": [
-              "How many sets per muscle should I do each week?",
-              "How much training volume is enough to build muscle?",
-              "How often should I train each muscle group?",
-              "Should I add more sets if I am not growing?",
-              "How many hard sets for chest should I do weekly?",
-              "Is ten sets per muscle enough for a beginner?",
-              "Should I split weekly sets across two workouts?",
-              "How do I know if my workout has too much volume?",
-              "Can I grow with fewer sets if I train hard?",
-              "Should advanced lifters do more weekly sets?",
-              "When should I reduce my training volume?",
-              "Does training to failure count as more volume?",
-              "How many sets should I start with if I am new?",
-              "Is doing more sets always better for muscle growth?",
-              "How should I count sets that work more than one muscle?",
-              "Can I make progress with six sets per muscle each week?"
-            ],
-            "content": "Many people make progress with roughly 8-15 challenging sets per muscle per week, distributed over at least two sessions when practical. Start near the lower end and add volume only if performance, technique, sleep, and recovery remain good. Training to failure on every set is not required.",
-            "topic": "training-volume",
-            "category": "training",
-            "follow_up_questions": [
-              "How many days can you train, and what equipment do you have?"
-            ],
-            "related_topics": [
-              "missed-workout",
-              "exercise-subs-chest",
-              "splits"
-            ],
-            "source": [
-              "Schoenfeld et al., Journal of Sports Sciences, 2017;35(11):1073-1082.",
-              "ACSM resistance training position stand, 2009."
-            ],
-            "safety_level": "routine",
-            "answer_type": "general_advice"
-          },
-          {
-            "id": "warmup",
-            "title": "Warm-ups and ramp-up sets",
-            "intent": "exercise_advice",
-            "tags": [
-              "warm up",
-              "warmup",
-              "prep",
-              "ramp sets",
-              "mobility"
-            ],
-            "questions": [
-              "How should I warm up before lifting weights?",
-              "Do I need to stretch before every workout?",
-              "What warm-up should I do before squats?",
-              "How many warm-up sets should I do?",
-              "Can I start my workout with my working weight?",
-              "Should my warm-up make me tired?",
-              "What is a good general warm-up at the gym?",
-              "Do I need warm-up sets for small exercises?"
-            ],
-            "content": "Start with a few minutes of easy movement if it helps you feel ready, then rehearse the movements you will train. For heavy compound lifts, use a few progressively heavier, low-fatigue ramp-up sets before working sets. Warm-ups should prepare you, not tire you out.",
-            "topic": "warmup",
-            "category": "training",
-            "follow_up_questions": [
-              "How many days can you train, and what equipment do you have?"
-            ],
-            "related_topics": [
-              "missed-workout",
-              "exercise-subs-chest",
-              "splits"
-            ],
-            "source": [
-              "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
-            ],
-            "safety_level": "routine",
-            "answer_type": "general_advice"
-          },
-          {
-            "id": "rep-ranges",
-            "title": "Repetitions and load selection",
-            "intent": "exercise_advice",
-            "tags": [
-              "reps",
-              "repetitions",
-              "rep range",
-              "weight",
-              "hypertrophy",
-              "strength"
-            ],
-            "questions": [
-              "How many reps should I do to build muscle?",
-              "Is a low rep range better for strength?",
-              "Can high reps build muscle too?",
-              "How heavy should I lift for an 8 to 12 rep set?",
-              "Do I need to lift heavy to grow?",
-              "How many repetitions are best for beginners?",
-              "Should I change rep ranges every week?",
-              "What is a good rep range for general fitness?"
-            ],
-            "content": "A broad range of loads and repetitions can build muscle when sets are challenging and technique is sound. Heavier loads are more specific to maximal strength, while moderate repetitions are often convenient for general muscle-building work. Choose a range you can perform consistently and progress over time.",
-            "topic": "rep-ranges",
-            "category": "training",
-            "follow_up_questions": [
-              "How many days can you train, and what equipment do you have?"
-            ],
-            "related_topics": [
-              "missed-workout",
-              "exercise-subs-chest",
-              "splits"
-            ],
-            "source": [
-              "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
-            ],
-            "safety_level": "routine",
-            "answer_type": "general_advice"
-          },
-          {
-            "id": "rest-between-sets",
-            "title": "Rest between sets",
-            "intent": "exercise_advice",
-            "tags": [
-              "rest time",
-              "between sets",
-              "rest interval",
-              "recover",
-              "sets"
-            ],
-            "questions": [
-              "How long should I rest between lifting sets?",
-              "Is one minute enough rest between sets?",
-              "Should I rest longer after heavy squats?",
-              "How long do bodybuilders rest between exercises?",
-              "Can short rests reduce my reps?",
-              "What is a good rest time for isolation exercises?",
-              "Should I start the next set when I am still breathing hard?",
-              "How much rest do I need for strength training?"
-            ],
-            "content": "Rest long enough to perform the next set with good technique and useful effort. Heavy multi-joint sets often need roughly two to four minutes; lighter isolation work may need less. These are starting points, not rules, and breathing, performance, and the exercise matter.",
-            "topic": "rest-between-sets",
-            "category": "training",
-            "follow_up_questions": [
-              "How many days can you train, and what equipment do you have?"
-            ],
-            "related_topics": [
-              "missed-workout",
-              "exercise-subs-chest",
-              "splits"
-            ],
-            "source": [
-              "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
-            ],
-            "safety_level": "routine",
-            "answer_type": "general_advice"
-          },
-          {
-            "id": "exercise-order",
-            "title": "Exercise order in a workout",
-            "intent": "exercise_advice",
-            "tags": [
-              "exercise order",
-              "workout order",
-              "compound",
-              "priority",
-              "routine"
-            ],
-            "questions": [
-              "Which exercise should I do first in my workout?",
-              "Should compounds come before isolation exercises?",
-              "Do I train my weak muscle first?",
-              "Is there a correct order for gym exercises?",
-              "Should I do cardio before or after lifting?",
-              "Where should I put abs in my workout?",
-              "Should I do bench before triceps exercises?",
-              "Can I change the order if equipment is busy?"
-            ],
-            "content": "Place the exercises that matter most to your goal earlier, while you are relatively fresh. Many people put demanding compound lifts before smaller isolation work, but exercise order can be adjusted for preference, equipment, and comfort. Consistent effort across the week matters more than a single perfect order.",
-            "topic": "exercise-order",
-            "category": "training",
-            "follow_up_questions": [
-              "How many days can you train, and what equipment do you have?"
-            ],
-            "related_topics": [
-              "missed-workout",
-              "exercise-subs-chest",
-              "splits"
-            ],
-            "source": [
-              "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
-            ],
-            "safety_level": "routine",
-            "answer_type": "general_advice"
-          },
-          {
-            "id": "training-technique",
-            "title": "Lifting technique and form",
-            "intent": "exercise_advice",
-            "tags": [
-              "form",
-              "technique",
-              "range of motion",
-              "control",
-              "lifting"
-            ],
-            "questions": [
-              "How do I know if my lifting form is good?",
-              "Should every repetition use the same range of motion?",
-              "Is it okay if my form changes on the last rep?",
-              "How fast should I lower a weight?",
-              "Do I need perfect form to make progress?",
-              "How can I practice a new exercise safely?",
-              "Should I film my lifts to check technique?",
-              "When should I stop a set because of form?"
-            ],
-            "content": "Use a controllable range of motion and repeatable technique that suits your body and the exercise. Practice new movements with light loads; increase weight only while you can maintain control. Stop or modify a set if you develop sharp pain or lose control, and ask a qualified coach to assess technique when you need hands-on feedback.",
-            "topic": "training-technique",
-            "category": "training",
-            "follow_up_questions": [
-              "How many days can you train, and what equipment do you have?"
-            ],
-            "related_topics": [
-              "missed-workout",
-              "exercise-subs-chest",
-              "splits"
-            ],
-            "source": [
-              "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
-            ],
-            "safety_level": "routine",
-            "answer_type": "general_advice"
-          },
-          {
-            "id": "training-plateau",
-            "title": "Breaking a training plateau",
-            "intent": "exercise_advice",
-            "tags": [
-              "plateau",
-              "stalled",
-              "stuck",
-              "strength progress",
-              "progression"
-            ],
-            "questions": [
-              "My lifts have stalled for a few weeks; what should I change?",
-              "How do I break a strength plateau?",
-              "Why am I not adding reps or weight anymore?",
-              "Should I change my program if progress slows?",
-              "How long should I wait before changing my routine?",
-              "What can I do when my bench press stops improving?",
-              "Could poor recovery be causing my plateau?",
-              "Should I add more sets when a lift stalls?"
-            ],
-            "content": "First check whether the plateau is real: compare several weeks of consistent training, technique, sleep, food, and logged performance rather than one session. If progress has genuinely stalled, adjust one variable at a time, such as load, repetitions, exercise choice, or recoverable volume. Avoid adding work when fatigue is already high.",
-            "topic": "training-plateau",
-            "category": "training",
-            "follow_up_questions": [
-              "How many days can you train, and what equipment do you have?"
-            ],
-            "related_topics": [
-              "missed-workout",
-              "exercise-subs-chest",
-              "splits"
-            ],
-            "source": [
-              "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
-            ],
-            "safety_level": "routine",
-            "answer_type": "general_advice"
-          },
-          {
-            "id": "deload",
-            "title": "Deload weeks and fatigue management",
-            "intent": "recovery_advice",
-            "tags": [
-              "deload",
-              "fatigue",
-              "training break",
-              "recovery week",
-              "tired"
-            ],
-            "questions": [
-              "When should I take a deload week?",
-              "How do I deload my workout program?",
-              "Should I lower weights if I feel run down?",
-              "Do beginners need planned deloads?",
-              "Can I take a lighter week instead of stopping training?",
-              "How much should I reduce my workout during a deload?",
-              "Will a week of easier training make me weaker?",
-              "What signs suggest I need to reduce training fatigue?"
-            ],
-            "content": "A deload is a short period of reduced training stress, useful when fatigue is interfering with performance or recovery. You can reduce sets, load, or effort for several sessions while keeping comfortable movement. It is not mandatory on a fixed schedule; persistent exhaustion or pain may need rest or professional assessment.",
-            "topic": "deload",
-            "category": "recovery",
-            "follow_up_questions": [
-              "How have sleep, soreness, and recent training been?"
-            ],
-            "related_topics": [
-              "recovery",
-              "soreness",
-              "rest-days"
-            ],
-            "source": [
-              "ACSM Guidelines for Exercise Testing and Prescription, 11th edition."
-            ],
-            "safety_level": "caution",
-            "answer_type": "general_advice"
-          },
-          {
-            "id": "progress-tracking",
-            "title": "Tracking fitness progress",
-            "intent": "exercise_advice",
-            "tags": [
-              "track",
-              "progress",
-              "logbook",
-              "measurements",
-              "results"
-            ],
-            "questions": [
-              "What should I track in my workout log?",
-              "How often should I measure my progress?",
-              "Which numbers show if my training is working?",
-              "Should I track reps and weights every session?",
-              "How do I compare workouts from week to week?",
-              "Are progress photos useful for fitness goals?",
-              "Should I measure my waist as well as my weight?",
-              "How long before I can judge whether a plan works?"
-            ],
-            "content": "Record exercises, loads, repetitions, sets, and any useful notes about effort or technique. Review trends over multiple weeks rather than reacting to one session. Depending on your goal, combine performance records with consistent body-weight averages, measurements, or photos; none of these measures tells the whole story alone.",
-            "topic": "progress-tracking",
-            "category": "training",
-            "follow_up_questions": [
-              "How many days can you train, and what equipment do you have?"
-            ],
-            "related_topics": [
-              "missed-workout",
-              "exercise-subs-chest",
-              "splits"
-            ],
-            "source": [
-              "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
-            ],
-            "safety_level": "routine",
-            "answer_type": "general_advice"
-          },
-          {
-            "id": "weight-loss-rate",
-            "title": "Gradual weight-loss pace",
-            "intent": "calculation",
-            "tags": [
-              "weight loss rate",
-              "lose weight",
-              "fat loss pace",
-              "weekly weight",
-              "deficit"
-            ],
-            "questions": [
-              "How quickly should I lose weight while keeping muscle?",
-              "What is a reasonable amount of weight to lose per week?",
-              "Am I losing weight too fast?",
-              "How slow should a sustainable fat-loss phase be?",
-              "Should I aim to lose a fixed number of kilos each week?",
-              "How can I tell if my diet deficit is too aggressive?",
-              "What rate of weight loss is realistic for me?",
-              "Why does my weight change so much from day to day?"
-            ],
-            "content": "Aim for gradual, sustainable change rather than the fastest possible loss. Scale weight naturally fluctuates with hydration, digestion, and other factors, so compare weekly averages across several weeks. If energy, training, or wellbeing deteriorate, the deficit may be too aggressive; a clinician can advise on individual medical needs.",
-            "topic": "weight-loss-rate",
-            "category": "nutrition",
-            "follow_up_questions": [
-              "What is your current weight, goal, and food preference?"
-            ],
-            "related_topics": [
-              "calories-tdee",
-              "protein",
-              "food-subs-veg"
-            ],
-            "source": [
-              "Mifflin et al., American Journal of Clinical Nutrition, 1990.",
-              "ISSN nutrition and exercise position stands."
-            ],
-            "safety_level": "caution",
-            "answer_type": "calculation"
-          },
-          {
-            "id": "body-recomposition",
-            "title": "Building muscle while losing fat",
-            "intent": "calculation",
-            "tags": [
-              "recomposition",
-              "lose fat gain muscle",
-              "body composition",
-              "build muscle",
-              "fat loss"
-            ],
-            "questions": [
-              "Can I gain muscle and lose fat at the same time?",
-              "How does body recomposition work?",
-              "Should I bulk or cut if I am new to lifting?",
-              "Can beginners build muscle while eating at maintenance?",
-              "How do I improve body composition without a big bulk?",
-              "Do I need a calorie deficit to lose body fat?",
-              "Can strength training help during fat loss?",
-              "How do I know if I am recomping?"
-            ],
-            "content": "Some people, especially newer lifters or those returning after a break, can gain muscle while losing fat, but the rate and likelihood vary. Consistent resistance training, adequate protein, sleep, and a modest calorie approach support the process. Track strength and longer-term body trends; short-term scale changes cannot confirm recomposition by themselves.",
-            "topic": "body-recomposition",
-            "category": "nutrition",
-            "follow_up_questions": [
-              "What is your current weight, goal, and food preference?"
-            ],
-            "related_topics": [
-              "calories-tdee",
-              "protein",
-              "food-subs-veg"
-            ],
-            "source": [
-              "Mifflin et al., American Journal of Clinical Nutrition, 1990.",
-              "ISSN nutrition and exercise position stands."
-            ],
-            "safety_level": "caution",
-            "answer_type": "calculation"
-          },
-          {
-            "id": "rest-days",
-            "title": "Rest days and weekly recovery",
-            "intent": "recovery_advice",
-            "tags": [
-              "rest day",
-              "days off",
-              "recovery",
-              "off day",
-              "training schedule"
-            ],
-            "questions": [
-              "How many rest days should I take each week?",
-              "Should I train every day or take days off?",
-              "What can I do on a rest day?",
-              "Is walking okay on a rest day?",
-              "How do I schedule rest between hard workouts?",
-              "Can I take an extra day off if I feel tired?",
-              "Does taking two rest days affect muscle growth?",
-              "Should rest days be completely inactive?"
-            ],
-            "content": "Rest days help balance training stress and recovery; the right number depends on your schedule, training volume, sleep, and experience. Light walking or comfortable mobility is fine if it feels restorative. Keep demanding work away from muscles that are still significantly fatigued, and adjust when performance or wellbeing declines.",
-            "topic": "rest-days",
-            "category": "recovery",
-            "follow_up_questions": [
-              "How have sleep, soreness, and recent training been?"
-            ],
-            "related_topics": [
-              "recovery",
-              "soreness",
-              "deload"
-            ],
-            "source": [
-              "ACSM Guidelines for Exercise Testing and Prescription, 11th edition."
-            ],
-            "safety_level": "caution",
-            "answer_type": "general_advice"
-          },
-          {
-            "id": "home-workouts",
-            "title": "Home workouts with limited equipment",
-            "intent": "substitution",
-            "tags": [
-              "home workout",
-              "bodyweight",
-              "no equipment",
-              "bands",
-              "dumbbells"
-            ],
-            "questions": [
-              "Can I build muscle at home without a gym?",
-              "What workout can I do with no equipment?",
-              "How do I make bodyweight exercises harder?",
-              "Can resistance bands replace gym machines?",
-              "What is a simple home strength routine?",
-              "How can I train legs at home with dumbbells?",
-              "Can push-ups and squats be enough to start?",
-              "How do I progress when my home weights are light?"
-            ],
-            "content": "Home training can build strength and muscle when exercises challenge you and become progressively harder. Use available bodyweight movements, bands, or dumbbells for pushing, pulling, squatting, hinging, and carrying. Progress with more repetitions, harder variations, added load, or controlled range of motion while maintaining good technique.",
-            "topic": "home-workouts",
-            "category": "training",
-            "follow_up_questions": [
-              "How many days can you train, and what equipment do you have?"
-            ],
-            "related_topics": [
-              "missed-workout",
-              "exercise-subs-chest",
-              "splits"
-            ],
-            "source": [
-              "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
-            ],
-            "safety_level": "routine",
-            "answer_type": "general_advice"
-          },
-          {
-            "id": "exercise-selection",
-            "title": "Choosing gym exercises",
-            "intent": "substitution",
-            "tags": [
-              "exercise selection",
-              "choose exercises",
-              "machines",
-              "free weights",
-              "routine"
-            ],
-            "questions": [
-              "Which exercises should I include in a balanced program?",
-              "Are machines as effective as free weights?",
-              "How many exercises should I do per workout?",
-              "Do I need to use barbell exercises to build muscle?",
-              "How do I pick exercises that fit my equipment?",
-              "Should I choose exercises I enjoy?",
-              "Can machines be easier for beginners to learn?",
-              "How often should I change my exercise selection?"
-            ],
-            "content": "Choose movements that train the muscles and skills relevant to your goals, fit your equipment, and can be performed comfortably with controlled technique. Machines and free weights can both be useful; neither is required for everyone. Keep a manageable set of exercises long enough to practice and track progress before changing them without a reason.",
-            "topic": "exercise-selection",
-            "category": "training",
-            "follow_up_questions": [
-              "How many days can you train, and what equipment do you have?"
-            ],
-            "related_topics": [
-              "missed-workout",
-              "exercise-subs-chest",
-              "splits"
-            ],
-            "source": [
-              "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
-            ],
-            "safety_level": "routine",
-            "answer_type": "general_advice"
-          },
-          {
-            "id": "beginner-program",
-            "title": "Starting a beginner strength program",
-            "intent": "planning",
-            "tags": [
-              "beginner program",
-              "new lifter",
-              "start lifting",
-              "simple plan",
-              "gym routine"
-            ],
-            "questions": [
-              "Can you give me a simple beginner gym plan?",
-              "What should I do during my first month of lifting?",
-              "How do I start strength training from scratch?",
-              "How many exercises should a new lifter learn?",
-              "Should beginners train full body or one muscle per day?",
-              "How hard should my first workouts feel?",
-              "Can I use the same beginner routine for several weeks?",
-              "What should I focus on before lifting heavier?"
-            ],
-            "content": "A beginner can start with two or three manageable full-body sessions per week, using a few familiar push, pull, squat, and hinge movements. Practice technique, leave some repetitions in reserve, and add repetitions or load gradually when sessions feel controlled. Build consistency before adding a complicated split or high training volume.",
-            "topic": "beginner-program",
-            "category": "training",
-            "follow_up_questions": [
-              "How many days can you train, and what equipment do you have?"
-            ],
-            "related_topics": [
-              "missed-workout",
-              "exercise-subs-chest",
-              "splits"
-            ],
-            "source": [
-              "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
-            ],
-            "safety_level": "routine",
-            "answer_type": "personalized_plan"
-          },
-          {
-            "id": "mobility-stretching",
-            "title": "Mobility and stretching",
-            "intent": "recovery_advice",
-            "tags": [
-              "mobility",
-              "stretch",
-              "flexibility",
-              "range of motion",
-              "warm up"
-            ],
-            "questions": [
-              "Should I stretch before or after lifting?",
-              "How can I improve my flexibility for squats?",
-              "What flexibility exercises can I do on a recovery day?",
-              "Will stretching prevent all injuries?",
-              "What is the difference between mobility and flexibility?",
-              "Can I use dynamic stretches before a workout?",
-              "How long should I hold a stretch?",
-              "Should stretching feel painful to work?"
-            ],
-            "content": "Mobility is the ability to move through a range of motion you can control; stretching is one way to work on flexibility. Use comfortable dynamic movements before training if they help you prepare, and gentle static stretching when it suits your goals. Stretching should not cause sharp pain, and it cannot guarantee injury prevention.",
-            "topic": "mobility-stretching",
-            "category": "recovery",
-            "follow_up_questions": [
-              "How have sleep, soreness, and recent training been?"
-            ],
-            "related_topics": [
-              "recovery",
-              "soreness",
-              "deload"
-            ],
-            "source": [
-              "ACSM Guidelines for Exercise Testing and Prescription, 11th edition."
-            ],
-            "safety_level": "caution",
-            "answer_type": "general_advice"
-          },
-          {
-            "id": "time-efficient-workouts",
-            "title": "Time-efficient workouts",
-            "intent": "planning",
-            "tags": [
-              "short workout",
-              "busy schedule",
-              "time efficient",
-              "superset",
-              "quick gym"
-            ],
-            "questions": [
-              "Can I get a good workout in 30 minutes?",
-              "How do I train when I have very little time?",
-              "What exercises should I prioritize in a short session?",
-              "Are supersets useful for saving time?",
-              "Is a short workout better than skipping the gym?",
-              "How can I make my gym routine more efficient?",
-              "Should I reduce exercises or rest time when busy?",
-              "Can three short sessions work each week?"
-            ],
-            "content": "Short sessions can be productive when you prioritize a few main movements and train consistently. Prepare your exercise order, keep transitions simple, and consider pairing non-competing exercises if it does not reduce technique or performance. Do not rush heavy sets or remove needed rest just to fit in more work.",
-            "topic": "time-efficient-workouts",
-            "category": "training",
-            "follow_up_questions": [
-              "How many days can you train, and what equipment do you have?"
-            ],
-            "related_topics": [
-              "missed-workout",
-              "exercise-subs-chest",
-              "splits"
-            ],
-            "source": [
-              "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
-            ],
-            "safety_level": "routine",
-            "answer_type": "personalized_plan"
-          },
-          {
-            "id": "training-consistency",
-            "title": "Building a consistent training habit",
-            "intent": "recovery_advice",
-            "tags": [
-              "consistency",
-              "motivation",
-              "habit",
-              "routine",
-              "adherence"
-            ],
-            "questions": [
-              "How do I stay consistent with going to the gym?",
-              "What should I do when I lose motivation to work out?",
-              "How can I fit exercise into a busy week?",
-              "Is it okay to do a shorter workout when I feel unmotivated?",
-              "How do I restart after taking a long break?",
-              "Should I set a fixed weekly gym schedule?",
-              "How can I make my workout routine easier to stick to?",
-              "What is a realistic training schedule for a busy beginner?"
-            ],
-            "content": "Consistency is easier when the plan fits your real schedule and starts at a manageable level. Choose regular training times, prepare a shorter fallback session for busy days, and focus on returning to the routine after interruptions rather than chasing perfection. Increase the plan gradually as the habit becomes reliable.",
-            "topic": "training-consistency",
-            "category": "recovery",
-            "follow_up_questions": [
-              "How have sleep, soreness, and recent training been?"
-            ],
-            "related_topics": [
-              "recovery",
-              "soreness",
-              "deload"
-            ],
-            "source": [
-              "ACSM Guidelines for Exercise Testing and Prescription, 11th edition."
-            ],
-            "safety_level": "caution",
-            "answer_type": "general_advice"
-          },
-          {
-            "id": "core-training",
-            "title": "Core training basics",
-            "intent": "exercise_advice",
-            "tags": [
-              "core",
-              "abs",
-              "abdominal",
-              "plank",
-              "trunk strength"
-            ],
-            "questions": [
-              "How often should I train my abs?",
-              "What are good beginner core exercises?",
-              "Will ab workouts burn belly fat?",
-              "Do I need to train core if I lift weights?",
-              "How many sets of planks should I do?",
-              "Are crunches necessary for a strong core?",
-              "Can I train abs at the end of my workout?",
-              "What exercises work the core besides sit-ups?"
-            ],
-            "content": "Core exercises can train trunk strength and control, but they do not selectively remove belly fat. Start with a few controlled movements such as planks, carries, or comfortable trunk-flexion and anti-rotation exercises. Add difficulty gradually and treat abdominal work like other training: use good technique and allow recovery.",
-            "topic": "core-training",
-            "category": "training",
-            "follow_up_questions": [
-              "How many days can you train, and what equipment do you have?"
-            ],
-            "related_topics": [
-              "missed-workout",
-              "exercise-subs-chest",
-              "splits"
-            ],
-            "source": [
-              "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
-            ],
-            "safety_level": "routine",
-            "answer_type": "general_advice"
-          }
-        ]
-      }
+  "docs": [
+    {
+      "id": "calories-tdee",
+      "title": "Calories, BMR and TDEE",
+      "intent": "calculation",
+      "tags": [
+        "calories",
+        "tdee",
+        "bmr",
+        "deficit",
+        "surplus",
+        "eat",
+        "gym diet",
+        "cutting",
+        "bulking",
+        "lean bulk",
+        "maintenance",
+        "kcal",
+        "macro tracking",
+        "MyFitnessPal",
+        "calorie counting",
+        "weight cut",
+        "fat loss calories",
+        "muscle gain calories",
+        "energy balance"
+      ],
+      "questions": [
+        "How many calories should I eat each day?",
+        "How do I calculate maintenance calories?",
+        "What calorie deficit should I use to lose fat?",
+        "How many calories should I eat to build muscle?",
+        "What are BMR and TDEE?",
+        "How can I estimate how many calories I burn in a day?",
+        "Should I eat at maintenance or in a deficit?",
+        "How much should I eat to lose weight gradually?",
+        "How much of a surplus do I need for a lean bulk?",
+        "Can I use my TDEE to set a calorie target?",
+        "How do I adjust calories if my weight stops changing?",
+        "Is eating below my BMR a good idea?",
+        "Why is my calorie target different from someone else's?",
+        "How do I know if my calorie target is working?",
+        "Should I change calories based on weekly weight averages?",
+        "What is a sensible starting calorie target for fat loss?",
+        "How many calories should I add for gradual muscle gain?",
+        "Gym ke baad kitni calories khana chahiye?",
+        "Cutting ke liye daily calories kitni honi chahiye?",
+        "Bulk kar raha hoon kitna surplus theek hai?",
+        "TDEE kya hota hai gym diet mein?",
+        "Weight loss ke liye kitna calorie deficit safe hai?",
+        "Maintenance calories kaise nikalu bodybuilding ke liye?",
+        "Gym jane wale ko din mein kitni calories chahiye?",
+        "BMR aur TDEE mein kya difference hai?",
+        "Plateau pe calories badhaun ya kam karun?"
+      ],
+      "content": "Daily calorie estimates can start with BMR (Mifflin-St Jeor) and an activity-based TDEE estimate. A modest adjustment from estimated maintenance may support gradual fat loss or muscle gain, but the right target varies with the person and should be checked against several weeks of weight, energy, and training trends. There is no universal calorie minimum that is safe for everyone; avoid aggressive restriction and seek individualized clinical guidance when needed.",
+      "topic": "calories-tdee",
+      "category": "nutrition",
+      "follow_up_questions": [
+        "What is your current weight, goal, and food preference?"
+      ],
+      "related_topics": [
+        "protein",
+        "food-subs-veg",
+        "indian-diet"
+      ],
+      "source": [
+        "Mifflin et al., American Journal of Clinical Nutrition, 1990;51:241-247."
+      ],
+      "safety_level": "caution",
+      "answer_type": "calculation"
+    },
+    {
+      "id": "protein",
+      "title": "Protein targets",
+      "intent": "calculation",
+      "tags": [
+        "protein",
+        "macros",
+        "muscle",
+        "grams",
+        "whey",
+        "protein shake",
+        "gainer",
+        "muscle protein",
+        "amino acids",
+        "chicken breast",
+        "egg whites",
+        "soya",
+        "gym nutrition",
+        "lean mass",
+        "cutting protein",
+        "bulking protein",
+        "1g per lb"
+      ],
+      "questions": [
+        "How much protein do I need per day?",
+        "How many grams of protein per kilogram should I eat?",
+        "What protein target helps preserve muscle while losing fat?",
+        "Can I get enough protein on a vegetarian diet?",
+        "How should I spread protein across meals?",
+        "How many grams of protein should I aim for at my body weight?",
+        "Does protein need to be higher when cutting?",
+        "How much protein per meal is useful?",
+        "What are affordable vegetarian high-protein foods?",
+        "Can lentils and rice help me meet my protein target?",
+        "Is protein powder necessary if I eat enough protein?",
+        "Should I eat protein on rest days too?",
+        "How can I estimate a protein target from my weight?",
+        "Does my protein goal change on days I don't train?",
+        "What are simple ways to add protein to breakfast?",
+        "Can I spread protein across three meals instead of five?",
+        "Is more protein always better for building muscle?",
+        "Gym wale ko din mein kitna protein chahiye?",
+        "Protein kitne gram per kg body weight?",
+        "Vegetarian gym diet mein protein kaise poora karun?",
+        "Whey protein zaroori hai kya?",
+        "Muscle banane ke liye protein kitna?",
+        "Cutting mein protein badhana chahiye?",
+        "Post workout protein kitni der mein leni chahiye?",
+        "Paneer dal se protein target kaise hit karun?",
+        "Protein shake gym se pehle ya baad mein?"
+      ],
+      "content": "For many healthy adults who resistance train, 1.6-2.2 g protein/kg body weight/day is a practical muscle-building range, not a mandatory target. Needs vary with goals, diet, and health; ask a clinician for individualized advice if you have kidney disease or another relevant condition. Spread protein across 3-5 meals if convenient. Affordable examples are 2 eggs (about 12 g protein, 140 kcal), 1 cup cooked dal (about 15-18 g, 200-250 kcal), 100 g tofu (about 8-15 g, 80-170 kcal), 50 g dry soya chunks (about 25 g, 170 kcal before added oil), or 100 g paneer (about 18 g, 250-300 kcal). Values vary by product and recipe; check package labels when available.",
+      "portion_notes": "Approximate serving guide: 2 eggs provide about 12 g protein and 140 kcal; 1 cup cooked dal about 15-18 g and 200-250 kcal; 100 g tofu about 8-15 g and 80-170 kcal; 50 g dry soya chunks about 25 g and 170 kcal before oil; 100 g paneer about 18 g and 250-300 kcal. Values vary by product and recipe.",
+      "topic": "protein",
+      "category": "nutrition",
+      "follow_up_questions": [
+        "What is your current weight, goal, and food preference?"
+      ],
+      "related_topics": [
+        "calories-tdee",
+        "food-subs-veg",
+        "indian-diet"
+      ],
+      "source": [
+        "Jager et al., JISSN, 2017;14:20.",
+        "Morton et al., BJSM, 2018;52:376-384."
+      ],
+      "safety_level": "caution",
+      "answer_type": "calculation"
+    },
+    {
+      "id": "missed-workout",
+      "title": "Missed workouts",
+      "intent": "schedule_adjustment",
+      "tags": [
+        "missed",
+        "skip",
+        "miss",
+        "reschedule",
+        "leg day",
+        "skip gym",
+        "no show",
+        "schedule",
+        "training week",
+        "push pull legs",
+        "double session",
+        "make up workout",
+        "rest day swap",
+        "travel",
+        "busy week",
+        "gym skip"
+      ],
+      "questions": [
+        "I missed a workout; should I make it up tomorrow?",
+        "What should I do if I skip leg day?",
+        "Can I double my workout after missing a session?",
+        "How should I adjust my week after missing the gym?",
+        "I missed leg day yesterday; should I move it to today?",
+        "Should I cram two training days together?",
+        "Can I skip an accessory workout and stay on schedule?",
+        "My week got busy and I lost a gym day. How do I reset?",
+        "Do I need to repeat the entire split next week?",
+        "Should I train the missed body part on my rest day?",
+        "I skipped the gym while traveling. How should I restart?",
+        "Will one missed workout ruin my progress?",
+        "Should I make up a missed workout or continue my schedule?",
+        "I missed two sessions this week; should I train extra next week?",
+        "Can I move today's workout to tomorrow and take a rest day later?",
+        "What if I miss a workout because I am sick?",
+        "Aaj gym nahi ja paya kya karun?",
+        "Leg day miss ho gaya kal kar lun?",
+        "Do din gym skip kiya ab kya schedule?",
+        "Ek workout miss se muscle loss hoga?",
+        "Kal double workout kar sakta hoon?",
+        "Weekend pe missed workout cover karun?",
+        "Sick tha gym miss kiya restart kaise?",
+        "Travel pe gym miss ho gaya routine kaise?"
+      ],
+      "content": "Do not double tomorrow's session after a missed workout. Shift the remaining week forward by one day or skip the least important accessory day. Protect rest.",
+      "topic": "missed-workout",
+      "category": "training",
+      "follow_up_questions": [
+        "How many days can you train, and what equipment do you have?"
+      ],
+      "related_topics": [
+        "exercise-subs-chest",
+        "splits",
+        "progressive-overload"
+      ],
+      "source": [
+        "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
+      ],
+      "safety_level": "routine",
+      "answer_type": "personalized_plan"
+    },
+    {
+      "id": "exercise-subs-chest",
+      "title": "Chest exercise substitutions",
+      "intent": "substitution",
+      "tags": [
+        "replace",
+        "substitute",
+        "bench",
+        "chest",
+        "press",
+        "pecs",
+        "pectorals",
+        "incline bench",
+        "decline",
+        "dumbbell fly",
+        "cable crossover",
+        "smith machine",
+        "flat bench",
+        "push day",
+        "chest day",
+        "hypertrophy chest",
+        "barbell",
+        "dumbbell press"
+      ],
+      "questions": [
+        "What can I do instead of barbell bench press?",
+        "How can I replace bench press without a barbell?",
+        "What is a good chest press alternative?",
+        "Can dumbbells replace a bench press?",
+        "I don't have a barbell; what chest movement can I do?",
+        "Can I use a chest press machine instead of bench?",
+        "What push exercise trains chest like the bench press?",
+        "How can I train chest at home without a bench?",
+        "Are push-ups an effective bench press substitute?",
+        "What equipment swap works for flat bench?",
+        "Can dumbbell presses replace barbell presses?",
+        "What's another exercise for pressing my chest?",
+        "What can replace bench press in my workout today?",
+        "How do I work chest if the bench stations are busy?",
+        "Could floor presses substitute for bench press?",
+        "What chest exercise can I do with only dumbbells?",
+        "Bench press ki jagah kya exercise karun?",
+        "Chest workout without barbell?",
+        "Dumbbell se chest kaise train karun?",
+        "Push ups se bench press replace ho sakta hai?",
+        "Gym mein bench busy hai chest ke liye alternative?",
+        "Flat bench nahi hai kya karun chest ke liye?",
+        "Incline dumbbell press theek substitute hai?",
+        "Chest day mein barbell nahi mila swap kya?"
+      ],
+      "content": "Barbell bench press can be replaced with dumbbell bench press, machine chest press, or weighted push-ups. Dumbbells are usually the closest hypertrophy substitute.",
+      "topic": "exercise-subs-chest",
+      "category": "training",
+      "follow_up_questions": [
+        "How many days can you train, and what equipment do you have?"
+      ],
+      "related_topics": [
+        "missed-workout",
+        "splits",
+        "progressive-overload"
+      ],
+      "source": [
+        "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
+      ],
+      "safety_level": "routine",
+      "answer_type": "general_advice"
+    },
+    {
+      "id": "food-subs-veg",
+      "title": "Vegetarian protein swaps",
+      "intent": "substitution",
+      "tags": [
+        "paneer",
+        "replace",
+        "vegetarian",
+        "protein",
+        "tofu",
+        "dal",
+        "soya chunks",
+        "besan chilla",
+        "chole",
+        "rajma",
+        "sprouts",
+        "peanut butter",
+        "milk",
+        "curd",
+        "greek yogurt",
+        "vegan protein",
+        "non veg swap",
+        "chicken alternative",
+        "fish substitute"
+      ],
+      "questions": [
+        "What can I eat instead of paneer for protein?",
+        "Can tofu replace chicken in my meal plan?",
+        "What are vegetarian alternatives with similar protein?",
+        "How do I swap foods and keep my protein intake similar?",
+        "What protein-rich vegetarian foods can replace paneer?",
+        "I need a chicken alternative with similar protein; any ideas?",
+        "What can I use instead of meat in this meal?",
+        "Could I use soy chunks instead of chicken?",
+        "Which vegetarian foods have a similar protein serving?",
+        "How do I replace paneer in my diet?",
+        "Is tofu a suitable high-protein swap for chicken?",
+        "Could yogurt or dal replace some of my chicken?",
+        "What is a high-protein replacement for fish in dinner?",
+        "How can I swap meat for vegetarian protein without changing my meal much?",
+        "Can I use beans or lentils instead of meat?",
+        "What can replace dairy protein if I am vegan?",
+        "Chicken ki jagah vegetarian protein kya lun?",
+        "Paneer substitute high protein veg?",
+        "Gym diet mein soya chunks kitne?",
+        "Tofu vs paneer protein gym ke liye?",
+        "Dal chawal se protein target hit hoga?",
+        "Vegan gym diet protein sources?",
+        "Egg khata nahi protein kaise?",
+        "Non veg band kiya protein kaise maintain?"
+      ],
+      "content": "Useful vegetarian swaps include tofu, soya chunks, curd or Greek yogurt, eggs if included in your diet, and dal or beans. Compare approximate protein per portion rather than food volume: 50 g dry soya chunks can provide about 25 g protein; 100 g paneer about 18 g; 100 g tofu about 8-15 g; 1 cup cooked dal about 15-18 g. Calories vary substantially by brand, fat content, and cooking oil, so use package labels or a trusted local food database for precise logging.",
+      "portion_notes": "Approximate servings: 50 g dry soya chunks about 25 g protein; 100 g paneer about 18 g; 100 g tofu about 8-15 g; 1 cup cooked dal about 15-18 g. Calories vary by brand, fat content, and cooking oil.",
+      "topic": "food-subs-veg",
+      "category": "nutrition",
+      "follow_up_questions": [
+        "What is your current weight, goal, and food preference?"
+      ],
+      "related_topics": [
+        "calories-tdee",
+        "protein",
+        "indian-diet"
+      ],
+      "source": [
+        "Indian Food Composition Tables, National Institute of Nutrition, 2017; values vary by recipe and product label."
+      ],
+      "safety_level": "routine",
+      "answer_type": "general_advice"
+    },
+    {
+      "id": "splits",
+      "title": "Choosing a training split",
+      "intent": "planning",
+      "tags": [
+        "split",
+        "ppl",
+        "upper",
+        "lower",
+        "full body",
+        "days",
+        "push pull legs",
+        "upper lower",
+        "bro split",
+        "3 day split",
+        "4 day split",
+        "5 day split",
+        "6 day split",
+        "workout plan",
+        "routine",
+        "schedule",
+        "muscle group frequency"
+      ],
+      "questions": [
+        "Which workout routine should I use for my training days?",
+        "Is full body or push pull legs better for a beginner?",
+        "How should I organize four gym days each week?",
+        "What is a good upper lower routine?",
+        "How many days should I train each muscle?",
+        "I can train three days a week; what split suits me?",
+        "Is upper/lower good if I can go four days?",
+        "Would full-body training work three days per week?",
+        "How should I split a five-day lifting week?",
+        "Which routine suits a beginner with limited training days?",
+        "Is push pull legs suitable for a three-day schedule?",
+        "How do I arrange upper and lower days?",
+        "Should I choose a split based on my goal or my schedule?",
+        "I only have two days for weights; what routine makes sense?",
+        "Can I train each body part twice weekly with four days?",
+        "Which split is easiest to recover from as a new lifter?",
+        "How should I schedule rest days around a weekly split?",
+        "Beginner ke liye best gym split kya hai?",
+        "Week mein 4 din gym ka routine?",
+        "Push pull legs Hindi mein samjhao?",
+        "Upper lower vs PPL kaun better?",
+        "3 din gym full body ya split?",
+        "Chest back legs kaise divide karun?",
+        "Muscle gain ke liye kaun sa split?",
+        "2 din week gym possible routine?"
+      ],
+      "content": "Beginners on 2-3 days should use full body. Four days is usually upper/lower. Intermediate 3-day is Push/Pull/Legs. Do not pick PPL only because the goal is muscle gain.",
+      "topic": "splits",
+      "category": "training",
+      "follow_up_questions": [
+        "How many days can you train, and what equipment do you have?"
+      ],
+      "related_topics": [
+        "missed-workout",
+        "exercise-subs-chest",
+        "progressive-overload"
+      ],
+      "source": [
+        "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
+      ],
+      "safety_level": "routine",
+      "answer_type": "personalized_plan"
+    },
+    {
+      "id": "progressive-overload",
+      "title": "Progressive overload",
+      "intent": "exercise_advice",
+      "tags": [
+        "overload",
+        "progress",
+        "weight",
+        "reps",
+        "add weight",
+        "strength gain",
+        "plateau",
+        "linear progression",
+        "double progression",
+        "rep PR",
+        "weight PR",
+        "gym progress",
+        "increment",
+        "micro plates",
+        "stalled lift"
+      ],
+      "questions": [
+        "How do I get stronger over time?",
+        "When should I increase the weight I lift?",
+        "I am stuck at the same reps and weight; what now?",
+        "How does progressive overload work?",
+        "How should I progress my lifts week to week?",
+        "When should I add another rep or more weight?",
+        "I can do all my reps easily; should I increase the load?",
+        "What do I do when I am not getting stronger?",
+        "Should I add weight every workout?",
+        "How can I track gradual strength progress?",
+        "Is it better to add reps before load?",
+        "What should I change if one of my lifts stalls?",
+        "How small should my weight increases be?",
+        "Should I keep the same load until every set reaches the target reps?",
+        "What does double progression mean in weight training?",
+        "How do I progress if my gym has limited weight increments?",
+        "Weight badhate kaise gym mein?",
+        "Same weight pe atak gaya kya karun?",
+        "Progressive overload kya hai simple?",
+        "Har week weight badhana chahiye?",
+        "Reps badhaun ya weight?",
+        "Squat bench deadlift progress kaise?",
+        "Gym mein strength kaise badhe?",
+        "Form break ho rahi weight kam karun?"
+      ],
+      "content": "Add load or reps when you hit the top of the rep range with good form. Example: 40 kg x 8 -> 40 kg x 10 -> 42.5 kg x 8. If form breaks down, hold the weight or deload rather than forcing jumps.",
+      "topic": "progressive-overload",
+      "category": "training",
+      "follow_up_questions": [
+        "How many days can you train, and what equipment do you have?"
+      ],
+      "related_topics": [
+        "missed-workout",
+        "exercise-subs-chest",
+        "splits"
+      ],
+      "source": [
+        "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
+      ],
+      "safety_level": "routine",
+      "answer_type": "general_advice"
+    },
+    {
+      "id": "recovery",
+      "title": "Recovery, sleep and stress",
+      "intent": "recovery_advice",
+      "tags": [
+        "recovery",
+        "sleep",
+        "rest",
+        "stress",
+        "overtraining",
+        "fatigue",
+        "CNS",
+        "muscle repair",
+        "sleep hygiene",
+        "cortisol",
+        "rest day",
+        "active recovery",
+        "foam roll",
+        "massage",
+        "burnout",
+        "gym tired"
+      ],
+      "questions": [
+        "How many hours should I sleep to recover from training?",
+        "Why am I tired after workouts and how can I recover?",
+        "Should I take a rest day when I feel run down?",
+        "How do stress and sleep affect muscle growth?",
+        "How can I improve recovery between gym sessions?",
+        "Is seven hours of sleep enough for training?",
+        "Could poor sleep affect my workout performance?",
+        "Should I reduce training when work stress is high?",
+        "How do I know if I need an extra rest day?",
+        "Would a deload help if I am constantly fatigued?",
+        "What habits matter most for muscle recovery?",
+        "Does stress slow down progress in the gym?",
+        "Why do my legs still feel heavy before my next session?",
+        "Can an easy rest day help me recover better?",
+        "How should I adjust my training after a poor night of sleep?",
+        "Does taking a rest day make me lose fitness?",
+        "Gym ke baad bahut thakawat normal hai?",
+        "Kitne ghante sone chahiye bodybuilding?",
+        "Recovery slow kyun ho rahi?",
+        "Stress se muscle gain affect?",
+        "Overtraining ke signs kya hain?",
+        "Legs heavy feel ho rahi rest lun?",
+        "Sleep kam hai gym performance?",
+        "Rest day lena zaroori hai kya?"
+      ],
+      "content": "Aim for 7-9 hours of sleep. High stress and poor sleep are reasons to keep calories closer to maintenance and reduce extra isolation volume.",
+      "topic": "recovery",
+      "category": "recovery",
+      "follow_up_questions": [
+        "How have sleep, soreness, and recent training been?"
+      ],
+      "related_topics": [
+        "soreness",
+        "deload",
+        "rest-days"
+      ],
+      "source": [
+        "ACSM Guidelines for Exercise Testing and Prescription, 11th edition."
+      ],
+      "safety_level": "caution",
+      "answer_type": "general_advice"
+    },
+    {
+      "id": "indian-diet",
+      "title": "Indian gym diet patterns",
+      "intent": "meal_planning",
+      "tags": [
+        "indian",
+        "gujarati",
+        "punjabi",
+        "south",
+        "roti",
+        "dal",
+        "rice",
+        "idli",
+        "dosa",
+        "paratha",
+        "khichdi",
+        "biryani",
+        "home food",
+        "tiffin",
+        "mess food",
+        "hostel diet",
+        "budget gym diet",
+        "desi diet",
+        "north indian",
+        "south indian"
+      ],
+      "questions": [
+        "Can you suggest a high protein Indian meal plan?",
+        "What Indian foods should I eat before and after a workout?",
+        "How can I add protein to dal, rice, and roti meals?",
+        "What are some vegetarian Indian foods for muscle gain?",
+        "Build me a high-protein Indian vegetarian menu.",
+        "How can I make my roti meal higher in protein?",
+        "Which Indian breakfast is good for muscle building?",
+        "Can I get enough protein from dal and curd?",
+        "What are easy Indian post-training meal options?",
+        "Suggest foods for a vegetarian Indian fat-loss diet.",
+        "How can paneer or tofu fit into Indian meals?",
+        "What can I eat using rice, dal, and vegetables?",
+        "What high-protein snack can I make with curd?",
+        "How do I add more protein to idli or dosa?",
+        "Can you suggest an Indian meal using soya chunks?",
+        "What can I order at an Indian restaurant that has protein?",
+        "Indian home food se gym diet kaise?",
+        "Roti chawal ke saath muscle gain?",
+        "Hostel mein gym diet kaise manage?",
+        "Vegetarian Indian gym meal plan simple?",
+        "Ghar ka khana cutting mein chalega?",
+        "Mess food gym ke goals ke saath?",
+        "Desi diet mein protein kaise badhaun?",
+        "Budget gym diet India?"
+      ],
+      "content": "A flexible Indian meal template: breakfast oats with milk/curd, or idli/dosa with sambar and eggs if preferred; lunch rice or roti with dal, vegetables, and tofu, soya, paneer, eggs, chicken, or fish; snack roasted chana or curd; dinner roti or rice with a protein food and vegetables. For lower-cost protein, 1 cup cooked dal is roughly 15-18 g protein and 50 g dry soya chunks roughly 25 g; actual calories depend on portions, oil, and recipe. Adjust portions to the person's calorie and protein targets rather than treating this as a fixed prescription.",
+      "portion_notes": "Low-cost protein examples: 1 cup cooked dal is about 15-18 g protein; 50 g dry soya chunks about 25 g; 2 eggs about 12 g; 100 g curd often about 3-5 g. Serving calories vary by recipe and oil.",
+      "topic": "indian-diet",
+      "category": "nutrition",
+      "follow_up_questions": [
+        "What is your current weight, goal, and food preference?"
+      ],
+      "related_topics": [
+        "calories-tdee",
+        "protein",
+        "food-subs-veg"
+      ],
+      "source": [
+        "National Institute of Nutrition, Indian Food Composition Tables, 2017."
+      ],
+      "safety_level": "routine",
+      "answer_type": "personalized_plan"
+    },
+    {
+      "id": "safety",
+      "title": "Safety and medical limits",
+      "intent": "safety",
+      "tags": [
+        "injury",
+        "pain",
+        "medical",
+        "disorder",
+        "starvation",
+        "emergency",
+        "doctor",
+        "medical advice",
+        "red flag",
+        "chest pain gym",
+        "dizziness",
+        "sharp pain",
+        "stop training",
+        "disclaimer",
+        "physician"
+      ],
+      "questions": [
+        "I have sharp pain during an exercise; should I continue?",
+        "Can you prescribe a diet for my medical condition?",
+        "How do I lose weight by starving myself?",
+        "What should I do about chest pain during exercise?",
+        "I feel sharp knee pain during squats. Should I push through?",
+        "Can you help me lose weight with a very low-calorie diet?",
+        "I get chest pain when I exercise. What should I do?",
+        "Is it okay to keep lifting through sharp joint pain?",
+        "I have a diagnosed condition; can you prescribe a diet and workout?",
+        "I have been purging to lose weight. How can I continue safely?",
+        "Should I train soon after surgery without medical advice?",
+        "What should I do about severe pain during exercise?",
+        "I feel dizzy and faint while exercising. Should I keep going?",
+        "Can you diagnose why my shoulder hurts when I press?",
+        "I have a heart condition; what intensity should I train at?",
+        "I want to stop eating to lose weight quickly. Is that safe?",
+        "Workout ke dauran chest pain?",
+        "Gym mein chakkar aaye kya karun?",
+        "Sharp knee pain squat mein?",
+        "Breathing problem exercise ke baad?",
+        "Injury ke baad gym kab wapas?",
+        "Pregnant gym kar sakti hoon?",
+        "Heart problem gym safe?",
+        "Bahut kam khana aur gym dangerous?"
+      ],
+      "content": "Stop exercise immediately for chest pain or pressure, fainting or near-fainting, severe or unusual shortness of breath, or sudden confusion/weakness; seek urgent medical care or call local emergency services for severe or persistent symptoms. Stop for sharp or severe injury pain and get clinical assessment before returning. Dizziness during exercise means stop, sit or lie somewhere safe, and do not resume that session if symptoms persist or recur. Do not provide weight-loss or workout instructions that encourage starvation, purging, laxatives, or hiding an eating disorder; respond supportively and encourage a qualified healthcare professional. Medical conditions, pregnancy, medication interactions, and post-surgery training require individualized clinician advice.",
+      "topic": "safety",
+      "category": "safety",
+      "follow_up_questions": [
+        "Are you experiencing severe symptoms right now?"
+      ],
+      "related_topics": [],
+      "source": [
+        "American Heart Association: Warning Signs of a Heart Attack.",
+        "National Eating Disorders Association: Help and Support."
+      ],
+      "safety_level": "high",
+      "answer_type": "safety_response"
+    },
+    {
+      "id": "supplements",
+      "title": "Supplements",
+      "intent": "supplement_advice",
+      "tags": [
+        "supplement",
+        "whey",
+        "creatine",
+        "vitamin",
+        "creatine monohydrate",
+        "pre workout",
+        "bcaa",
+        "multivitamin",
+        "omega 3",
+        "fish oil",
+        "mass gainer",
+        "fat burner",
+        "zinc",
+        "vitamin d",
+        "electrolytes",
+        "stack"
+      ],
+      "questions": [
+        "Is creatine safe and how much should I take?",
+        "Do I need whey protein to build muscle?",
+        "Which supplements are useful for strength training?",
+        "Can supplements replace a balanced diet?",
+        "What daily creatine dose is commonly used?",
+        "Is whey just a convenient source of protein?",
+        "Do I need a multivitamin for gym training?",
+        "Which supplements have good evidence for lifting?",
+        "Can I build muscle without taking supplements?",
+        "When should I take creatine during the day?",
+        "Is protein powder required after every workout?",
+        "Should I ask my doctor before taking supplements?",
+        "Does creatine need to be cycled?",
+        "Can I mix creatine into my regular drink?",
+        "Are fat-burning supplements necessary for losing weight?",
+        "How can I tell if a supplement claim is trustworthy?",
+        "Gym ke liye kaun se supplements chahiye?",
+        "Creatine safe hai kya beginners?",
+        "Whey vs mass gainer difference?",
+        "Pre workout lena chahiye?",
+        "BCAA zaroori hai?",
+        "Fat burner use karun cutting mein?",
+        "Creatine kitni dose daily?",
+        "Supplements bina gym possible?"
+      ],
+      "content": "Food first. Creatine monohydrate (commonly 3-5 g/day for healthy adults) is well studied, and protein powder is a convenience if food does not meet a person's needs. Fat burners are not necessary and may contain stimulants with meaningful risks. Supplements can interact with medicines or be unsuitable with kidney/liver disease, pregnancy, or other conditions; check with a clinician or pharmacist for personal advice. Do not present supplements as required or as treatment.",
+      "topic": "supplements",
+      "category": "nutrition",
+      "follow_up_questions": [
+        "What is your current weight, goal, and food preference?"
+      ],
+      "related_topics": [
+        "calories-tdee",
+        "protein",
+        "food-subs-veg"
+      ],
+      "source": [
+        "Kreider et al., JISSN, 2017;14:18.",
+        "NIH Office of Dietary Supplements fact sheets."
+      ],
+      "safety_level": "caution",
+      "answer_type": "general_advice"
+    },
+    {
+      "id": "water",
+      "title": "Hydration",
+      "intent": "calculation",
+      "tags": [
+        "water",
+        "hydration",
+        "electrolytes",
+        "sweat",
+        "water intake",
+        "liters",
+        "dehydration",
+        "workout fluids",
+        "cramps"
+      ],
+      "questions": [
+        "How much water should I drink based on my weight?",
+        "Do I need extra water on workout days?",
+        "How can I tell whether I am drinking enough?",
+        "Can drinking more water build muscle?",
+        "How many liters of water should I drink at the gym?",
+        "Should I drink more when it is hot outside?",
+        "How can I stay hydrated during a long workout?",
+        "Is clear urine always a sign I drank enough?",
+        "Can I drink too much water too quickly?",
+        "Do athletes need a fixed daily water amount?",
+        "Should I drink water during strength training?",
+        "How much extra fluid do I need when I sweat a lot?",
+        "Should I sip water between sets?",
+        "Do I need electrolytes for a normal gym session?",
+        "How should I hydrate before an early workout?",
+        "Can thirst help me decide when to drink?",
+        "Gym mein din mein kitna pani?",
+        "Workout ke dauran kitna water?",
+        "Dehydration se performance?",
+        "2 liter pani enough gym ke liye?",
+        "Summer mein gym hydration?",
+        "Muscle cramps pani ki kami?"
+      ],
+      "content": "About 30-35 ml of water per kg of body weight, plus extra on training days. Pale straw urine is a practical check.",
+      "topic": "water",
+      "category": "nutrition",
+      "follow_up_questions": [
+        "What is your current weight, goal, and food preference?"
+      ],
+      "related_topics": [
+        "calories-tdee",
+        "protein",
+        "food-subs-veg"
+      ],
+      "source": [
+        "Thomas et al., Journal of the Academy of Nutrition and Dietetics, 2016;116(3):501-528."
+      ],
+      "safety_level": "caution",
+      "answer_type": "calculation"
+    },
+    {
+      "id": "carbs-fat",
+      "title": "Carbohydrates and dietary fat",
+      "intent": "calculation",
+      "tags": [
+        "carbs",
+        "carbohydrates",
+        "fat",
+        "macros",
+        "energy",
+        "fuel",
+        "fats",
+        "macros split",
+        "low carb",
+        "high carb",
+        "essential fats",
+        "rice oats",
+        "peanut butter fats",
+        "keto gym"
+      ],
+      "questions": [
+        "How many carbs and fats should I eat?",
+        "Are carbohydrates bad for fat loss?",
+        "How much dietary fat do I need?",
+        "What should my macros be after setting protein?",
+        "Should I avoid carbs to lose body fat?",
+        "How do I divide calories between carbs and fat?",
+        "What percentage of calories should come from fat?",
+        "Do carbohydrates help me lift better?",
+        "Is a low-carb diet necessary for weight loss?",
+        "How much fat should I keep in my diet?",
+        "Can I eat carbs at dinner and still lose weight?",
+        "Which macros should I set after protein?",
+        "What macro split should I use on a non-training day?",
+        "Can I choose macros based on the foods I enjoy?",
+        "What happens if I eat too little dietary fat?",
+        "Do I need to track every macro to make progress?",
+        "Gym diet mein carbs kitne?",
+        "Fat loss mein carbs kam karun?",
+        "Bulking mein carbs badhaun?",
+        "Macros ratio muscle gain?",
+        "Low carb gym performance?",
+        "Healthy fats gym diet?",
+        "Carbs pre workout important?"
+      ],
+      "content": "After protein is set, remaining calories can be split between carbohydrates and fat based on preference and training. Fat often starts near 20-30% of calories. Carbohydrates support training fuel; placing some around workouts can help performance. Avoid extremely low fat intake because dietary fat supports normal hormone function and vitamin absorption.",
+      "topic": "carbs-fat",
+      "category": "nutrition",
+      "follow_up_questions": [
+        "What is your current weight, goal, and food preference?"
+      ],
+      "related_topics": [
+        "calories-tdee",
+        "protein",
+        "food-subs-veg"
+      ],
+      "source": [
+        "National Academies Dietary Reference Intakes for Macronutrients, 2005."
+      ],
+      "safety_level": "routine",
+      "answer_type": "calculation"
+    },
+    {
+      "id": "caffeine",
+      "title": "Caffeine and pre-workout",
+      "intent": "supplement_advice",
+      "tags": [
+        "caffeine",
+        "coffee",
+        "pre-workout",
+        "energy",
+        "stimulant",
+        "pre workout stim",
+        "espresso",
+        "green tea",
+        "caffeine tolerance",
+        "sleep caffeine",
+        "black coffee gym"
+      ],
+      "questions": [
+        "How much caffeine should I take before lifting?",
+        "Is coffee good before a workout?",
+        "How late can I take pre-workout?",
+        "What is a safe daily caffeine limit?",
+        "How many milligrams of caffeine are in a useful pre-workout dose?",
+        "Can coffee improve my gym performance?",
+        "Will caffeine at night affect my sleep?",
+        "How long before training should I have coffee?",
+        "Is taking an energy drink before every workout okay?",
+        "Should I lower caffeine if I feel jittery?",
+        "Does pre-workout have too much caffeine?",
+        "Can I take caffeine while trying to lose weight?",
+        "Can I train well without using caffeine?",
+        "What should I do if caffeine makes my heart race?",
+        "Is one cup of coffee enough before a workout?",
+        "How many hours before bed should I stop caffeine?",
+        "Gym se pehle coffee theek hai?",
+        "Pre workout aur coffee saath?",
+        "Kitni caffeine safe gym?",
+        "Caffeine se sleep kharab gym?",
+        "Without pre workout energy kaise?",
+        "Chai gym se pehle chalegi?"
+      ],
+      "content": "Caffeine may improve training performance. If you tolerate it, start with a low dose; commonly studied doses are about 3-6 mg/kg 30-90 minutes before exercise. Keep total daily caffeine under about 400 mg for most healthy adults and use less if sensitive. Avoid late-day doses that disrupt sleep. This guidance is not suitable for everyone, including some medical conditions or pregnancy.",
+      "topic": "caffeine",
+      "category": "nutrition",
+      "follow_up_questions": [
+        "What is your current weight, goal, and food preference?"
+      ],
+      "related_topics": [
+        "calories-tdee",
+        "protein",
+        "food-subs-veg"
+      ],
+      "source": [
+        "Guest et al., JISSN, 2021;18:1."
+      ],
+      "safety_level": "caution",
+      "answer_type": "general_advice"
+    },
+    {
+      "id": "cardio",
+      "title": "Cardio alongside strength training",
+      "intent": "exercise_advice",
+      "tags": [
+        "cardio",
+        "running",
+        "walking",
+        "cycling",
+        "hiit",
+        "endurance",
+        "treadmill",
+        "LISS",
+        "fat loss cardio",
+        "heart rate",
+        "steps",
+        "stairmaster",
+        "rowing",
+        "conditioning"
+      ],
+      "questions": [
+        "How much cardio should I do while lifting?",
+        "Will running stop me from building muscle?",
+        "Should I do HIIT every day?",
+        "How many days should I walk or cycle?",
+        "Can I do cardio and weights on the same day?",
+        "How many minutes of cardio should a beginner do?",
+        "Is walking enough cardio for general fitness?",
+        "How can I improve cardio without hurting leg recovery?",
+        "Should I run before or after lifting weights?",
+        "How often should I do interval training?",
+        "Will cycling interfere with strength gains?",
+        "What is a reasonable amount of cardio during a bulk?",
+        "Can low-intensity cardio help my fitness?",
+        "How should I combine running with leg training?",
+        "Is it okay to do a short walk every day?",
+        "How do I add cardio without feeling exhausted?",
+        "Muscle gain ke saath kitna cardio?",
+        "Fat loss ke liye cardio kitni der?",
+        "Cardio weights se pehle ya baad?",
+        "HIIT vs steady state gym?",
+        "Daily walking enough with lifting?",
+        "Cardio se muscle loss hoga?",
+        "Treadmill cutting routine?"
+      ],
+      "content": "Cardio can support cardiovascular health and body composition alongside lifting. A practical starting point is 20-40 minutes of easy-to-moderate work two to four times weekly, adjusted for goals and recovery. Limit frequent hard intervals if they reduce lifting quality or recovery.",
+      "topic": "cardio",
+      "category": "training",
+      "follow_up_questions": [
+        "How many days can you train, and what equipment do you have?"
+      ],
+      "related_topics": [
+        "missed-workout",
+        "exercise-subs-chest",
+        "splits"
+      ],
+      "source": [
+        "WHO Guidelines on Physical Activity and Sedentary Behaviour, 2020."
+      ],
+      "safety_level": "routine",
+      "answer_type": "general_advice"
+    },
+    {
+      "id": "soreness",
+      "title": "Muscle soreness after training",
+      "intent": "recovery_advice",
+      "tags": [
+        "sore",
+        "soreness",
+        "doms",
+        "muscle pain",
+        "stiffness",
+        "recovery",
+        "muscle soreness",
+        "delayed onset",
+        "legs sore",
+        "biceps sore",
+        "stretch sore",
+        "foam rolling soreness",
+        "second day pain"
+      ],
+      "questions": [
+        "Why am I sore after leg day?",
+        "Should I work out when my muscles are sore?",
+        "How can I recover from DOMS?",
+        "Is muscle soreness required for growth?",
+        "My quads are sore two days after squats; is that normal?",
+        "Can I train a different muscle while sore?",
+        "Does soreness mean my workout was effective?",
+        "What can I do for mild delayed soreness?",
+        "Should I stretch if my muscles are sore?",
+        "When should soreness make me skip training?",
+        "How long does normal post-workout soreness last?",
+        "Is joint pain the same as muscle soreness?",
+        "Why do I get sore after changing my exercises?",
+        "Can light cycling help with sore legs?",
+        "Should I wait until all soreness is gone before training?",
+        "When is muscle pain a reason to seek medical help?",
+        "Gym ke next day body dard normal?",
+        "DOMS kya hota hai?",
+        "Legs bahut sore train karun?",
+        "Muscle pain vs injury difference?",
+        "Soreness kam kaise kare?",
+        "Har workout ke baad dard normal?"
+      ],
+      "content": "Mild delayed-onset muscle soreness can happen after unfamiliar or demanding training and usually settles over several days. Gentle movement is fine if it feels comfortable; reduce load or rest if movement is limited. Soreness is not required for progress. Sharp, severe, persistent, or joint pain needs medical assessment rather than coaching advice.",
+      "topic": "soreness",
+      "category": "recovery",
+      "follow_up_questions": [
+        "How have sleep, soreness, and recent training been?"
+      ],
+      "related_topics": [
+        "recovery",
+        "deload",
+        "rest-days"
+      ],
+      "source": [
+        "ACSM Guidelines for Exercise Testing and Prescription, 11th edition."
+      ],
+      "safety_level": "caution",
+      "answer_type": "general_advice"
+    },
+    {
+      "id": "meal-timing",
+      "title": "Meal timing around workouts",
+      "intent": "meal_planning",
+      "tags": [
+        "meal",
+        "timing",
+        "breakfast",
+        "lunch",
+        "dinner",
+        "pre-workout",
+        "post-workout",
+        "food",
+        "pre workout meal",
+        "post workout meal",
+        "fasted training",
+        "intermittent fasting gym",
+        "breakfast lifter",
+        "night meal",
+        "nutrient timing",
+        "anabolic window"
+      ],
+      "questions": [
+        "What should I eat before training?",
+        "What is a good post-workout meal?",
+        "Do I need to eat immediately after lifting?",
+        "Can you suggest a high-protein day of meals?",
+        "How soon before a workout should I eat?",
+        "Is a banana and yogurt okay before the gym?",
+        "Do I need a protein shake right after exercise?",
+        "What should I eat after an evening workout?",
+        "Does meal timing matter more than daily protein?",
+        "Can you suggest a simple training-day menu?",
+        "Should I eat carbs before strength training?",
+        "What is a light snack before lifting weights?",
+        "What if I train early and don't feel hungry?",
+        "Can I have my normal dinner after a late workout?",
+        "Is there a special anabolic window after training?",
+        "What are quick pre-workout snacks that are easy to digest?",
+        "Gym se pehle kya khana?",
+        "Post workout meal kitni der mein?",
+        "Empty stomach gym safe?",
+        "Intermittent fasting aur weight training?",
+        "Raat ko gym dinner timing?",
+        "Pre workout banana chalega?"
+      ],
+      "content": "Total daily calories and protein matter more than precise meal timing. If useful, have a familiar meal with protein and carbohydrates one to three hours before training. Afterward, have a normal protein-containing meal when convenient. Examples include yogurt or eggs with oats and fruit, or tofu, paneer, chicken, or dal with rice or roti and vegetables.",
+      "topic": "meal-timing",
+      "category": "nutrition",
+      "follow_up_questions": [
+        "What is your current weight, goal, and food preference?"
+      ],
+      "related_topics": [
+        "calories-tdee",
+        "protein",
+        "food-subs-veg"
+      ],
+      "source": [
+        "Thomas et al., Journal of the Academy of Nutrition and Dietetics, 2016;116(3):501-528."
+      ],
+      "safety_level": "routine",
+      "answer_type": "personalized_plan"
+    },
+    {
+      "id": "training-volume",
+      "title": "Weekly training volume",
+      "intent": "exercise_advice",
+      "tags": [
+        "sets",
+        "volume",
+        "hypertrophy",
+        "frequency",
+        "muscle growth",
+        "sets per week",
+        "hard sets",
+        "MEV MRV",
+        "volume landmarks",
+        "junk volume",
+        "effective reps",
+        "training load",
+        "hypertrophy volume"
+      ],
+      "questions": [
+        "How many sets per muscle should I do each week?",
+        "How much training volume is enough to build muscle?",
+        "How often should I train each muscle group?",
+        "Should I add more sets if I am not growing?",
+        "How many hard sets for chest should I do weekly?",
+        "Is ten sets per muscle enough for a beginner?",
+        "Should I split weekly sets across two workouts?",
+        "How do I know if my workout has too much volume?",
+        "Can I grow with fewer sets if I train hard?",
+        "Should advanced lifters do more weekly sets?",
+        "When should I reduce my training volume?",
+        "Does training to failure count as more volume?",
+        "How many sets should I start with if I am new?",
+        "Is doing more sets always better for muscle growth?",
+        "How should I count sets that work more than one muscle?",
+        "Can I make progress with six sets per muscle each week?",
+        "Chest ke liye week mein kitne sets?",
+        "Volume zyada ho gaya signs?",
+        "Muscle grow nahi ho raha sets badhaun?",
+        "Beginner kitne sets per muscle?",
+        "16 sets chest enough?",
+        "Training volume kya hai gym?"
+      ],
+      "content": "Many people make progress with roughly 8-15 challenging sets per muscle per week, distributed over at least two sessions when practical. Start near the lower end and add volume only if performance, technique, sleep, and recovery remain good. Training to failure on every set is not required.",
+      "topic": "training-volume",
+      "category": "training",
+      "follow_up_questions": [
+        "How many days can you train, and what equipment do you have?"
+      ],
+      "related_topics": [
+        "missed-workout",
+        "exercise-subs-chest",
+        "splits"
+      ],
+      "source": [
+        "Schoenfeld et al., Journal of Sports Sciences, 2017;35(11):1073-1082.",
+        "ACSM resistance training position stand, 2009."
+      ],
+      "safety_level": "routine",
+      "answer_type": "general_advice"
+    },
+    {
+      "id": "warmup",
+      "title": "Warm-ups and ramp-up sets",
+      "intent": "exercise_advice",
+      "tags": [
+        "warm up",
+        "warmup",
+        "prep",
+        "ramp sets",
+        "mobility",
+        "dynamic stretch",
+        "activation",
+        "hip mobility",
+        "shoulder warmup",
+        "empty bar",
+        "ramp up sets",
+        "joint prep",
+        "light cardio warmup"
+      ],
+      "questions": [
+        "How should I warm up before lifting weights?",
+        "Do I need to stretch before every workout?",
+        "What warm-up should I do before squats?",
+        "How many warm-up sets should I do?",
+        "Can I start my workout with my working weight?",
+        "Should my warm-up make me tired?",
+        "What is a good general warm-up at the gym?",
+        "Do I need warm-up sets for small exercises?",
+        "Squat se pehle warmup kya?",
+        "Bench press warmup sets kitni?",
+        "Stretching before lifting?",
+        "5 minute warmup enough?",
+        "Heavy deadlift warmup routine?",
+        "Warmup skip kar sakta hoon?"
+      ],
+      "content": "Start with a few minutes of easy movement if it helps you feel ready, then rehearse the movements you will train. For heavy compound lifts, use a few progressively heavier, low-fatigue ramp-up sets before working sets. Warm-ups should prepare you, not tire you out.",
+      "topic": "warmup",
+      "category": "training",
+      "follow_up_questions": [
+        "How many days can you train, and what equipment do you have?"
+      ],
+      "related_topics": [
+        "missed-workout",
+        "exercise-subs-chest",
+        "splits"
+      ],
+      "source": [
+        "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
+      ],
+      "safety_level": "routine",
+      "answer_type": "general_advice"
+    },
+    {
+      "id": "rep-ranges",
+      "title": "Repetitions and load selection",
+      "intent": "exercise_advice",
+      "tags": [
+        "reps",
+        "repetitions",
+        "rep range",
+        "weight",
+        "hypertrophy",
+        "strength",
+        "5x5",
+        "8-12 reps",
+        "high reps low weight",
+        "strength reps",
+        "hypertrophy reps",
+        "1RM",
+        "RPE",
+        "RIR",
+        "failure reps"
+      ],
+      "questions": [
+        "How many reps should I do to build muscle?",
+        "Is a low rep range better for strength?",
+        "Can high reps build muscle too?",
+        "How heavy should I lift for an 8 to 12 rep set?",
+        "Do I need to lift heavy to grow?",
+        "How many repetitions are best for beginners?",
+        "Should I change rep ranges every week?",
+        "What is a good rep range for general fitness?",
+        "Muscle ke liye kitne reps?",
+        "Strength ke liye rep range?",
+        "12 reps vs 6 reps muscle?",
+        "Beginner kitne reps start?",
+        "Har set failure tak?",
+        "Rep range change kab kare?"
+      ],
+      "content": "A broad range of loads and repetitions can build muscle when sets are challenging and technique is sound. Heavier loads are more specific to maximal strength, while moderate repetitions are often convenient for general muscle-building work. Choose a range you can perform consistently and progress over time.",
+      "topic": "rep-ranges",
+      "category": "training",
+      "follow_up_questions": [
+        "How many days can you train, and what equipment do you have?"
+      ],
+      "related_topics": [
+        "missed-workout",
+        "exercise-subs-chest",
+        "splits"
+      ],
+      "source": [
+        "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
+      ],
+      "safety_level": "routine",
+      "answer_type": "general_advice"
+    },
+    {
+      "id": "rest-between-sets",
+      "title": "Rest between sets",
+      "intent": "exercise_advice",
+      "tags": [
+        "rest time",
+        "between sets",
+        "rest interval",
+        "recover",
+        "sets",
+        "rest timer",
+        "90 seconds",
+        "3 minutes rest",
+        "superset rest",
+        "compound rest",
+        "isolation rest",
+        "phone scrolling gym"
+      ],
+      "questions": [
+        "How long should I rest between lifting sets?",
+        "Is one minute enough rest between sets?",
+        "Should I rest longer after heavy squats?",
+        "How long do bodybuilders rest between exercises?",
+        "Can short rests reduce my reps?",
+        "What is a good rest time for isolation exercises?",
+        "Should I start the next set when I am still breathing hard?",
+        "How much rest do I need for strength training?",
+        "Sets ke beech kitna rest?",
+        "1 minute rest enough?",
+        "Squat ke baad kitna wait?",
+        "Short rest muscle gain?",
+        "Rest timer use karun?",
+        "Triceps isolation rest time?"
+      ],
+      "content": "Rest long enough to perform the next set with good technique and useful effort. Heavy multi-joint sets often need roughly two to four minutes; lighter isolation work may need less. These are starting points, not rules, and breathing, performance, and the exercise matter.",
+      "topic": "rest-between-sets",
+      "category": "training",
+      "follow_up_questions": [
+        "How many days can you train, and what equipment do you have?"
+      ],
+      "related_topics": [
+        "missed-workout",
+        "exercise-subs-chest",
+        "splits"
+      ],
+      "source": [
+        "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
+      ],
+      "safety_level": "routine",
+      "answer_type": "general_advice"
+    },
+    {
+      "id": "exercise-order",
+      "title": "Exercise order in a workout",
+      "intent": "exercise_advice",
+      "tags": [
+        "exercise order",
+        "workout order",
+        "compound",
+        "priority",
+        "routine",
+        "compound first",
+        "isolation last",
+        "superset order",
+        "priority lift",
+        "squat bench deadlift order",
+        "accessory work"
+      ],
+      "questions": [
+        "Which exercise should I do first in my workout?",
+        "Should compounds come before isolation exercises?",
+        "Do I train my weak muscle first?",
+        "Is there a correct order for gym exercises?",
+        "Should I do cardio before or after lifting?",
+        "Where should I put abs in my workout?",
+        "Should I do bench before triceps exercises?",
+        "Can I change the order if equipment is busy?",
+        "Pehle compound ya isolation?",
+        "Chest day exercise order?",
+        "Cardio start ya end?",
+        "Weak muscle pehle train?",
+        "Abs workout kab kare?",
+        "Equipment busy order change?"
+      ],
+      "content": "Place the exercises that matter most to your goal earlier, while you are relatively fresh. Many people put demanding compound lifts before smaller isolation work, but exercise order can be adjusted for preference, equipment, and comfort. Consistent effort across the week matters more than a single perfect order.",
+      "topic": "exercise-order",
+      "category": "training",
+      "follow_up_questions": [
+        "How many days can you train, and what equipment do you have?"
+      ],
+      "related_topics": [
+        "missed-workout",
+        "exercise-subs-chest",
+        "splits"
+      ],
+      "source": [
+        "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
+      ],
+      "safety_level": "routine",
+      "answer_type": "general_advice"
+    },
+    {
+      "id": "training-technique",
+      "title": "Lifting technique and form",
+      "intent": "exercise_advice",
+      "tags": [
+        "form",
+        "technique",
+        "range of motion",
+        "control",
+        "lifting",
+        "form check",
+        "ROM",
+        "tempo",
+        "eccentric",
+        "mind muscle connection",
+        "ego lifting",
+        "spotter",
+        "lifting cues"
+      ],
+      "questions": [
+        "How do I know if my lifting form is good?",
+        "Should every repetition use the same range of motion?",
+        "Is it okay if my form changes on the last rep?",
+        "How fast should I lower a weight?",
+        "Do I need perfect form to make progress?",
+        "How can I practice a new exercise safely?",
+        "Should I film my lifts to check technique?",
+        "When should I stop a set because of form?",
+        "Squat form kaise sahi?",
+        "Deadlift back round fix?",
+        "Ego lifting se injury?",
+        "Full ROM important muscle?",
+        "Bench press shoulder pain form?",
+        "Gym mein form kaise improve?"
+      ],
+      "content": "Use a controllable range of motion and repeatable technique that suits your body and the exercise. Practice new movements with light loads; increase weight only while you can maintain control. Stop or modify a set if you develop sharp pain or lose control, and ask a qualified coach to assess technique when you need hands-on feedback.",
+      "topic": "training-technique",
+      "category": "training",
+      "follow_up_questions": [
+        "How many days can you train, and what equipment do you have?"
+      ],
+      "related_topics": [
+        "missed-workout",
+        "exercise-subs-chest",
+        "splits"
+      ],
+      "source": [
+        "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
+      ],
+      "safety_level": "routine",
+      "answer_type": "general_advice"
+    },
+    {
+      "id": "training-plateau",
+      "title": "Breaking a training plateau",
+      "intent": "exercise_advice",
+      "tags": [
+        "plateau",
+        "stalled",
+        "stuck",
+        "strength progress",
+        "progression",
+        "stuck weight",
+        "no progress",
+        "stall",
+        "break plateau",
+        "deload week",
+        "program change",
+        "strength plateau"
+      ],
+      "questions": [
+        "My lifts have stalled for a few weeks; what should I change?",
+        "How do I break a strength plateau?",
+        "Why am I not adding reps or weight anymore?",
+        "Should I change my program if progress slows?",
+        "How long should I wait before changing my routine?",
+        "What can I do when my bench press stops improving?",
+        "Could poor recovery be causing my plateau?",
+        "Should I add more sets when a lift stalls?",
+        "Gym progress ruk gaya kya karun?",
+        "Plateau break kaise?",
+        "Same weight mahine se?",
+        "Muscle nahi badh raha reason?",
+        "Program change kab kare?",
+        "Deload se plateau fix?"
+      ],
+      "content": "First check whether the plateau is real: compare several weeks of consistent training, technique, sleep, food, and logged performance rather than one session. If progress has genuinely stalled, adjust one variable at a time, such as load, repetitions, exercise choice, or recoverable volume. Avoid adding work when fatigue is already high.",
+      "topic": "training-plateau",
+      "category": "training",
+      "follow_up_questions": [
+        "How many days can you train, and what equipment do you have?"
+      ],
+      "related_topics": [
+        "missed-workout",
+        "exercise-subs-chest",
+        "splits"
+      ],
+      "source": [
+        "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
+      ],
+      "safety_level": "routine",
+      "answer_type": "general_advice"
+    },
+    {
+      "id": "deload",
+      "title": "Deload weeks and fatigue management",
+      "intent": "recovery_advice",
+      "tags": [
+        "deload",
+        "fatigue",
+        "training break",
+        "recovery week",
+        "tired",
+        "deload week",
+        "reduce volume",
+        "taper",
+        "lighter weights",
+        "fatigue management"
+      ],
+      "questions": [
+        "When should I take a deload week?",
+        "How do I deload my workout program?",
+        "Should I lower weights if I feel run down?",
+        "Do beginners need planned deloads?",
+        "Can I take a lighter week instead of stopping training?",
+        "How much should I reduce my workout during a deload?",
+        "Will a week of easier training make me weaker?",
+        "What signs suggest I need to reduce training fatigue?",
+        "Deload week kya hoti hai?",
+        "Kab deload lena chahiye?",
+        "Deload mein kitna weight?",
+        "Tired hoon deload karun?",
+        "Har 4 week deload?",
+        "Deload ke baad strength?"
+      ],
+      "content": "A deload is a short period of reduced training stress, useful when fatigue is interfering with performance or recovery. You can reduce sets, load, or effort for several sessions while keeping comfortable movement. It is not mandatory on a fixed schedule; persistent exhaustion or pain may need rest or professional assessment.",
+      "topic": "deload",
+      "category": "recovery",
+      "follow_up_questions": [
+        "How have sleep, soreness, and recent training been?"
+      ],
+      "related_topics": [
+        "recovery",
+        "soreness",
+        "rest-days"
+      ],
+      "source": [
+        "ACSM Guidelines for Exercise Testing and Prescription, 11th edition."
+      ],
+      "safety_level": "caution",
+      "answer_type": "general_advice"
+    },
+    {
+      "id": "progress-tracking",
+      "title": "Tracking fitness progress",
+      "intent": "exercise_advice",
+      "tags": [
+        "track",
+        "progress",
+        "logbook",
+        "measurements",
+        "results",
+        "workout log",
+        "training diary",
+        "progress photos",
+        "scale weight",
+        "strength log",
+        "app tracking",
+        "PR log"
+      ],
+      "questions": [
+        "What should I track in my workout log?",
+        "How often should I measure my progress?",
+        "Which numbers show if my training is working?",
+        "Should I track reps and weights every session?",
+        "How do I compare workouts from week to week?",
+        "Are progress photos useful for fitness goals?",
+        "Should I measure my waist as well as my weight?",
+        "How long before I can judge whether a plan works?",
+        "Gym progress track kaise?",
+        "Weight log daily ya weekly?",
+        "Progress photos kitni bar?",
+        "Strength increase kaise measure?",
+        "Notebook vs app gym log?",
+        "Body measurements kaise?"
+      ],
+      "content": "Record exercises, loads, repetitions, sets, and any useful notes about effort or technique. Review trends over multiple weeks rather than reacting to one session. Depending on your goal, combine performance records with consistent body-weight averages, measurements, or photos; none of these measures tells the whole story alone.",
+      "topic": "progress-tracking",
+      "category": "training",
+      "follow_up_questions": [
+        "How many days can you train, and what equipment do you have?"
+      ],
+      "related_topics": [
+        "missed-workout",
+        "exercise-subs-chest",
+        "splits"
+      ],
+      "source": [
+        "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
+      ],
+      "safety_level": "routine",
+      "answer_type": "general_advice"
+    },
+    {
+      "id": "weight-loss-rate",
+      "title": "Gradual weight-loss pace",
+      "intent": "calculation",
+      "tags": [
+        "weight loss rate",
+        "lose weight",
+        "fat loss pace",
+        "weekly weight",
+        "deficit",
+        "fat loss speed",
+        "weekly weight loss",
+        "cut rate",
+        "aggressive cut",
+        "slow cut",
+        "scale fluctuations",
+        "whoosh effect"
+      ],
+      "questions": [
+        "How quickly should I lose weight while keeping muscle?",
+        "What is a reasonable amount of weight to lose per week?",
+        "Am I losing weight too fast?",
+        "How slow should a sustainable fat-loss phase be?",
+        "Should I aim to lose a fixed number of kilos each week?",
+        "How can I tell if my diet deficit is too aggressive?",
+        "What rate of weight loss is realistic for me?",
+        "Why does my weight change so much from day to day?",
+        "Week mein kitna weight loss safe?",
+        "Cutting speed fast ya slow?",
+        "0.5 kg per week realistic?",
+        "Scale same but look leaner?",
+        "Fat loss stall cutting?",
+        "Muscle preserve slow cut?"
+      ],
+      "content": "Aim for gradual, sustainable change rather than the fastest possible loss. Scale weight naturally fluctuates with hydration, digestion, and other factors, so compare weekly averages across several weeks. If energy, training, or wellbeing deteriorate, the deficit may be too aggressive; a clinician can advise on individual medical needs.",
+      "topic": "weight-loss-rate",
+      "category": "nutrition",
+      "follow_up_questions": [
+        "What is your current weight, goal, and food preference?"
+      ],
+      "related_topics": [
+        "calories-tdee",
+        "protein",
+        "food-subs-veg"
+      ],
+      "source": [
+        "Mifflin et al., American Journal of Clinical Nutrition, 1990.",
+        "ISSN nutrition and exercise position stands."
+      ],
+      "safety_level": "caution",
+      "answer_type": "calculation"
+    },
+    {
+      "id": "body-recomposition",
+      "title": "Building muscle while losing fat",
+      "intent": "calculation",
+      "tags": [
+        "recomposition",
+        "lose fat gain muscle",
+        "body composition",
+        "build muscle",
+        "fat loss",
+        "recomp",
+        "same weight look better",
+        "beginner recomp",
+        "maintenance recomp"
+      ],
+      "questions": [
+        "Can I gain muscle and lose fat at the same time?",
+        "How does body recomposition work?",
+        "Should I bulk or cut if I am new to lifting?",
+        "Can beginners build muscle while eating at maintenance?",
+        "How do I improve body composition without a big bulk?",
+        "Do I need a calorie deficit to lose body fat?",
+        "Can strength training help during fat loss?",
+        "How do I know if I am recomping?",
+        "Recomposition kya hai?",
+        "Fat loss aur muscle gain saath?",
+        "Beginner recomp possible?",
+        "Same weight better body?",
+        "Recomp ke liye calories?",
+        "Bulk cut ke bina body change?"
+      ],
+      "content": "Some people, especially newer lifters or those returning after a break, can gain muscle while losing fat, but the rate and likelihood vary. Consistent resistance training, adequate protein, sleep, and a modest calorie approach support the process. Track strength and longer-term body trends; short-term scale changes cannot confirm recomposition by themselves.",
+      "topic": "body-recomposition",
+      "category": "nutrition",
+      "follow_up_questions": [
+        "What is your current weight, goal, and food preference?"
+      ],
+      "related_topics": [
+        "calories-tdee",
+        "protein",
+        "food-subs-veg"
+      ],
+      "source": [
+        "Mifflin et al., American Journal of Clinical Nutrition, 1990.",
+        "ISSN nutrition and exercise position stands."
+      ],
+      "safety_level": "caution",
+      "answer_type": "calculation"
+    },
+    {
+      "id": "rest-days",
+      "title": "Rest days and weekly recovery",
+      "intent": "recovery_advice",
+      "tags": [
+        "rest day",
+        "days off",
+        "recovery",
+        "off day",
+        "training schedule",
+        "active rest",
+        "complete rest",
+        "recovery day",
+        "walk on rest day",
+        "yoga rest day"
+      ],
+      "questions": [
+        "How many rest days should I take each week?",
+        "Should I train every day or take days off?",
+        "What can I do on a rest day?",
+        "Is walking okay on a rest day?",
+        "How do I schedule rest between hard workouts?",
+        "Can I take an extra day off if I feel tired?",
+        "Does taking two rest days affect muscle growth?",
+        "Should rest days be completely inactive?",
+        "Rest day pe kya kare?",
+        "Kitne rest days week?",
+        "Rest day walk chalegi?",
+        "Muscle rest kitne din?",
+        "Back to back gym days?",
+        "Rest day mein yoga?"
+      ],
+      "content": "Rest days help balance training stress and recovery; the right number depends on your schedule, training volume, sleep, and experience. Light walking or comfortable mobility is fine if it feels restorative. Keep demanding work away from muscles that are still significantly fatigued, and adjust when performance or wellbeing declines.",
+      "topic": "rest-days",
+      "category": "recovery",
+      "follow_up_questions": [
+        "How have sleep, soreness, and recent training been?"
+      ],
+      "related_topics": [
+        "recovery",
+        "soreness",
+        "deload"
+      ],
+      "source": [
+        "ACSM Guidelines for Exercise Testing and Prescription, 11th edition."
+      ],
+      "safety_level": "caution",
+      "answer_type": "general_advice"
+    },
+    {
+      "id": "home-workouts",
+      "title": "Home workouts with limited equipment",
+      "intent": "substitution",
+      "tags": [
+        "home workout",
+        "bodyweight",
+        "no equipment",
+        "bands",
+        "dumbbells",
+        "home gym",
+        "dumbbells only",
+        "resistance bands",
+        "garage gym",
+        "apartment workout"
+      ],
+      "questions": [
+        "Can I build muscle at home without a gym?",
+        "What workout can I do with no equipment?",
+        "How do I make bodyweight exercises harder?",
+        "Can resistance bands replace gym machines?",
+        "What is a simple home strength routine?",
+        "How can I train legs at home with dumbbells?",
+        "Can push-ups and squats be enough to start?",
+        "How do I progress when my home weights are light?",
+        "Ghar pe gym without equipment?",
+        "Home workout muscle gain?",
+        "Dumbbells only routine?",
+        "Resistance band gym substitute?",
+        "Hotel room workout?",
+        "Gym band ho to home plan?"
+      ],
+      "content": "Home training can build strength and muscle when exercises challenge you and become progressively harder. Use available bodyweight movements, bands, or dumbbells for pushing, pulling, squatting, hinging, and carrying. Progress with more repetitions, harder variations, added load, or controlled range of motion while maintaining good technique.",
+      "topic": "home-workouts",
+      "category": "training",
+      "follow_up_questions": [
+        "How many days can you train, and what equipment do you have?"
+      ],
+      "related_topics": [
+        "missed-workout",
+        "exercise-subs-chest",
+        "splits"
+      ],
+      "source": [
+        "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
+      ],
+      "safety_level": "routine",
+      "answer_type": "general_advice"
+    },
+    {
+      "id": "exercise-selection",
+      "title": "Choosing gym exercises",
+      "intent": "substitution",
+      "tags": [
+        "exercise selection",
+        "choose exercises",
+        "machines",
+        "free weights",
+        "routine",
+        "best exercises",
+        "compound lifts",
+        "isolation picks",
+        "squat hinge push pull",
+        "movement patterns",
+        "exercise list"
+      ],
+      "questions": [
+        "Which exercises should I include in a balanced program?",
+        "Are machines as effective as free weights?",
+        "How many exercises should I do per workout?",
+        "Do I need to use barbell exercises to build muscle?",
+        "How do I pick exercises that fit my equipment?",
+        "Should I choose exercises I enjoy?",
+        "Can machines be easier for beginners to learn?",
+        "How often should I change my exercise selection?",
+        "Best gym exercises beginner?",
+        "Kaun se exercises must do?",
+        "Compound movements list?",
+        "Biceps ke liye best exercise?",
+        "Leg day main lifts?",
+        "Back thickness ke liye kya?"
+      ],
+      "content": "Choose movements that train the muscles and skills relevant to your goals, fit your equipment, and can be performed comfortably with controlled technique. Machines and free weights can both be useful; neither is required for everyone. Keep a manageable set of exercises long enough to practice and track progress before changing them without a reason.",
+      "topic": "exercise-selection",
+      "category": "training",
+      "follow_up_questions": [
+        "How many days can you train, and what equipment do you have?"
+      ],
+      "related_topics": [
+        "missed-workout",
+        "exercise-subs-chest",
+        "splits"
+      ],
+      "source": [
+        "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
+      ],
+      "safety_level": "routine",
+      "answer_type": "general_advice"
+    },
+    {
+      "id": "beginner-program",
+      "title": "Starting a beginner strength program",
+      "intent": "planning",
+      "tags": [
+        "beginner program",
+        "new lifter",
+        "start lifting",
+        "simple plan",
+        "gym routine",
+        "new to gym",
+        "first month gym",
+        "starting strength",
+        "novice lifter",
+        "gym etiquette",
+        "first workout"
+      ],
+      "questions": [
+        "Can you give me a simple beginner gym plan?",
+        "What should I do during my first month of lifting?",
+        "How do I start strength training from scratch?",
+        "How many exercises should a new lifter learn?",
+        "Should beginners train full body or one muscle per day?",
+        "How hard should my first workouts feel?",
+        "Can I use the same beginner routine for several weeks?",
+        "What should I focus on before lifting heavier?",
+        "Gym shuru kiya kya routine?",
+        "Beginner first week gym?",
+        "Pehli bar gym mein kya kare?",
+        "New lifter mistakes?",
+        "3 month beginner program?",
+        "Gym beginner full body?"
+      ],
+      "content": "A beginner can start with two or three manageable full-body sessions per week, using a few familiar push, pull, squat, and hinge movements. Practice technique, leave some repetitions in reserve, and add repetitions or load gradually when sessions feel controlled. Build consistency before adding a complicated split or high training volume.",
+      "topic": "beginner-program",
+      "category": "training",
+      "follow_up_questions": [
+        "How many days can you train, and what equipment do you have?"
+      ],
+      "related_topics": [
+        "missed-workout",
+        "exercise-subs-chest",
+        "splits"
+      ],
+      "source": [
+        "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
+      ],
+      "safety_level": "routine",
+      "answer_type": "personalized_plan"
+    },
+    {
+      "id": "mobility-stretching",
+      "title": "Mobility and stretching",
+      "intent": "recovery_advice",
+      "tags": [
+        "mobility",
+        "stretch",
+        "flexibility",
+        "range of motion",
+        "warm up",
+        "static stretch",
+        "dynamic mobility",
+        "hip flexor",
+        "shoulder mobility",
+        "ankle mobility",
+        "warm down stretch"
+      ],
+      "questions": [
+        "Should I stretch before or after lifting?",
+        "How can I improve my flexibility for squats?",
+        "What flexibility exercises can I do on a recovery day?",
+        "Will stretching prevent all injuries?",
+        "What is the difference between mobility and flexibility?",
+        "Can I use dynamic stretches before a workout?",
+        "How long should I hold a stretch?",
+        "Should stretching feel painful to work?",
+        "Gym ke baad stretching?",
+        "Mobility daily karni chahiye?",
+        "Tight hips squat fix?",
+        "Shoulder mobility bench?",
+        "Static vs dynamic stretch?",
+        "Flexibility muscle gain?"
+      ],
+      "content": "Mobility is the ability to move through a range of motion you can control; stretching is one way to work on flexibility. Use comfortable dynamic movements before training if they help you prepare, and gentle static stretching when it suits your goals. Stretching should not cause sharp pain, and it cannot guarantee injury prevention.",
+      "topic": "mobility-stretching",
+      "category": "recovery",
+      "follow_up_questions": [
+        "How have sleep, soreness, and recent training been?"
+      ],
+      "related_topics": [
+        "recovery",
+        "soreness",
+        "deload"
+      ],
+      "source": [
+        "ACSM Guidelines for Exercise Testing and Prescription, 11th edition."
+      ],
+      "safety_level": "caution",
+      "answer_type": "general_advice"
+    },
+    {
+      "id": "time-efficient-workouts",
+      "title": "Time-efficient workouts",
+      "intent": "planning",
+      "tags": [
+        "short workout",
+        "busy schedule",
+        "time efficient",
+        "superset",
+        "quick gym",
+        "30 minute gym",
+        "giant set",
+        "quick session",
+        "time crunch"
+      ],
+      "questions": [
+        "Can I get a good workout in 30 minutes?",
+        "How do I train when I have very little time?",
+        "What exercises should I prioritize in a short session?",
+        "Are supersets useful for saving time?",
+        "Is a short workout better than skipping the gym?",
+        "How can I make my gym routine more efficient?",
+        "Should I reduce exercises or rest time when busy?",
+        "Can three short sessions work each week?",
+        "45 minute mein full workout?",
+        "Busy ho gym short routine?",
+        "Superset time save?",
+        "30 min enough muscle?",
+        "Office ke baad quick gym?",
+        "Minimum effective workout time?"
+      ],
+      "content": "Short sessions can be productive when you prioritize a few main movements and train consistently. Prepare your exercise order, keep transitions simple, and consider pairing non-competing exercises if it does not reduce technique or performance. Do not rush heavy sets or remove needed rest just to fit in more work.",
+      "topic": "time-efficient-workouts",
+      "category": "training",
+      "follow_up_questions": [
+        "How many days can you train, and what equipment do you have?"
+      ],
+      "related_topics": [
+        "missed-workout",
+        "exercise-subs-chest",
+        "splits"
+      ],
+      "source": [
+        "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
+      ],
+      "safety_level": "routine",
+      "answer_type": "personalized_plan"
+    },
+    {
+      "id": "training-consistency",
+      "title": "Building a consistent training habit",
+      "intent": "recovery_advice",
+      "tags": [
+        "consistency",
+        "motivation",
+        "habit",
+        "routine",
+        "adherence",
+        "discipline",
+        "show up",
+        "long term progress",
+        "skip less",
+        "routine stick"
+      ],
+      "questions": [
+        "How do I stay consistent with going to the gym?",
+        "What should I do when I lose motivation to work out?",
+        "How can I fit exercise into a busy week?",
+        "Is it okay to do a shorter workout when I feel unmotivated?",
+        "How do I restart after taking a long break?",
+        "Should I set a fixed weekly gym schedule?",
+        "How can I make my workout routine easier to stick to?",
+        "What is a realistic training schedule for a busy beginner?",
+        "Gym consistent kaise rahu?",
+        "Motivation nahi aati kya karun?",
+        "Missed weeks habit break?",
+        "Discipline vs motivation gym?",
+        "Long term fitness kaise?",
+        "Har week gym jana mushkil?"
+      ],
+      "content": "Consistency is easier when the plan fits your real schedule and starts at a manageable level. Choose regular training times, prepare a shorter fallback session for busy days, and focus on returning to the routine after interruptions rather than chasing perfection. Increase the plan gradually as the habit becomes reliable.",
+      "topic": "training-consistency",
+      "category": "recovery",
+      "follow_up_questions": [
+        "How have sleep, soreness, and recent training been?"
+      ],
+      "related_topics": [
+        "recovery",
+        "soreness",
+        "deload"
+      ],
+      "source": [
+        "ACSM Guidelines for Exercise Testing and Prescription, 11th edition."
+      ],
+      "safety_level": "caution",
+      "answer_type": "general_advice"
+    },
+    {
+      "id": "core-training",
+      "title": "Core training basics",
+      "intent": "exercise_advice",
+      "tags": [
+        "core",
+        "abs",
+        "abdominal",
+        "plank",
+        "trunk strength",
+        "core stability",
+        "crunches",
+        "hanging leg raise",
+        "anti extension",
+        "six pack"
+      ],
+      "questions": [
+        "How often should I train my abs?",
+        "What are good beginner core exercises?",
+        "Will ab workouts burn belly fat?",
+        "Do I need to train core if I lift weights?",
+        "How many sets of planks should I do?",
+        "Are crunches necessary for a strong core?",
+        "Can I train abs at the end of my workout?",
+        "What exercises work the core besides sit-ups?",
+        "Abs ke liye daily gym?",
+        "Core training kab kare?",
+        "Plank kitni der?",
+        "Six pack ke liye abs routine?",
+        "Squat deadlift se core enough?",
+        "Lower back core exercises?"
+      ],
+      "content": "Core exercises can train trunk strength and control, but they do not selectively remove belly fat. Start with a few controlled movements such as planks, carries, or comfortable trunk-flexion and anti-rotation exercises. Add difficulty gradually and treat abdominal work like other training: use good technique and allow recovery.",
+      "topic": "core-training",
+      "category": "training",
+      "follow_up_questions": [
+        "How many days can you train, and what equipment do you have?"
+      ],
+      "related_topics": [
+        "missed-workout",
+        "exercise-subs-chest",
+        "splits"
+      ],
+      "source": [
+        "ACSM, Progression Models in Resistance Training for Healthy Adults, 2009."
+      ],
+      "safety_level": "routine",
+      "answer_type": "general_advice"
+    }
+  ]
+}

@@ -7,7 +7,7 @@ import { useProgressStore } from '../store/useProgressStore';
 import { useNutritionStore } from '../store/useNutritionStore';
 import { useChatStore } from '../store/useChatStore';
 import { useAuthStore } from '../store/useAuthStore';
-import { generateCoachResponse, CoachContext } from '../engine/hybridCoach';
+import { getCoachAnswer, generateCoachResponse, CoachContext } from '../engine/hybridCoach';
 import { fetchChatAnswer } from '../lib/api';
 
 export default function ChatPage() {
@@ -97,7 +97,11 @@ export default function ChatPage() {
         responseReferences = result.references ?? [];
         followUpQuestions = result.followUpQuestions ?? [];
       } catch {
-        responseContent = generateCoachResponse(question, context);
+        const localResult = getCoachAnswer(question, context);
+        responseContent = localResult.answer;
+        responseSources = localResult.sources;
+        responseReferences = localResult.references ?? [];
+        followUpQuestions = localResult.followUpQuestions;
       }
       addMessage({
         id: (Date.now() + 1).toString(),

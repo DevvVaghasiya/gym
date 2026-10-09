@@ -9,10 +9,14 @@ import { useNutritionStore } from '../store/useNutritionStore';
 import { useProgressStore } from '../store/useProgressStore';
 import { useNavigate } from 'react-router-dom';
 import {
-  User, Dumbbell, Utensils, Bell,
-  Check, LogOut, Camera, RotateCcw, ShieldAlert, Sliders,
-  Sparkles, Save, Heart, ShieldCheck
+  User, Dumbbell, Utensils, Sliders,
+  Check, LogOut, Camera, Save, Download, RefreshCw, Trash2
 } from 'lucide-react';
+
+const inputStyle =
+  'w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-medium text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-all';
+const labelStyle =
+  'block text-xs font-semibold text-slate-300 mb-2';
 
 export default function SettingsPage() {
   const profile = useUserStore(state => state.profile);
@@ -41,15 +45,14 @@ export default function SettingsPage() {
     if (!profile) return;
     updateProfile(form);
 
-    // Regenerate plans if key parameters changed
     const newWorkoutPlan = generateWorkoutPlan({ ...profile, ...form });
     setWorkoutPlan(newWorkoutPlan);
 
     const newDietPlan = generateAIDietPlan({ ...profile, ...form });
     setDietPlan(newDietPlan);
 
-    setSavedMsg('Settings saved! Your AI workout & diet plans have been updated.');
-    setTimeout(() => setSavedMsg(''), 4000);
+    setSavedMsg('Settings saved successfully!');
+    setTimeout(() => setSavedMsg(''), 3500);
   };
 
   const handleUploadAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,12 +68,12 @@ export default function SettingsPage() {
   };
 
   const handleResetData = () => {
-    if (!confirm('Are you sure you want to reset your account profile and re-run onboarding?')) return;
+    if (!confirm('Re-run onboarding wizard to recalculate your fitness baseline?')) return;
     navigate('/onboarding');
   };
 
   const handleDeleteAccount = () => {
-    if (!confirm('Are you sure you want to permanently delete your account data?')) return;
+    if (!confirm('Are you sure you want to delete your profile data and sign out?')) return;
     setProfile(null as any);
     logout();
   };
@@ -78,9 +81,7 @@ export default function SettingsPage() {
   const handleExportData = () => {
     if (!profile) return;
     const recoveryScore = profile.sleepHours >= 8 ? 88 : profile.sleepHours >= 7 ? 74 : 52;
-    
-    let csv = "date,goal,sleep_hours,recovery_score,weight_kg,recent_pr_exercise,recent_pr_weight\n";
-    
+    let csv = 'date,goal,sleep_hours,recovery_score,weight_kg,recent_pr_exercise,recent_pr_weight\n';
     entries.forEach(entry => {
       const recentPR = prs.find(p => p.date === entry.date) || prs[prs.length - 1] || null;
       csv += `${entry.date},${profile.goal},${profile.sleepHours},${recoveryScore},${entry.weightKg},${recentPR ? recentPR.exerciseName : 'none'},${recentPR ? recentPR.weight : 0}\n`;
@@ -90,214 +91,220 @@ export default function SettingsPage() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `fitai_feature_table_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.download = `fitai_export_${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
-    
-    setSavedMsg('Feature Table exported successfully!');
-    setTimeout(() => setSavedMsg(''), 4000);
+
+    setSavedMsg('Data exported successfully!');
+    setTimeout(() => setSavedMsg(''), 3500);
   };
 
   if (!profile) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh] text-slate-400 font-bold">
+      <div className="flex min-h-[60vh] items-center justify-center font-bold text-slate-400">
         Loading settings...
       </div>
     );
   }
 
-  const inputClasses = "w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm font-semibold placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-all";
-  const labelClasses = "block text-xs font-bold text-slate-400 mb-1.5";
+  const navTabs = [
+    { id: 'profile', label: 'Body Biometrics & Profile', desc: 'Weight, height, age, targets', icon: User },
+    { id: 'workout', label: 'Workout & Training Rules', desc: 'Split, frequency, gym setup', icon: Dumbbell },
+    { id: 'nutrition', label: 'Diet & Nutrition Preferences', desc: 'Meals, water goal, diet type', icon: Utensils },
+    { id: 'preferences', label: 'App Theme & Notifications', desc: 'Sound, alerts, data export', icon: Sliders },
+  ];
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className="max-w-6xl mx-auto pb-24 space-y-8 font-sans"
+      transition={{ duration: 0.3 }}
+      className="mx-auto max-w-6xl space-y-6 pb-24 font-sans px-2 sm:px-4"
     >
-      {/* Header */}
-      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900/60 border border-white/10 p-6 sm:p-8 rounded-[2rem] backdrop-blur-xl">
+      {/* Top Header */}
+      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-3xl border border-white/10 bg-slate-900/80 p-6 sm:p-8 backdrop-blur-2xl">
         <div>
-          <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">App Settings</h1>
-          <p className="text-slate-400 text-xs sm:text-sm font-medium mt-1">Manage your body stats, workout preferences, diet targets & app options.</p>
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">App Settings</h1>
+          <p className="mt-1 text-xs sm:text-sm text-slate-400">
+            Customize your biometrics, workout preferences, diet goals and app behavior.
+          </p>
         </div>
 
-        <div className="flex w-full items-stretch gap-3 sm:w-auto sm:items-center">
+        <div className="flex items-center gap-3">
           <button
             onClick={handleSaveSettings}
-            aria-label="Save changes"
-            className="flex min-h-12 flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-3 py-3 text-[11px] font-bold uppercase tracking-wider text-white shadow-lg transition-all hover:from-blue-500 hover:to-indigo-500 sm:flex-none sm:px-6 sm:text-xs"
+            className="flex items-center gap-2 rounded-xl bg-violet-600 px-5 py-2.5 text-xs font-bold text-white shadow-lg shadow-violet-500/20 transition-all hover:bg-violet-500 active:scale-[0.99]"
           >
-            <Save className="h-4 w-4 shrink-0" />
-            <span className="sm:hidden">Save</span>
-            <span className="hidden sm:inline">Save Changes</span>
+            <Save className="h-4 w-4" /> Save Changes
           </button>
           <button
             onClick={() => logout()}
-            className="flex min-h-12 flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-slate-700 bg-slate-800 px-3 py-3 text-[11px] font-bold text-slate-300 transition-all hover:bg-slate-700 hover:text-white sm:flex-none sm:px-4 sm:text-xs"
+            className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-xs font-bold text-slate-300 transition-all hover:bg-rose-500/10 hover:border-rose-500/30 hover:text-rose-300"
           >
-            <LogOut className="h-4 w-4 shrink-0 text-rose-400" /> Sign Out
+            <LogOut className="h-4 w-4 text-rose-400" /> Sign Out
           </button>
         </div>
       </header>
 
-      {/* Save Toast Notification */}
+      {/* Save Notification Toast */}
       <AnimatePresence>
         {savedMsg && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-5 py-3.5 rounded-2xl text-xs font-bold flex items-center gap-2.5 shadow-xl"
+            exit={{ opacity: 0, y: -8 }}
+            className="flex items-center gap-2.5 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-5 py-3 text-xs font-bold text-emerald-300 shadow-xl"
           >
-            <Check className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+            <Check className="h-4 w-4 text-emerald-400" />
             <span>{savedMsg}</span>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        
-        {/* Left Profile Summary & Navigation */}
-        <div className="lg:col-span-4 space-y-6">
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-3 rounded-[2rem] border border-white/10 bg-slate-900/60 p-4 text-left backdrop-blur-xl sm:block sm:p-6 sm:text-center">
-            <div className="group relative h-14 w-14 shrink-0 sm:mx-auto sm:mb-4 sm:h-24 sm:w-24">
-              <div className="w-full h-full rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 p-1 shadow-xl">
-                <div className="w-full h-full rounded-full bg-slate-950 flex items-center justify-center overflow-hidden">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 items-start">
+        {/* Left Profile Sidebar & Navigation */}
+        <div className="space-y-6 lg:col-span-4">
+          {/* User Profile Card */}
+          <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 text-center backdrop-blur-2xl">
+            <div className="group relative mx-auto mb-4 h-20 w-20">
+              <div className="h-full w-full rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 p-1 shadow-xl">
+                <div className="flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-slate-950">
                   {form.avatar ? (
-                    <img src={form.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                    <img src={form.avatar} alt="Avatar" className="h-full w-full object-cover" />
                   ) : (
-                    <span className="text-3xl font-black text-white">{form.name?.charAt(0) || 'U'}</span>
+                    <span className="text-2xl font-black text-white">{form.name?.charAt(0) || 'U'}</span>
                   )}
                 </div>
               </div>
-              <label className="absolute inset-0 bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center cursor-pointer">
-                <Camera className="w-5 h-5 text-white" />
+              <label className="absolute inset-0 flex cursor-pointer items-center justify-center rounded-full bg-black/60 opacity-0 transition-opacity group-hover:opacity-100">
+                <Camera className="h-5 w-5 text-white" />
                 <input type="file" accept="image/*" onChange={handleUploadAvatar} className="hidden" />
               </label>
             </div>
 
-            <div className="min-w-0 flex-1 sm:flex-none">
-              <h3 className="truncate text-lg font-black text-white sm:text-xl">{form.name || 'User'}</h3>
-              <p className="truncate text-xs font-medium text-slate-400 sm:mb-4">{form.email || 'user@example.com'}</p>
-            </div>
+            <h3 className="text-base font-extrabold text-white truncate">{form.name || 'User'}</h3>
+            <p className="text-xs text-slate-400 truncate mb-4">{form.email || 'user@example.com'}</p>
 
-            <div className="grid w-full grid-cols-2 gap-2 border-t border-white/5 pt-3 text-center text-xs sm:pt-4">
-              <div className="p-3 bg-slate-950 rounded-xl border border-white/5">
-                <span className="text-slate-500 text-[10px] font-extrabold uppercase block mb-0.5">Current Weight</span>
-                <span className="text-white font-bold">{form.weightKg || 70} kg</span>
+            <div className="grid grid-cols-2 gap-2 border-t border-white/8 pt-4 text-left">
+              <div className="rounded-xl border border-white/5 bg-white/[0.02] p-3 text-center">
+                <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-500">Current</span>
+                <span className="text-sm font-extrabold text-white">{form.weightKg || 70} kg</span>
               </div>
-              <div className="p-3 bg-slate-950 rounded-xl border border-white/5">
-                <span className="text-slate-500 text-[10px] font-extrabold uppercase block mb-0.5">Target Weight</span>
-                <span className="text-cyan-400 font-bold">{form.goalWeightKg || 70} kg</span>
+              <div className="rounded-xl border border-white/5 bg-white/[0.02] p-3 text-center">
+                <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-500">Target</span>
+                <span className="text-sm font-extrabold text-violet-400">{form.goalWeightKg || 70} kg</span>
               </div>
             </div>
           </div>
 
-          {/* Navigation Tabs */}
-          <div className="grid grid-cols-4 gap-1.5 rounded-[2rem] border border-white/10 bg-slate-900/60 p-2 backdrop-blur-xl sm:p-3 lg:flex lg:flex-col lg:gap-1.5">
-            {[
-              { id: 'profile', label: 'Body Biometrics & Profile', mobileLabel: 'Profile', icon: User },
-              { id: 'workout', label: 'Workout & Training Rules', mobileLabel: 'Workout', icon: Dumbbell },
-              { id: 'nutrition', label: 'Diet & Nutrition Preferences', mobileLabel: 'Diet', icon: Utensils },
-              { id: 'preferences', label: 'App Theme & Notifications', mobileLabel: 'App', icon: Sliders },
-            ].map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
-                aria-pressed={activeTab === tab.id}
-                className={`flex min-h-12 min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-1 py-2 text-[10px] font-extrabold transition-all sm:flex-row sm:gap-2 sm:px-3 sm:text-xs lg:min-h-11 lg:justify-start lg:px-4 lg:py-3 ${
-                  activeTab === tab.id
-                    ? 'bg-blue-600 text-white shadow-lg'
-                    : 'text-slate-400 hover:text-white hover:bg-white/5'
-                }`}
-              >
-                <tab.icon className="w-4 h-4" />
-                <span className="sm:hidden">{tab.mobileLabel}</span>
-                <span className="hidden sm:inline">{tab.label}</span>
-              </button>
-            ))}
+          {/* Navigation Tab Pills */}
+          <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-2.5 backdrop-blur-2xl space-y-1">
+            {navTabs.map(tab => {
+              const active = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as any)}
+                  className={`flex w-full items-center gap-3 rounded-2xl p-3 text-left transition-all ${
+                    active
+                      ? 'bg-violet-600/15 border border-violet-500/30 text-white shadow-sm'
+                      : 'border border-transparent text-slate-400 hover:bg-white/5 hover:text-white'
+                  }`}
+                >
+                  <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${
+                    active ? 'bg-violet-600 text-white' : 'bg-white/5 text-slate-400'
+                  }`}>
+                    <tab.icon className="h-4 w-4" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className={`text-xs font-bold truncate ${active ? 'text-white' : 'text-slate-300'}`}>
+                      {tab.label}
+                    </p>
+                    <p className="text-[10px] text-slate-500 truncate">{tab.desc}</p>
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* Right Settings Form Content */}
+        {/* Right Tab Content Card */}
         <div className="lg:col-span-8">
-          <div className="bg-slate-900/60 border border-white/10 rounded-[2rem] p-6 sm:p-8 backdrop-blur-xl space-y-6">
+          <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 sm:p-8 backdrop-blur-2xl space-y-6">
             
             {/* TAB 1: Profile & Biometrics */}
             {activeTab === 'profile' && (
               <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl font-black text-white">Body Biometrics</h3>
-                  <p className="text-xs text-slate-400 font-medium">Update your physiological metrics for accurate AI calculations.</p>
+                <div className="border-b border-white/8 pb-4">
+                  <h3 className="text-lg font-black text-white">Body Biometrics</h3>
+                  <p className="text-xs text-slate-400">Keep your physiological metrics up to date for precise AI targets.</p>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className={labelClasses}>Full Name</label>
+                    <label className={labelStyle}>Full Name</label>
                     <input
-                      type="text" className={inputClasses} value={form.name || ''}
+                      type="text" className={inputStyle} value={form.name || ''}
                       onChange={e => setForm({ ...form, name: e.target.value })}
                     />
                   </div>
                   <div>
-                    <label className={labelClasses}>Email Address</label>
+                    <label className={labelStyle}>Email Address</label>
                     <input
-                      type="email" className={inputClasses} value={form.email || ''}
+                      type="email" className={inputStyle} value={form.email || ''}
                       onChange={e => setForm({ ...form, email: e.target.value })}
                     />
                   </div>
                   <div>
-                    <label className={labelClasses}>Age (Years)</label>
+                    <label className={labelStyle}>Age (Years)</label>
                     <input
-                      type="number" className={inputClasses} value={form.age || 25}
+                      type="number" className={inputStyle} value={form.age || 26}
                       onChange={e => setForm({ ...form, age: Number(e.target.value) })}
                     />
                   </div>
                   <div>
-                    <label className={labelClasses}>Height (cm)</label>
+                    <label className={labelStyle}>Height (cm)</label>
                     <input
-                      type="number" className={inputClasses} value={form.heightCm || 175}
+                      type="number" className={inputStyle} value={form.heightCm || 178}
                       onChange={e => setForm({ ...form, heightCm: Number(e.target.value) })}
                     />
                   </div>
                   <div>
-                    <label className={labelClasses}>Current Weight (kg)</label>
+                    <label className={labelStyle}>Current Weight (kg)</label>
                     <input
-                      type="number" step="0.5" className={inputClasses} value={form.weightKg || 70}
+                      type="number" step="0.5" className={inputStyle} value={form.weightKg || 74}
                       onChange={e => setForm({ ...form, weightKg: Number(e.target.value) })}
                     />
                   </div>
                   <div>
-                    <label className={labelClasses}>Goal Weight (kg)</label>
+                    <label className={labelStyle}>Goal Weight (kg)</label>
                     <input
-                      type="number" step="0.5" className={inputClasses} value={form.goalWeightKg || 70}
+                      type="number" step="0.5" className={inputStyle} value={form.goalWeightKg || 70}
                       onChange={e => setForm({ ...form, goalWeightKg: Number(e.target.value) })}
                     />
                   </div>
                   <div>
-                    <label className={labelClasses}>Primary Goal</label>
+                    <label className={labelStyle}>Primary Goal</label>
                     <select
-                      className={inputClasses} value={form.goal || 'recomposition'}
+                      className={inputStyle} value={form.goal || 'recomposition'}
                       onChange={e => setForm({ ...form, goal: e.target.value })}
                     >
-                      <option value="weight_loss">Weight Loss / Fat Burn</option>
-                      <option value="muscle_gain">Muscle Gain / Bulking</option>
+                      <option value="weight_loss">Weight Loss / Fat Loss</option>
+                      <option value="muscle_gain">Build Muscle / Hypertrophy</option>
                       <option value="recomposition">Body Recomposition</option>
-                      <option value="strength">Pure Strength & Power</option>
+                      <option value="strength">Strength & Power</option>
                     </select>
                   </div>
                   <div>
-                    <label className={labelClasses}>Activity Level</label>
+                    <label className={labelStyle}>Activity Level</label>
                     <select
-                      className={inputClasses} value={form.activityLevel || 'moderate'}
+                      className={inputStyle} value={form.activityLevel || 'moderate'}
                       onChange={e => setForm({ ...form, activityLevel: e.target.value })}
                     >
                       <option value="sedentary">Sedentary (Desk Job)</option>
                       <option value="light">Lightly Active</option>
                       <option value="moderate">Moderately Active</option>
-                      <option value="high">Very Active</option>
+                      <option value="heavy">Very Active</option>
                     </select>
                   </div>
                 </div>
@@ -307,16 +314,16 @@ export default function SettingsPage() {
             {/* TAB 2: Workout Rules */}
             {activeTab === 'workout' && (
               <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl font-black text-white">Workout & Training Rules</h3>
-                  <p className="text-xs text-slate-400 font-medium">Customize your AI exercise split, equipment, and workout length.</p>
+                <div className="border-b border-white/8 pb-4">
+                  <h3 className="text-lg font-black text-white">Workout & Training Rules</h3>
+                  <p className="text-xs text-slate-400">Configure your training frequency, session duration, and available gym type.</p>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className={labelClasses}>Training Experience</label>
+                    <label className={labelStyle}>Training Experience</label>
                     <select
-                      className={inputClasses} value={form.experience || 'beginner'}
+                      className={inputStyle} value={form.experience || 'beginner'}
                       onChange={e => setForm({ ...form, experience: e.target.value })}
                     >
                       <option value="beginner">Beginner (0 - 1 year)</option>
@@ -325,9 +332,9 @@ export default function SettingsPage() {
                     </select>
                   </div>
                   <div>
-                    <label className={labelClasses}>Workout Days per Week</label>
+                    <label className={labelStyle}>Workout Days per Week</label>
                     <select
-                      className={inputClasses} value={form.daysPerWeek || 4}
+                      className={inputStyle} value={form.daysPerWeek || 4}
                       onChange={e => setForm({ ...form, daysPerWeek: Number(e.target.value) })}
                     >
                       <option value={3}>3 Days / Week</option>
@@ -337,9 +344,9 @@ export default function SettingsPage() {
                     </select>
                   </div>
                   <div>
-                    <label className={labelClasses}>Session Duration</label>
+                    <label className={labelStyle}>Session Duration</label>
                     <select
-                      className={inputClasses} value={form.workoutDuration || 60}
+                      className={inputStyle} value={form.workoutDuration || 60}
                       onChange={e => setForm({ ...form, workoutDuration: Number(e.target.value) })}
                     >
                       <option value={45}>45 Minutes</option>
@@ -349,13 +356,13 @@ export default function SettingsPage() {
                     </select>
                   </div>
                   <div>
-                    <label className={labelClasses}>Gym Type</label>
+                    <label className={labelStyle}>Gym Environment</label>
                     <select
-                      className={inputClasses} value={form.gymType || 'commercial'}
+                      className={inputStyle} value={form.gymType || 'commercial'}
                       onChange={e => setForm({ ...form, gymType: e.target.value })}
                     >
                       <option value="commercial">Commercial Gym (Full Equipment)</option>
-                      <option value="home">Home Gym (Dumbbells/Bands)</option>
+                      <option value="home">Home Gym (Dumbbells & Bands)</option>
                       <option value="bodyweight">Calisthenics (Bodyweight Only)</option>
                     </select>
                   </div>
@@ -366,16 +373,16 @@ export default function SettingsPage() {
             {/* TAB 3: Diet & Nutrition */}
             {activeTab === 'nutrition' && (
               <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl font-black text-white">Diet & Hydration Targets</h3>
-                  <p className="text-xs text-slate-400 font-medium">Configure food preferences and daily water targets.</p>
+                <div className="border-b border-white/8 pb-4">
+                  <h3 className="text-lg font-black text-white">Diet & Hydration Targets</h3>
+                  <p className="text-xs text-slate-400">Configure dietary preference, water intake, and daily meals count.</p>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className={labelClasses}>Dietary Preference</label>
+                    <label className={labelStyle}>Dietary Preference</label>
                     <select
-                      className={inputClasses} value={form.foodPreference || 'vegetarian'}
+                      className={inputStyle} value={form.foodPreference || 'vegetarian'}
                       onChange={e => setForm({ ...form, foodPreference: e.target.value })}
                     >
                       <option value="vegetarian">Vegetarian</option>
@@ -385,16 +392,16 @@ export default function SettingsPage() {
                     </select>
                   </div>
                   <div>
-                    <label className={labelClasses}>Daily Water Goal (Liters)</label>
+                    <label className={labelStyle}>Daily Water Goal (Liters)</label>
                     <input
-                      type="number" step="0.5" className={inputClasses} value={form.dailyWaterIntakeLiters || 3.0}
+                      type="number" step="0.5" className={inputStyle} value={form.dailyWaterIntakeLiters || 3.0}
                       onChange={e => setForm({ ...form, dailyWaterIntakeLiters: Number(e.target.value) })}
                     />
                   </div>
                   <div>
-                    <label className={labelClasses}>Meals Per Day</label>
+                    <label className={labelStyle}>Meals Per Day</label>
                     <select
-                      className={inputClasses} value={form.numberOfMeals || 4}
+                      className={inputStyle} value={form.numberOfMeals || 4}
                       onChange={e => setForm({ ...form, numberOfMeals: Number(e.target.value) })}
                     >
                       <option value={3}>3 Meals</option>
@@ -403,9 +410,9 @@ export default function SettingsPage() {
                     </select>
                   </div>
                   <div>
-                    <label className={labelClasses}>Daily Sleep Target (Hours)</label>
+                    <label className={labelStyle}>Sleep Target (Hours)</label>
                     <input
-                      type="number" step="0.5" className={inputClasses} value={form.sleepHours || 8}
+                      type="number" step="0.5" className={inputStyle} value={form.sleepHours || 8}
                       onChange={e => setForm({ ...form, sleepHours: Number(e.target.value) })}
                     />
                   </div>
@@ -416,86 +423,89 @@ export default function SettingsPage() {
             {/* TAB 4: Preferences & Account */}
             {activeTab === 'preferences' && (
               <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl font-black text-white">Preferences & Notifications</h3>
-                  <p className="text-xs text-slate-400 font-medium">Control audio cues, workout notifications, and account data.</p>
+                <div className="border-b border-white/8 pb-4">
+                  <h3 className="text-lg font-black text-white">Preferences & Account Management</h3>
+                  <p className="text-xs text-slate-400">Control notifications, export metrics, or manage account data.</p>
                 </div>
 
                 {/* Toggles */}
                 <div className="space-y-3">
                   {[
-                    { title: 'Rest Timer Audio Beeps', desc: 'Play sound when workout rest timer expires', state: soundEnabled, toggle: setSoundEnabled },
-                    { title: 'Daily Workout Reminders', desc: 'Notify when today is a scheduled training day', state: workoutReminders, toggle: setWorkoutReminders },
-                    { title: 'Hydration Log Notifications', desc: 'Periodic reminders to meet daily water goal', state: waterReminders, toggle: setWaterReminders },
+                    { title: 'Rest Timer Audio Beeps', desc: 'Audio cue when workout rest interval ends', state: soundEnabled, toggle: setSoundEnabled },
+                    { title: 'Daily Workout Reminders', desc: 'Alerts on scheduled training days', state: workoutReminders, toggle: setWorkoutReminders },
+                    { title: 'Hydration Notifications', desc: 'Reminders to log daily water consumption', state: waterReminders, toggle: setWaterReminders },
                   ].map((pref, i) => (
-                    <div key={i} className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+                    <div key={i} className="flex items-center justify-between rounded-2xl border border-white/8 bg-white/[0.02] p-4">
                       <div>
                         <h4 className="text-sm font-bold text-white">{pref.title}</h4>
-                        <p className="text-xs text-slate-500">{pref.desc}</p>
+                        <p className="text-xs text-slate-400">{pref.desc}</p>
                       </div>
                       <button
                         type="button"
                         onClick={() => pref.toggle(!pref.state)}
-                        className={`w-12 h-6 rounded-full transition-colors relative ${pref.state ? 'bg-blue-600' : 'bg-slate-800'}`}
+                        className={`relative h-6 w-11 rounded-full transition-colors ${pref.state ? 'bg-violet-600' : 'bg-slate-800'}`}
                       >
-                        <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all ${pref.state ? 'left-7' : 'left-1'}`} />
+                        <div className={`absolute top-1 h-4 w-4 rounded-full bg-white transition-all ${pref.state ? 'left-6' : 'left-1'}`} />
                       </button>
                     </div>
                   ))}
                 </div>
 
-                {/* Re-run Onboarding & Danger Zone */}
-                <div className="pt-6 border-t border-slate-800 space-y-4">
-                  <div className="p-4 rounded-xl bg-blue-500/10 border border-blue-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                {/* Action Cards */}
+                <div className="space-y-3 pt-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-violet-500/20 bg-violet-500/10 p-4">
                     <div>
-                      <h4 className="text-sm font-bold text-blue-300">Re-run AI Onboarding Wizard</h4>
-                      <p className="text-xs text-slate-400">Recalculate your physiological baseline from scratch.</p>
+                      <h4 className="text-sm font-bold text-violet-200">Re-run AI Onboarding Wizard</h4>
+                      <p className="text-xs text-slate-400">Recalculate physiological metrics from scratch.</p>
                     </div>
                     <button
-                      type="button" onClick={handleResetData}
-                      className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs uppercase tracking-wider transition-all"
+                      type="button"
+                      onClick={handleResetData}
+                      className="flex items-center justify-center gap-2 rounded-xl bg-violet-600 px-4 py-2.5 text-xs font-bold text-white transition-all hover:bg-violet-500"
                     >
-                      Re-run Wizard
+                      <RefreshCw className="h-3.5 w-3.5" /> Re-run Wizard
                     </button>
                   </div>
 
-                  <div className="p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-blue-500/20 bg-blue-500/10 p-4">
                     <div>
-                      <h4 className="text-sm font-bold text-cyan-300">Export Training Data (CSV)</h4>
-                      <p className="text-xs text-slate-400">Download your feature table for Phase 2 AI Model Training.</p>
+                      <h4 className="text-sm font-bold text-blue-200">Export Training Logs</h4>
+                      <p className="text-xs text-slate-400">Download your progress history as a CSV file.</p>
                     </div>
                     <button
-                      type="button" onClick={handleExportData}
-                      className="px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs uppercase tracking-wider transition-all"
+                      type="button"
+                      onClick={handleExportData}
+                      className="flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-bold text-white transition-all hover:bg-blue-500"
                     >
-                      Export CSV
+                      <Download className="h-3.5 w-3.5" /> Export CSV
                     </button>
                   </div>
 
-                  <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-rose-500/20 bg-rose-500/10 p-4">
                     <div>
-                      <h4 className="text-sm font-bold text-rose-300">Delete Account & Data</h4>
-                      <p className="text-xs text-slate-400">Permanently remove profile records from local storage.</p>
+                      <h4 className="text-sm font-bold text-rose-300">Delete Account & Reset Data</h4>
+                      <p className="text-xs text-slate-400">Permanently clear stored profile and workout state.</p>
                     </div>
                     <button
-                      type="button" onClick={handleDeleteAccount}
-                      className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs uppercase tracking-wider transition-all"
+                      type="button"
+                      onClick={handleDeleteAccount}
+                      className="flex items-center justify-center gap-2 rounded-xl bg-rose-600 px-4 py-2.5 text-xs font-bold text-white transition-all hover:bg-rose-500"
                     >
-                      Delete Account
+                      <Trash2 className="h-3.5 w-3.5" /> Delete Account
                     </button>
                   </div>
                 </div>
               </div>
             )}
 
-            {/* Bottom Save Button */}
-            <div className="pt-6 border-t border-slate-800 flex justify-end">
+            {/* Bottom Save Button Bar */}
+            <div className="flex items-center justify-end border-t border-white/8 pt-5">
               <button
                 type="button"
                 onClick={handleSaveSettings}
-                className="px-8 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-lg flex items-center gap-2"
+                className="flex items-center gap-2 rounded-xl bg-violet-600 px-6 py-3 text-xs font-bold text-white shadow-lg shadow-violet-500/25 transition-all hover:bg-violet-500 active:scale-[0.99]"
               >
-                <Save className="w-4 h-4" /> Save All Settings
+                <Save className="h-4 w-4" /> Save All Settings
               </button>
             </div>
           </div>

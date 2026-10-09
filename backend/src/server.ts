@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import * as mysql from 'mysql2/promise';
 import bcrypt from 'bcrypt';
@@ -220,7 +220,7 @@ const authenticateToken = (req: any, res: any, next: any) => {
 };
 
 // POST /api/auth/signup
-app.post('/api/auth/signup', async (req, res) => {
+app.post('/api/auth/signup', async (req: Request, res: Response) => {
   try {
     const { name, email, password, phone } = req.body;
 
@@ -250,7 +250,7 @@ app.post('/api/auth/signup', async (req, res) => {
 });
 
 // POST /api/auth/login
-app.post('/api/auth/login', async (req, res) => {
+app.post('/api/auth/login', async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
     
@@ -395,7 +395,7 @@ app.post('/api/onboarding/save', authenticateToken, async (req: any, res: any) =
 
 const ML_URL = process.env.ML_SERVICE_URL || 'http://localhost:8000';
 
-app.post('/api/ml/recommend', async (req, res) => {
+app.post('/api/ml/recommend', async (req: Request, res: Response) => {
   try {
     const r = await fetch(`${ML_URL}/recommend`, {
       method: 'POST',
@@ -410,7 +410,7 @@ app.post('/api/ml/recommend', async (req, res) => {
   }
 });
 
-app.post('/api/chat', async (req: any, res) => {
+app.post('/api/chat', async (req: any, res: Response) => {
   try {
     const r = await fetch(`${ML_URL}/chat`, {
       method: 'POST',
@@ -444,7 +444,7 @@ app.post('/api/chat', async (req: any, res) => {
   }
 });
 
-app.get('/api/progress', authenticateToken, async (req: any, res) => {
+app.get('/api/progress', authenticateToken, async (req: any, res: Response) => {
   try {
     const userId = resolveUserId(req);
     const [rows]: any = await pool.execute(
@@ -466,7 +466,7 @@ app.get('/api/progress', authenticateToken, async (req: any, res) => {
   }
 });
 
-app.post('/api/progress', authenticateToken, async (req: any, res) => {
+app.post('/api/progress', authenticateToken, async (req: any, res: Response) => {
   try {
     const { weightKg, bodyFatPercent, muscleMassPercent, notes, date } = req.body;
     const userId = resolveUserId(req);

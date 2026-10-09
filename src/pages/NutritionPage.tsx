@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Utensils, RotateCw, AlertTriangle, CheckCircle2, Droplet, Plus,
   Sparkles, Zap, ChevronRight, ShieldCheck, Flame, Check, RefreshCw, X,
-  Clock, PieChart, Apple, Info
+  Clock, Info, Dumbbell, ShieldAlert, Award
 } from 'lucide-react';
 
 export default function NutritionPage() {
@@ -49,7 +49,7 @@ export default function NutritionPage() {
 
   const toast = (msg: string) => {
     setToastMsg(msg);
-    setTimeout(() => setToastMsg(''), 3200);
+    setTimeout(() => setToastMsg(''), 3000);
   };
 
   const mealSnapshot = (plan: typeof dietPlan) =>
@@ -96,10 +96,10 @@ export default function NutritionPage() {
 
   if (!profile) {
     return (
-      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3 p-8 text-center">
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 p-8 text-center font-sans">
         <AlertTriangle className="h-12 w-12 text-amber-400" />
         <h3 className="text-xl font-black text-white">Profile Setup Required</h3>
-        <p className="max-w-xs text-xs text-slate-400">Complete your profile to generate your personalized AI nutrition plan.</p>
+        <p className="max-w-xs text-xs text-slate-400">Complete your profile to generate your custom AI nutrition plan.</p>
       </div>
     );
   }
@@ -112,7 +112,7 @@ export default function NutritionPage() {
     );
   }
 
-  // Macro Calculations
+  // Macro Totals
   const sum = (key: 'totalCalories' | 'totalProtein' | 'totalCarbs' | 'totalFat') =>
     dietPlan.meals.reduce((a, m) => (m.logged ? a + m[key] : a), 0);
 
@@ -135,6 +135,13 @@ export default function NutritionPage() {
   const pendingCount = dietPlan.meals.filter(m => !m.logged).length;
   const completedCount = dietPlan.meals.filter(m => m.logged).length;
 
+  const mealIcons: Record<string, string> = {
+    breakfast: '🥣',
+    lunch: '🥗',
+    snack: '🥪',
+    dinner: '🍲',
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -149,7 +156,7 @@ export default function NutritionPage() {
             initial={{ opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
-            className="fixed right-6 top-6 z-[70] flex items-center gap-2.5 rounded-2xl border border-emerald-500/30 bg-slate-900/95 px-5 py-3 text-xs font-bold text-emerald-300 shadow-2xl backdrop-blur-xl"
+            className="fixed right-6 top-6 z-[80] flex items-center gap-2.5 rounded-2xl border border-emerald-500/40 bg-slate-900/95 px-5 py-3 text-xs font-bold text-emerald-300 shadow-2xl backdrop-blur-2xl"
           >
             <CheckCircle2 className="h-4 w-4 text-emerald-400" />
             <span>{toastMsg}</span>
@@ -157,16 +164,16 @@ export default function NutritionPage() {
         )}
       </AnimatePresence>
 
-      {/* Top Header Card */}
-      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-3xl border border-white/10 bg-slate-900/80 p-6 sm:p-8 backdrop-blur-2xl">
+      {/* ── HEADER ── */}
+      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-3xl border border-white/10 bg-slate-900/80 p-6 sm:p-8 backdrop-blur-2xl shadow-xl">
         <div>
           <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-violet-500/30 bg-violet-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-violet-300">
-            <Sparkles className="h-3.5 w-3.5 text-violet-400" /> Adaptive Nutrition Coach
+            <Sparkles className="h-3.5 w-3.5 text-violet-400" /> Precision Nutrition Engine
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">Diet & Nutrition Plan</h1>
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">Daily Diet & Nutrition</h1>
           <p className="mt-1 text-xs sm:text-sm text-slate-400">
-            Targeting <span className="font-bold text-white">{dietPlan.dailyCalories} kcal/day</span> calibrated for{' '}
-            <span className="font-semibold text-violet-400 capitalize">{(profile.goal ?? 'fitness').replace('_', ' ')}</span>
+            Calibrated for <span className="font-bold text-white capitalize">{(profile.goal ?? 'fitness').replace('_', ' ')}</span> · Target:{' '}
+            <span className="font-extrabold text-violet-400">{dietPlan.dailyCalories} kcal</span>
           </p>
         </div>
 
@@ -174,163 +181,175 @@ export default function NutritionPage() {
           <button
             onClick={() => {
               setDietPlan(generateAIDietPlan(profile));
-              toast('Full menu regenerated with new meal ideas!');
+              toast('Full diet plan regenerated!');
             }}
-            className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-xs font-bold text-slate-300 transition-all hover:bg-white/10 hover:text-white active:scale-[0.99]"
+            className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 text-xs font-bold text-slate-200 transition-all hover:bg-white/10 hover:text-white active:scale-95 shadow-sm"
           >
             <RefreshCw className="h-4 w-4 text-violet-400" /> Regenerate Menu
           </button>
         </div>
       </header>
 
-      {/* Macronutrient Status Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Calories Card */}
-        <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-5 backdrop-blur-2xl flex flex-col justify-between">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-500/10 text-orange-400 border border-orange-500/20">
-                <Flame className="h-4 w-4" />
-              </div>
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Calories</span>
-            </div>
-            <span className="text-[11px] font-bold text-orange-400">{pct(totalCals, dietPlan.dailyCalories)}%</span>
+      {/* ── MACRO & CALORIE DASHBOARD ── */}
+      <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 sm:p-8 backdrop-blur-2xl shadow-2xl space-y-6">
+        <div className="flex items-center justify-between border-b border-white/8 pb-4">
+          <div className="flex items-center gap-2.5">
+            <div className="h-5 w-1.5 rounded-full bg-violet-500" />
+            <h2 className="text-base font-black tracking-tight text-white">Daily Macronutrient Targets</h2>
           </div>
-
-          <div className="my-2">
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-2xl font-black text-white">{totalCals}</span>
-              <span className="text-xs font-semibold text-slate-500">/ {dietPlan.dailyCalories} kcal</span>
-            </div>
-            <p className="text-[11px] text-slate-400 mt-0.5">
-              {Math.max(0, dietPlan.dailyCalories - totalCals)} kcal remaining
-            </p>
-          </div>
-
-          <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-white/5">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${pct(totalCals, dietPlan.dailyCalories)}%` }}
-              transition={{ duration: 0.5 }}
-              className="h-full rounded-full bg-gradient-to-r from-amber-500 to-orange-500"
-            />
-          </div>
+          <span className="text-xs font-semibold text-slate-400">
+            {completedCount} of {dietPlan.meals.length} Meals Logged
+          </span>
         </div>
 
-        {/* Protein Card */}
-        <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-5 backdrop-blur-2xl flex flex-col justify-between">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                <Zap className="h-4 w-4" />
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {/* Calories Big Tile */}
+          <div className="rounded-2xl border border-orange-500/30 bg-gradient-to-br from-orange-500/15 via-slate-900/90 to-slate-950 p-5 shadow-lg flex flex-col justify-between">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-500/20 text-orange-400 border border-orange-500/30">
+                  <Flame className="h-5 w-5" />
+                </div>
+                <span className="text-xs font-black uppercase tracking-wider text-orange-200">Calories</span>
               </div>
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Protein</span>
+              <span className="text-xs font-black text-orange-400">{pct(totalCals, dietPlan.dailyCalories)}%</span>
             </div>
-            <span className="text-[11px] font-bold text-blue-400">{pct(totalP, dietPlan.protein)}%</span>
+
+            <div className="my-2">
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-3xl font-black text-white">{totalCals}</span>
+                <span className="text-xs font-bold text-slate-400">/ {dietPlan.dailyCalories} kcal</span>
+              </div>
+              <p className="text-[11px] font-semibold text-slate-400 mt-1">
+                {Math.max(0, dietPlan.dailyCalories - totalCals)} kcal remaining today
+              </p>
+            </div>
+
+            <div className="mt-3 h-2.5 w-full overflow-hidden rounded-full bg-black/40 border border-white/5">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${pct(totalCals, dietPlan.dailyCalories)}%` }}
+                transition={{ duration: 0.5 }}
+                className="h-full rounded-full bg-gradient-to-r from-amber-500 to-orange-500 shadow-[0_0_12px_rgba(249,115,22,0.6)]"
+              />
+            </div>
           </div>
 
-          <div className="my-2">
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-2xl font-black text-white">{totalP}g</span>
-              <span className="text-xs font-semibold text-slate-500">/ {dietPlan.protein}g</span>
+          {/* Protein Tile */}
+          <div className="rounded-2xl border border-blue-500/30 bg-gradient-to-br from-blue-500/15 via-slate-900/90 to-slate-950 p-5 shadow-lg flex flex-col justify-between">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                  <Zap className="h-5 w-5" />
+                </div>
+                <span className="text-xs font-black uppercase tracking-wider text-blue-200">Protein</span>
+              </div>
+              <span className="text-xs font-black text-blue-400">{pct(totalP, dietPlan.protein)}%</span>
             </div>
-            <p className="text-[11px] text-slate-400 mt-0.5">
-              {Math.max(0, dietPlan.protein - totalP)}g left today
-            </p>
+
+            <div className="my-2">
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-3xl font-black text-white">{totalP}g</span>
+                <span className="text-xs font-bold text-slate-400">/ {dietPlan.protein}g</span>
+              </div>
+              <p className="text-[11px] font-semibold text-slate-400 mt-1">
+                {Math.max(0, dietPlan.protein - totalP)}g to hit target
+              </p>
+            </div>
+
+            <div className="mt-3 h-2.5 w-full overflow-hidden rounded-full bg-black/40 border border-white/5">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${pct(totalP, dietPlan.protein)}%` }}
+                transition={{ duration: 0.5 }}
+                className="h-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 shadow-[0_0_12px_rgba(59,130,246,0.6)]"
+              />
+            </div>
           </div>
 
-          <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-white/5">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${pct(totalP, dietPlan.protein)}%` }}
-              transition={{ duration: 0.5 }}
-              className="h-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-500"
-            />
+          {/* Carbs Tile */}
+          <div className="rounded-2xl border border-violet-500/30 bg-gradient-to-br from-violet-500/15 via-slate-900/90 to-slate-950 p-5 shadow-lg flex flex-col justify-between">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-500/20 text-violet-400 border border-violet-500/30">
+                  <Utensils className="h-5 w-5" />
+                </div>
+                <span className="text-xs font-black uppercase tracking-wider text-violet-200">Carbs</span>
+              </div>
+              <span className="text-xs font-black text-violet-400">{pct(totalC, dietPlan.carbs)}%</span>
+            </div>
+
+            <div className="my-2">
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-3xl font-black text-white">{totalC}g</span>
+                <span className="text-xs font-bold text-slate-400">/ {dietPlan.carbs}g</span>
+              </div>
+              <p className="text-[11px] font-semibold text-slate-400 mt-1">
+                {Math.max(0, dietPlan.carbs - totalC)}g remaining budget
+              </p>
+            </div>
+
+            <div className="mt-3 h-2.5 w-full overflow-hidden rounded-full bg-black/40 border border-white/5">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${pct(totalC, dietPlan.carbs)}%` }}
+                transition={{ duration: 0.5 }}
+                className="h-full rounded-full bg-gradient-to-r from-violet-500 to-purple-500 shadow-[0_0_12px_rgba(168,85,247,0.6)]"
+              />
+            </div>
+          </div>
+
+          {/* Fats Tile */}
+          <div className="rounded-2xl border border-rose-500/30 bg-gradient-to-br from-rose-500/15 via-slate-900/90 to-slate-950 p-5 shadow-lg flex flex-col justify-between">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-rose-500/20 text-rose-400 border border-rose-500/30">
+                  <Flame className="h-5 w-5" />
+                </div>
+                <span className="text-xs font-black uppercase tracking-wider text-rose-200">Healthy Fats</span>
+              </div>
+              <span className="text-xs font-black text-rose-400">{pct(totalF, dietPlan.fat)}%</span>
+            </div>
+
+            <div className="my-2">
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-3xl font-black text-white">{totalF}g</span>
+                <span className="text-xs font-bold text-slate-400">/ {dietPlan.fat}g</span>
+              </div>
+              <p className="text-[11px] font-semibold text-slate-400 mt-1">
+                {Math.max(0, dietPlan.fat - totalF)}g remaining budget
+              </p>
+            </div>
+
+            <div className="mt-3 h-2.5 w-full overflow-hidden rounded-full bg-black/40 border border-white/5">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${pct(totalF, dietPlan.fat)}%` }}
+                transition={{ duration: 0.5 }}
+                className="h-full rounded-full bg-gradient-to-r from-rose-500 to-pink-500 shadow-[0_0_12px_rgba(244,63,94,0.6)]"
+              />
+            </div>
           </div>
         </div>
+      </section>
 
-        {/* Carbohydrates Card */}
-        <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-5 backdrop-blur-2xl flex flex-col justify-between">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-violet-500/10 text-violet-400 border border-violet-500/20">
-                <Utensils className="h-4 w-4" />
-              </div>
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Carbs</span>
-            </div>
-            <span className="text-[11px] font-bold text-violet-400">{pct(totalC, dietPlan.carbs)}%</span>
-          </div>
-
-          <div className="my-2">
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-2xl font-black text-white">{totalC}g</span>
-              <span className="text-xs font-semibold text-slate-500">/ {dietPlan.carbs}g</span>
-            </div>
-            <p className="text-[11px] text-slate-400 mt-0.5">
-              {Math.max(0, dietPlan.carbs - totalC)}g remaining
-            </p>
-          </div>
-
-          <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-white/5">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${pct(totalC, dietPlan.carbs)}%` }}
-              transition={{ duration: 0.5 }}
-              className="h-full rounded-full bg-gradient-to-r from-violet-500 to-purple-500"
-            />
-          </div>
-        </div>
-
-        {/* Healthy Fats Card */}
-        <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-5 backdrop-blur-2xl flex flex-col justify-between">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20">
-                <Apple className="h-4 w-4" />
-              </div>
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Fats</span>
-            </div>
-            <span className="text-[11px] font-bold text-rose-400">{pct(totalF, dietPlan.fat)}%</span>
-          </div>
-
-          <div className="my-2">
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-2xl font-black text-white">{totalF}g</span>
-              <span className="text-xs font-semibold text-slate-500">/ {dietPlan.fat}g</span>
-            </div>
-            <p className="text-[11px] text-slate-400 mt-0.5">
-              {Math.max(0, dietPlan.fat - totalF)}g remaining
-            </p>
-          </div>
-
-          <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-white/5">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${pct(totalF, dietPlan.fat)}%` }}
-              transition={{ duration: 0.5 }}
-              className="h-full rounded-full bg-gradient-to-r from-rose-500 to-pink-500"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Hydration Tracker Card */}
-      <section className="rounded-3xl border border-cyan-500/20 bg-gradient-to-r from-blue-950/40 via-slate-900/80 to-cyan-950/40 p-6 backdrop-blur-2xl">
+      {/* ── HYDRATION TRACKER ── */}
+      <section className="rounded-3xl border border-cyan-500/30 bg-gradient-to-r from-blue-950/40 via-slate-900/90 to-cyan-950/40 p-6 sm:p-7 backdrop-blur-2xl shadow-xl">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-cyan-500/30 bg-cyan-500/15 text-cyan-400 shadow-md">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-cyan-500/40 bg-cyan-500/20 text-cyan-300 shadow-lg shadow-cyan-500/20">
               <Droplet className="h-6 w-6" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-base font-extrabold text-white">Daily Water Intake</h3>
-                <span className="rounded-full border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-cyan-300">
+                <h3 className="text-base font-extrabold text-white">Daily Hydration Tracker</h3>
+                <span className="rounded-full border border-cyan-500/30 bg-cyan-500/15 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-cyan-300">
                   {waterPct}% Complete
                 </span>
               </div>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-slate-300 mt-0.5">
                 Logged <span className="font-bold text-cyan-300">{water.toFixed(2)} L</span> of your{' '}
-                <span className="font-semibold text-white">{waterTarget.toFixed(1)} L</span> daily recommendation
+                <span className="font-semibold text-white">{waterTarget.toFixed(1)} L</span> target
               </p>
             </div>
           </div>
@@ -338,47 +357,47 @@ export default function NutritionPage() {
           <div className="flex items-center gap-2.5">
             <button
               onClick={() => addWater(0.25)}
-              className="flex items-center gap-1.5 rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-4 py-2.5 text-xs font-bold text-cyan-300 transition-all hover:bg-cyan-500/20 active:scale-95"
+              className="flex items-center gap-1.5 rounded-xl border border-cyan-500/40 bg-cyan-500/10 px-4 py-2.5 text-xs font-bold text-cyan-300 transition-all hover:bg-cyan-500/25 active:scale-95"
             >
               <Plus className="h-3.5 w-3.5" /> 250 ml
             </button>
             <button
               onClick={() => addWater(0.5)}
-              className="flex items-center gap-1.5 rounded-xl border border-cyan-500/40 bg-cyan-500/20 px-4 py-2.5 text-xs font-bold text-cyan-200 transition-all hover:bg-cyan-500/30 active:scale-95"
+              className="flex items-center gap-1.5 rounded-xl border border-cyan-500/40 bg-cyan-500/20 px-4 py-2.5 text-xs font-bold text-cyan-200 transition-all hover:bg-cyan-500/35 active:scale-95"
             >
               <Plus className="h-3.5 w-3.5" /> 500 ml
             </button>
             <button
               onClick={() => addWater(1.0)}
-              className="flex items-center gap-1.5 rounded-xl bg-cyan-500 px-4 py-2.5 text-xs font-bold text-slate-950 transition-all hover:bg-cyan-400 active:scale-95 shadow-md shadow-cyan-500/20"
+              className="flex items-center gap-1.5 rounded-xl bg-cyan-500 px-4 py-2.5 text-xs font-bold text-slate-950 transition-all hover:bg-cyan-400 active:scale-95 shadow-lg shadow-cyan-500/30"
             >
               <Plus className="h-3.5 w-3.5" /> 1.0 L
             </button>
           </div>
         </div>
 
-        <div className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-slate-950/70 border border-white/5">
+        <div className="mt-4 h-3 w-full overflow-hidden rounded-full bg-slate-950/80 border border-white/5">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${waterPct}%` }}
             transition={{ duration: 0.6 }}
-            className="h-full rounded-full bg-gradient-to-r from-blue-500 via-cyan-400 to-teal-300 shadow-[0_0_12px_rgba(6,182,212,0.6)]"
+            className="h-full rounded-full bg-gradient-to-r from-blue-500 via-cyan-400 to-teal-300 shadow-[0_0_15px_rgba(6,182,212,0.8)]"
           />
         </div>
       </section>
 
-      {/* Main 2-Column Section */}
+      {/* ── 2-COLUMN MAIN LAYOUT ── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left Column: Meal Plan List */}
+        {/* Left Column: Meal Schedule */}
         <div className="lg:col-span-8 space-y-4">
-          {/* Section Header & Filter Pills */}
+          {/* Header & Filter Pills */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="flex items-center gap-2.5">
               <div className="h-5 w-1.5 rounded-full bg-violet-500" />
               <h2 className="text-lg font-black tracking-tight text-white">Daily Meal Schedule</h2>
             </div>
 
-            <div className="flex items-center gap-1 rounded-2xl border border-white/10 bg-slate-900/80 p-1 text-xs font-bold">
+            <div className="flex items-center gap-1 rounded-2xl border border-white/10 bg-slate-900/80 p-1 text-xs font-bold shadow-md">
               {[
                 { key: 'all', label: `All (${dietPlan.meals.length})` },
                 { key: 'pending', label: `Pending (${pendingCount})` },
@@ -399,33 +418,33 @@ export default function NutritionPage() {
             </div>
           </div>
 
-          {/* Meals Cards */}
+          {/* Meal Cards */}
           <div className="space-y-4">
             {filteredMeals.map((meal, idx) => (
               <motion.div
                 key={meal.id}
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.05 }}
-                className={`overflow-hidden rounded-3xl border transition-all ${
+                className={`overflow-hidden rounded-3xl border transition-all shadow-xl ${
                   meal.logged
-                    ? 'border-emerald-500/40 bg-emerald-950/20'
+                    ? 'border-emerald-500/40 bg-gradient-to-b from-emerald-950/20 via-slate-900/90 to-slate-950'
                     : meal.skipped
                     ? 'border-white/5 bg-slate-900/40 opacity-70'
-                    : 'border-white/10 bg-slate-900/80 hover:border-white/20'
+                    : 'border-white/12 bg-gradient-to-b from-slate-900/90 via-slate-900/70 to-slate-950/90 hover:border-violet-500/30'
                 }`}
               >
-                {/* Meal Header Banner */}
+                {/* Header Row */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/8 px-6 py-4">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3.5">
                     <div
-                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border ${
+                      className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-xl shadow-md border ${
                         meal.logged
-                          ? 'border-emerald-500/30 bg-emerald-500/15 text-emerald-400'
-                          : 'border-white/10 bg-white/5 text-violet-400'
+                          ? 'border-emerald-500/40 bg-emerald-500/20 text-emerald-300'
+                          : 'border-violet-500/30 bg-violet-500/10'
                       }`}
                     >
-                      {meal.logged ? <CheckCircle2 className="h-5 w-5" /> : <Utensils className="h-5 w-5" />}
+                      {mealIcons[meal.name.toLowerCase()] || '🍽️'}
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
@@ -433,17 +452,17 @@ export default function NutritionPage() {
                           <Clock className="h-3 w-3" /> {meal.time}
                         </span>
                         {meal.skipped && (
-                          <span className="rounded-full bg-rose-500/10 border border-rose-500/25 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-rose-300">
+                          <span className="rounded-full bg-rose-500/15 border border-rose-500/30 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-rose-300">
                             Skipped
                           </span>
                         )}
                         {meal.logged && (
-                          <span className="rounded-full bg-emerald-500/10 border border-emerald-500/25 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-emerald-300">
-                            Logged
+                          <span className="rounded-full bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-emerald-300">
+                            Logged ✓
                           </span>
                         )}
                       </div>
-                      <h3 className="text-base font-extrabold text-white mt-0.5">{meal.name}</h3>
+                      <h3 className="text-base font-black text-white mt-0.5">{meal.name}</h3>
                     </div>
                   </div>
 
@@ -451,25 +470,25 @@ export default function NutritionPage() {
                   <div className="flex items-center gap-2 self-end sm:self-center">
                     <button
                       onClick={() => handleRegenerate(meal.id)}
-                      title="Swap / Regenerate Meal"
-                      className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-400 transition-all hover:bg-white/10 hover:text-white"
+                      title="Swap meal with AI alternative"
+                      className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-400 transition-all hover:bg-white/10 hover:text-white active:scale-95"
                     >
                       <RotateCw className="h-4 w-4" />
                     </button>
                     {!meal.logged && (
                       <button
                         onClick={() => handleSkip(meal.id)}
-                        className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-400 transition-all hover:border-rose-500/30 hover:text-rose-300"
+                        className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-400 transition-all hover:border-rose-500/30 hover:text-rose-300 active:scale-95"
                       >
                         Skip
                       </button>
                     )}
                     <button
                       onClick={() => handleLog(meal.id)}
-                      className={`flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold transition-all shadow-md active:scale-95 ${
+                      className={`flex items-center gap-1.5 rounded-xl px-5 py-2 text-xs font-extrabold transition-all shadow-md active:scale-95 ${
                         meal.logged
                           ? 'bg-emerald-600 text-white hover:bg-emerald-500'
-                          : 'bg-violet-600 text-white hover:bg-violet-500'
+                          : 'bg-gradient-to-r from-violet-600 to-indigo-600 text-white hover:from-violet-500 hover:to-indigo-500 shadow-violet-500/20'
                       }`}
                     >
                       {meal.logged ? (
@@ -483,21 +502,21 @@ export default function NutritionPage() {
                   </div>
                 </div>
 
-                {/* Meal Body */}
-                <div className="p-6 grid grid-cols-1 md:grid-cols-12 gap-6">
-                  {/* Ingredients Column */}
-                  <div className="md:col-span-8 space-y-2">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Ingredients & Portions</p>
-                    <div className="space-y-1.5">
+                {/* Body: Ingredients & Macro Pills */}
+                <div className="p-6 space-y-4">
+                  {/* Ingredients list */}
+                  <div className="space-y-2">
+                    <p className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Ingredients & Quantities</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {meal.foods.map((food, fi) => (
                         <div
                           key={fi}
-                          className="flex items-center justify-between rounded-xl border border-white/5 bg-white/[0.02] px-3.5 py-2 text-xs"
+                          className="flex items-center justify-between rounded-xl border border-white/5 bg-white/[0.03] px-3.5 py-2.5 text-xs"
                         >
-                          <span className="font-semibold text-slate-200">
-                            {food.name} <span className="text-slate-500 text-[11px]">({food.amount})</span>
+                          <span className="font-bold text-slate-200">
+                            {food.name} <span className="text-slate-400 font-normal">({food.amount})</span>
                           </span>
-                          <span className="font-bold text-slate-400">
+                          <span className="font-extrabold text-slate-300 ml-2">
                             {food.calories} kcal · <span className="text-blue-400">{food.protein}g P</span>
                           </span>
                         </div>
@@ -505,32 +524,28 @@ export default function NutritionPage() {
                     </div>
                   </div>
 
-                  {/* Summary Column */}
-                  <div className="md:col-span-4 flex flex-col justify-center space-y-2 rounded-2xl border border-white/5 bg-white/[0.02] p-4">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Meal Macros</p>
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="font-semibold text-slate-400">Energy</span>
-                      <span className="font-black text-white">{meal.totalCalories} kcal</span>
-                    </div>
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="font-semibold text-blue-400">Protein</span>
-                      <span className="font-black text-blue-300">{meal.totalProtein}g</span>
-                    </div>
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="font-semibold text-violet-400">Carbs</span>
-                      <span className="font-black text-violet-300">{meal.totalCarbs}g</span>
-                    </div>
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="font-semibold text-rose-400">Fats</span>
-                      <span className="font-black text-rose-300">{meal.totalFat}g</span>
-                    </div>
+                  {/* Meal Macro Pills Bar */}
+                  <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-white/5">
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mr-2">Meal Nutrition:</span>
+                    <span className="rounded-xl border border-orange-500/25 bg-orange-500/10 px-3 py-1 text-xs font-black text-orange-300">
+                      🔥 {meal.totalCalories} kcal
+                    </span>
+                    <span className="rounded-xl border border-blue-500/25 bg-blue-500/10 px-3 py-1 text-xs font-black text-blue-300">
+                      ⚡ {meal.totalProtein}g Protein
+                    </span>
+                    <span className="rounded-xl border border-violet-500/25 bg-violet-500/10 px-3 py-1 text-xs font-black text-violet-300">
+                      🌾 {meal.totalCarbs}g Carbs
+                    </span>
+                    <span className="rounded-xl border border-rose-500/25 bg-rose-500/10 px-3 py-1 text-xs font-black text-rose-300">
+                      🥑 {meal.totalFat}g Fats
+                    </span>
                   </div>
                 </div>
               </motion.div>
             ))}
 
             {filteredMeals.length === 0 && (
-              <div className="rounded-3xl border border-white/8 bg-slate-900/60 p-12 text-center text-sm font-semibold text-slate-400">
+              <div className="rounded-3xl border border-white/10 bg-slate-900/60 p-12 text-center text-sm font-semibold text-slate-400">
                 No meals found for the selected filter.
               </div>
             )}
@@ -539,15 +554,15 @@ export default function NutritionPage() {
 
         {/* Right Column: Stack & Micronutrients */}
         <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-6">
-          {/* Recommended Supplement Stack */}
-          <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 backdrop-blur-2xl space-y-4">
+          {/* Supplement Stack */}
+          <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 backdrop-blur-2xl shadow-xl space-y-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-amber-500/30 bg-amber-500/15 text-amber-400">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-amber-500/30 bg-amber-500/15 text-amber-400 shadow-md">
                 <Zap className="h-5 w-5" />
               </div>
               <div>
                 <h3 className="text-base font-extrabold text-white">Recommended Stack</h3>
-                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Targeted Performance</p>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Performance Support</p>
               </div>
             </div>
 
@@ -556,14 +571,14 @@ export default function NutritionPage() {
                 <button
                   key={i}
                   onClick={() => setSelectedSupp(supp)}
-                  className="group w-full rounded-2xl border border-white/5 bg-white/[0.02] p-3.5 text-left transition-all hover:border-amber-500/30 hover:bg-amber-500/5"
+                  className="group w-full rounded-2xl border border-white/5 bg-white/[0.03] p-4 text-left transition-all hover:border-amber-500/40 hover:bg-amber-500/10 shadow-sm"
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-xs font-bold text-white transition-colors group-hover:text-amber-300">{supp.name}</p>
-                      <p className="text-[10px] text-slate-400 mt-0.5">{supp.dosage} · {supp.timing}</p>
+                      <p className="text-xs font-black text-white transition-colors group-hover:text-amber-300">{supp.name}</p>
+                      <p className="text-[11px] text-slate-400 mt-0.5">{supp.dosage} · {supp.timing}</p>
                     </div>
-                    <ChevronRight className="h-4 w-4 text-slate-600 transition-transform group-hover:translate-x-0.5 group-hover:text-amber-300" />
+                    <ChevronRight className="h-4 w-4 text-slate-500 transition-transform group-hover:translate-x-0.5 group-hover:text-amber-300" />
                   </div>
                 </button>
               ))}
@@ -571,14 +586,14 @@ export default function NutritionPage() {
           </div>
 
           {/* Daily Micronutrients */}
-          <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 backdrop-blur-2xl space-y-4">
+          <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 backdrop-blur-2xl shadow-xl space-y-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-500/15 text-emerald-400">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-500/15 text-emerald-400 shadow-md">
                 <ShieldCheck className="h-5 w-5" />
               </div>
               <div>
-                <h3 className="text-base font-extrabold text-white">Daily Micronutrients</h3>
-                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Essential Minerals</p>
+                <h3 className="text-base font-extrabold text-white">Essential Minerals</h3>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Daily Optimal RDA</p>
               </div>
             </div>
 
@@ -589,12 +604,23 @@ export default function NutritionPage() {
                 { label: 'Zinc', val: dietPlan.micronutrients?.zinc || '20 mg' },
                 { label: 'Omega-3', val: dietPlan.micronutrients?.omega3 || '1000 mg' },
               ].map((m, i) => (
-                <div key={i} className="rounded-2xl border border-white/5 bg-white/[0.02] p-3 text-center">
+                <div key={i} className="rounded-2xl border border-white/5 bg-white/[0.03] p-3.5 text-center">
                   <p className="text-sm font-black text-white">{m.val}</p>
                   <p className="mt-0.5 text-[9px] font-bold uppercase tracking-wider text-slate-400">{m.label}</p>
                 </div>
               ))}
             </div>
+          </div>
+
+          {/* Coach Insight Card */}
+          <div className="rounded-3xl border border-violet-500/25 bg-gradient-to-br from-violet-500/15 via-slate-900/90 to-slate-950 p-6 backdrop-blur-2xl shadow-xl space-y-2">
+            <div className="flex items-center gap-2 text-violet-300">
+              <Award className="h-4 w-4" />
+              <span className="text-xs font-bold uppercase tracking-wider">Coach Nutrition Tip</span>
+            </div>
+            <p className="text-xs leading-relaxed text-slate-300 font-medium">
+              Aim for 25–40g of protein distributed across each meal to trigger muscle protein synthesis consistently throughout your recovery windows.
+            </p>
           </div>
         </div>
       </div>
@@ -603,7 +629,7 @@ export default function NutritionPage() {
       <AnimatePresence>
         {selectedSupp && (
           <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xl"
+            className="fixed inset-0 z-[90] flex items-center justify-center p-4 bg-black/75 backdrop-blur-xl"
             onClick={() => setSelectedSupp(null)}
           >
             <motion.div
@@ -653,7 +679,7 @@ export default function NutritionPage() {
                 onClick={() => setSelectedSupp(null)}
                 className="mt-6 w-full rounded-2xl bg-white py-3 text-xs font-extrabold uppercase tracking-widest text-slate-950 transition hover:bg-slate-200"
               >
-                Got It
+                Close
               </button>
             </motion.div>
           </div>
